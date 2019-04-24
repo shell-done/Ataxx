@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Game::Game(QObject *parent) : QObject(parent) {
+Game::Game(QObject *parent) : QObject(parent), translator(DIR_LANGUAGES) {
 	gameStatus = ON_MENU;
 
 }
@@ -26,11 +26,11 @@ void Game::play() {
 }
 
 void Game::displayMenu() {
-	cout << "Ataxx - CIR 2 Project - Alexandre THOMAS | ISEN Yncrea Ouest Rennes" << endl << endl;
-	cout << "+-------------------------------------+" << endl;
-	cout << "|             Ataxx - Menu            |" << endl;
-	cout << "+-------------------------------------+" << endl;
-	cout << "Please select any of the following option :" << endl;
+	cout << translator.stdTranslate("console:menu:project") << endl << endl;
+	cout << translator.stdTranslate("console:menu:header:1") << endl;
+	cout << translator.stdTranslate("console:menu:header:2") << endl;
+	cout << translator.stdTranslate("console:menu:header:1") << endl;
+	cout << translator.stdTranslate("console:menu:options") << endl;
 	cout << "";
 
 	int a;

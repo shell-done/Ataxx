@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "core.h"
+#include "translator.h"
 
 class Game : public QObject {
 	Q_OBJECT
@@ -15,6 +16,7 @@ public:
 
 private:
 	e_gameStatus gameStatus;
+	Translator translator;
 
 	void displayMenu();
 };
