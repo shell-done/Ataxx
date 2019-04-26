@@ -13,8 +13,11 @@ public:
 	Translator(QString languageFolder);
 
 	void setLang(QString lang);
-	QString qTranslate(const char* string);
+	QString qTranslate(const char* string, bool replaceSpecialChars = false);
 	std::string stdTranslate(const char* string);
+
+	const QStringList getAvailableLanguages(bool consoleMode = false) const;
+	static QString replaceSpecialChars(const QString& str);
 
 private:
 	bool loadLang();

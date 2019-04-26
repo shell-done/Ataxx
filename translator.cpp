@@ -5,6 +5,7 @@ using namespace std;
 const QString Translator::defaultLanguage = "English";
 
 Translator::Translator(QString langFolder) : languageFolder(langFolder) {
+	currentLanguage = "";
 	QStringList langFilesFound = languageFolder.entryList(QStringList() << "*.lang", QDir::Files);
 
 	for(const QString& filePath: langFilesFound) {
@@ -12,7 +13,7 @@ Translator::Translator(QString langFolder) : languageFolder(langFolder) {
 
 		if(file.open(QIODevice::ReadOnly)) {
 		   QTextStream in(&file);
-		   QString lang = in.readLine().remove(";");
+		   QString lang = in.readLine();
 
 		   languagesAvailable.insert(lang, filePath);
 
@@ -51,6 +52,10 @@ bool Translator::loadLang() {
 			QString line = in.readLine();
 
 			QStringList data = line.split(" = ");
+
+			if(data.size() != 2)
+				continue;
+
 			translation.insert(data[0], data[1]);
 		}
 
@@ -61,31 +66,75 @@ bool Translator::loadLang() {
 	return false;
 }
 
-void Translator::setLang(QString lang) {
-	if(!languagesAvailable.keys().contains(lang)) {
-		QString error = "[WARNING] Language : " + lang + " does not exists";
-		cout << error.toStdString() << endl;
 
-		return;
+void Translator::setLang(QString lang) {
+	QString prevLang = currentLanguage;
+
+	if(languagesAvailable.keys().contains(lang)) {
+		currentLanguage = lang;
+	} else {
+		cout << QString("[WARNING] Language : %1 does not exists").arg(replaceSpecialChars(lang)).toStdString() << endl;
+
+		if(languagesAvailable.keys().contains(defaultLanguage)) {
+			currentLanguage = defaultLanguage;
+		} else if(!languagesAvailable.isEmpty()) {
+			currentLanguage = languagesAvailable.firstKey();
+			cout << "[WARNING] Default language not found" << endl;
+		} else {
+			cout << "[WARNING] No languages found" << endl;
+			return;
+		}
 	}
 
-	loadLang();
+	if(!loadLang()) {
+		currentLanguage = prevLang;
+		cout << QString("[WARNING] Can't read language file : %1").arg(lang).toStdString() << endl;
+	} else {
+		cout << QString("%1 %2").arg(qTranslate("console:options:languageSet", true)).arg(replaceSpecialChars(currentLanguage)).toStdString() << endl;
+	}
 }
 
-QString Translator::qTranslate(const char* string) {
+QString Translator::qTranslate(const char* string, bool replaceSpeChars) {
 	QString res = translation.value(QString(string), "");
 
 	if(res.isEmpty())
 		res = QString(string);
 
+	if(replaceSpeChars)
+		res = replaceSpecialChars(res);
+
 	return res;
 }
 
 std::string Translator::stdTranslate(const char *string) {
-	std::string res = translation.value(QString(string), "").toStdString();
+	QString qstr = qTranslate(string);
+	if(qstr == "")
+		return "";
 
-	if(res == "")
-		res = std::string(string);
+	qstr = replaceSpecialChars(qstr);
 
-	return res;
+	return qstr.toStdString();
+}
+
+const QStringList Translator::getAvailableLanguages(bool consoleMode) const {
+	QStringList list = languagesAvailable.keys();
+
+	if(consoleMode)
+		for(QString& str: list)
+			str = replaceSpecialChars(str);
+
+	return list;
+}
+
+QString Translator::replaceSpecialChars(const QString& str) {
+	QString copy = str;
+
+	copy.replace(QRegExp(QString::fromUtf8("[éèëê]")), "e");
+	copy.replace(QRegExp(QString::fromUtf8("[à]")), "a");
+	copy.replace(QRegExp(QString::fromUtf8("[îï]")), "i");
+	copy.replace(QRegExp(QString::fromUtf8("[ô]")), "o");
+	copy.replace(QRegExp(QString::fromUtf8("[ù]")), "u");
+	copy.replace(QRegExp(QString::fromUtf8("[ç]")), "c");
+
+	return copy;
 }
