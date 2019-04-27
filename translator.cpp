@@ -23,7 +23,7 @@ Translator::Translator(QString langFolder) : languageFolder(langFolder) {
 
 	if(languagesAvailable.isEmpty()) {
 		currentLanguage = "";
-		cout << "[WARNING] No lang files found" << endl;
+		cerr << "[WARNING] No lang files found" << endl;
 		return;
 	}
 
@@ -36,7 +36,7 @@ Translator::Translator(QString langFolder) : languageFolder(langFolder) {
 	if(!loadLang()) {
 		currentLanguage = "";
 		QString error = "[WARNING] Can't read language file : " + currentLanguage;
-		cout << error.toStdString() << endl;
+		cerr << error.toStdString() << endl;
 	}
 }
 
@@ -73,22 +73,22 @@ void Translator::setLang(QString lang) {
 	if(languagesAvailable.keys().contains(lang)) {
 		currentLanguage = lang;
 	} else {
-		cout << QString("[WARNING] Language : %1 does not exists").arg(replaceSpecialChars(lang)).toStdString() << endl;
+		cerr << QString("[WARNING] Language : %1 does not exists").arg(replaceSpecialChars(lang)).toStdString() << endl;
 
 		if(languagesAvailable.keys().contains(defaultLanguage)) {
 			currentLanguage = defaultLanguage;
 		} else if(!languagesAvailable.isEmpty()) {
 			currentLanguage = languagesAvailable.firstKey();
-			cout << "[WARNING] Default language not found" << endl;
+			cerr << "[WARNING] Default language not found" << endl;
 		} else {
-			cout << "[WARNING] No languages found" << endl;
+			cerr << "[WARNING] No languages found" << endl;
 			return;
 		}
 	}
 
 	if(!loadLang()) {
 		currentLanguage = prevLang;
-		cout << QString("[WARNING] Can't read language file : %1").arg(lang).toStdString() << endl;
+		cerr << QString("[WARNING] Can't read language file : %1").arg(lang).toStdString() << endl;
 	} else {
 		cout << QString("%1 %2").arg(qTranslate("console:options:languageSet", true)).arg(replaceSpecialChars(currentLanguage)).toStdString() << endl;
 	}

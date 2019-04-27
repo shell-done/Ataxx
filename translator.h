@@ -10,7 +10,7 @@
 
 class Translator {
 public:
-	Translator(QString languageFolder);
+	Translator(QString m_languageFolder);
 
 	void setLang(QString lang);
 	QString qTranslate(const char* string, bool replaceSpecialChars = false);
@@ -24,11 +24,11 @@ private:
 
 	static const QString defaultLanguage;
 
-	QDir languageFolder;
-	QMap<QString, QString> languagesAvailable;
-	QString currentLanguage;
+	QDir m_languageFolder;
+	QMap<QString, QString> m_languagesAvailable;
+	QString m_currentLanguage;
 
-	QMap<QString, QString> translation;
+	QMap<QString, QString> m_translations;
 };
 
 #endif // LANGUAGE_H

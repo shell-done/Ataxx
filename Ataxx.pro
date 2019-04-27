@@ -27,13 +27,11 @@ CONFIG += c++11
 CONFIG += console
 
 SOURCES += \
-    board.cpp \
     game.cpp \
     main.cpp \
     translator.cpp
 
 HEADERS += \
-    board.h \
     core.h \
     game.h \
     translator.h
