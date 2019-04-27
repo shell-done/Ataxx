@@ -4,6 +4,7 @@
 #include <QObject>
 #include "core.h"
 #include "translator.h"
+#include "board.h"
 
 class Game : public QObject {
 	Q_OBJECT
@@ -26,6 +27,7 @@ private:
 	e_displayMode m_displayMode;
 
 	e_gameStatus m_gameStatus;
+	Board board;
 
 signals:
 	void updateConsole();
