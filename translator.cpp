@@ -4,47 +4,47 @@ using namespace std;
 
 const QString Translator::defaultLanguage = "English";
 
-Translator::Translator(QString langFolder) : languageFolder(langFolder) {
-	currentLanguage = "";
-	QStringList langFilesFound = languageFolder.entryList(QStringList() << "*.lang", QDir::Files);
+Translator::Translator(QString langFolder) : m_languageFolder(langFolder) {
+	m_currentLanguage = "";
+	QStringList langFilesFound = m_languageFolder.entryList(QStringList() << "*.lang", QDir::Files);
 
 	for(const QString& filePath: langFilesFound) {
-		QFile file(languageFolder.path() + "/" + filePath);
+		QFile file(m_languageFolder.path() + "/" + filePath);
 
 		if(file.open(QIODevice::ReadOnly)) {
 		   QTextStream in(&file);
 		   QString lang = in.readLine();
 
-		   languagesAvailable.insert(lang, filePath);
+		   m_languagesAvailable.insert(lang, filePath);
 
 		   file.close();
 		}
 	}
 
-	if(languagesAvailable.isEmpty()) {
-		currentLanguage = "";
+	if(m_languagesAvailable.isEmpty()) {
+		m_currentLanguage = "";
 		cerr << "[WARNING] No lang files found" << endl;
 		return;
 	}
 
-	if(languagesAvailable.keys().contains(defaultLanguage)) {
-		currentLanguage = defaultLanguage;
+	if(m_languagesAvailable.keys().contains(defaultLanguage)) {
+		m_currentLanguage = defaultLanguage;
 	} else {
-		currentLanguage = languagesAvailable.firstKey();
+		m_currentLanguage = m_languagesAvailable.firstKey();
 	}
 
 	if(!loadLang()) {
-		currentLanguage = "";
-		QString error = "[WARNING] Can't read language file : " + currentLanguage;
+		m_currentLanguage = "";
+		QString error = "[WARNING] Can't read language file : " + m_currentLanguage;
 		cerr << error.toStdString() << endl;
 	}
 }
 
 bool Translator::loadLang() {
-	QFile langFile(languageFolder.path() + "/" + languagesAvailable[currentLanguage]);
+	QFile langFile(m_languageFolder.path() + "/" + m_languagesAvailable[m_currentLanguage]);
 
 	if (langFile.open(QIODevice::ReadOnly)) {
-		translation.clear();
+		m_translations.clear();
 
 		QTextStream in(&langFile);
 		in.readLine();
@@ -56,7 +56,7 @@ bool Translator::loadLang() {
 			if(data.size() != 2)
 				continue;
 
-			translation.insert(data[0], data[1]);
+			m_translations.insert(data[0], data[1]);
 		}
 
 		langFile.close();
@@ -68,17 +68,17 @@ bool Translator::loadLang() {
 
 
 void Translator::setLang(QString lang) {
-	QString prevLang = currentLanguage;
+	QString prevLang = m_currentLanguage;
 
-	if(languagesAvailable.keys().contains(lang)) {
-		currentLanguage = lang;
+	if(m_languagesAvailable.keys().contains(lang)) {
+		m_currentLanguage = lang;
 	} else {
 		cerr << QString("[WARNING] Language : %1 does not exists").arg(replaceSpecialChars(lang)).toStdString() << endl;
 
-		if(languagesAvailable.keys().contains(defaultLanguage)) {
-			currentLanguage = defaultLanguage;
-		} else if(!languagesAvailable.isEmpty()) {
-			currentLanguage = languagesAvailable.firstKey();
+		if(m_languagesAvailable.keys().contains(defaultLanguage)) {
+			m_currentLanguage = defaultLanguage;
+		} else if(!m_languagesAvailable.isEmpty()) {
+			m_currentLanguage = m_languagesAvailable.firstKey();
 			cerr << "[WARNING] Default language not found" << endl;
 		} else {
 			cerr << "[WARNING] No languages found" << endl;
@@ -87,15 +87,15 @@ void Translator::setLang(QString lang) {
 	}
 
 	if(!loadLang()) {
-		currentLanguage = prevLang;
+		m_currentLanguage = prevLang;
 		cerr << QString("[WARNING] Can't read language file : %1").arg(lang).toStdString() << endl;
 	} else {
-		cout << QString("%1 %2").arg(qTranslate("console:options:languageSet", true)).arg(replaceSpecialChars(currentLanguage)).toStdString() << endl;
+		cout << QString("%1 %2").arg(qTranslate("console:options:languageSet", true)).arg(replaceSpecialChars(m_currentLanguage)).toStdString() << endl;
 	}
 }
 
 QString Translator::qTranslate(const char* string, bool replaceSpeChars) {
-	QString res = translation.value(QString(string), "");
+	QString res = m_translations.value(QString(string), "");
 
 	if(res.isEmpty())
 		res = QString(string);
@@ -117,7 +117,7 @@ std::string Translator::stdTranslate(const char *string) {
 }
 
 const QStringList Translator::getAvailableLanguages(bool consoleMode) const {
-	QStringList list = languagesAvailable.keys();
+	QStringList list = m_languagesAvailable.keys();
 
 	if(consoleMode)
 		for(QString& str: list)

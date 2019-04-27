@@ -9,13 +9,27 @@ class Game : public QObject {
 	Q_OBJECT
 
 public:
-	Game(QObject *parent = nullptr);
+	Game(const QMap<QString, QString>& arguments, QObject *parent = nullptr);
+	void start();
+	void update();
 
-	Translator* tr();
+	Translator* tr() const;
+	e_displayMode displayMode() const;
+
+	e_gameStatus gameStatus() const;
+	void setGameStatus(const e_gameStatus& gameStatus);
+
+	void mainMenuInput(int userInput);
 
 private:
-	e_gameStatus m_gameStatus;
 	Translator* m_translator;
+	e_displayMode m_displayMode;
+
+	e_gameStatus m_gameStatus;
+
+signals:
+	void updateConsole();
+	void updateWindow();
 };
 
 #endif // GAME_H
