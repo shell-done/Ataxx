@@ -79,6 +79,27 @@ void Board::setCharacter(const QPoint &p, char character) {
 	m_boxes[p.x()][p.y()] = character;
 }
 
+
+QPair<QPoint, QPoint> Board::strToPoints(const QString& str) {
+	QStringList coordinates = str.split(" ");
+
+	bool ok = true;
+	if(coordinates.size() != 4)
+		ok = false;
+
+	for(int i=0; i<coordinates.size() && ok; i++) {
+		if(i%2 == 0 && (coordinates[i].toInt() < 0 || coordinates[i].toInt() >= m_width))
+			ok = false;
+		else if(i%2 == 1 && (coordinates[i].toInt() < 0 || coordinates[i].toInt() >= m_height))
+			ok = false;
+	}
+
+	if(ok)
+		return QPair<QPoint, QPoint>(QPoint(coordinates[0].toInt(), coordinates[1].toInt()), QPoint(coordinates[2].toInt(), coordinates[3].toInt()));
+
+	return QPair<QPoint, QPoint>(QPoint(-1, -1), QPoint(-1, -1));
+}
+
 bool Board::moveAllowed(const QPoint &origin, const QPoint &dest) {
 	if(!onGrid(origin) || !onGrid(dest))
 		return false;

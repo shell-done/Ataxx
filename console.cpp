@@ -32,8 +32,12 @@ void Console::gameUpdate() {
 		break;
 	}
 
-	if(m_game->displayMode() == CONSOLE)
-		getUserInput();
+	if(m_game->displayMode() == CONSOLE) {
+		if(m_game->gameSubStatus() == LOCAL_IN_GAME)
+			playParty();
+		else
+			getUserInput();
+	}
 }
 
 void Console::displayMainMenu() {
@@ -134,6 +138,7 @@ void Console::getUserInput() {
 void Console::mainMenuInput(int userInput) {
 	switch(userInput) {
 	case 0:
+		m_game->setGameStatus(QUIT);
 		return;
 
 	case 1:
@@ -162,18 +167,12 @@ void Console::localGameInput(int userInput) {
 		else if(userInput == 1)
 			if(m_game->board()->exists()) {
 				cerr << "[WARNING] A board already exists" << endl;
-				m_game->setGameStatus(LOCAL_PARTY);
 			} else {
 				cout << m_tr->qTranslate("console:local:generating", true).arg(m_game->board()->width()).arg(m_game->board()->height()).toStdString() << endl;
 				m_game->board()->generate();
-				m_game->setGameStatus(LOCAL_IN_GAME);
 			}
 		else
 			cout << m_tr->stdTranslate("console:global:error") << endl;
-			m_game->setGameStatus(LOCAL_PARTY);
-		break;
-
-	case LOCAL_IN_GAME:
 		break;
 
 	default:
@@ -208,7 +207,6 @@ void Console::optionsMenuInput(int userInput) {
 			m_game->setGameStatus(ON_OPTIONS_MENU);
 		} else {
 			cout << m_tr->stdTranslate("console:global:error") << endl;
-			m_game->setGameStatus(ON_LANGUAGES_MENU);
 		}
 		break;
 
@@ -245,4 +243,23 @@ void Console::displayParty(Board* board) {
 	cout << "-+" << endl << endl;
 
 	cout << m_tr->qTranslate("console:local:playing", true).arg(board->currentPlayer()).toStdString() << endl;
+}
+
+void Console::playParty() {
+	string userInput = "";
+	QPair<QPoint, QPoint> points = QPair<QPoint, QPoint>(QPoint(-1, -1), QPoint(-1, -1));
+
+	do {
+		cout << m_tr->stdTranslate("console:global:in");
+		cin >> userInput;
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
+
+		points = m_game->board()->strToPoints(QString::fromStdString(userInput));
+
+		if(points.first.x() == -1)
+			cout << m_tr->stdTranslate("console:global:error") << endl;
+	} while(points.first.x() == -1);
+
+
 }

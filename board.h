@@ -26,6 +26,8 @@ public:
 	bool onGrid(const QPoint& point);
 	char at(const QPoint& point);
 	void setCharacter(const QPoint& point, char character);
+
+	QPair<QPoint, QPoint> strToPoints(const QString& str);
 	bool moveAllowed(const QPoint& origin, const QPoint& dest);
 	void playMove(const QPoint& origin, const QPoint& dest);
 

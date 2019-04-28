@@ -18,7 +18,8 @@ Game::Game(const QMap<QString, QString>& arguments, QObject *parent) : QObject(p
 void Game::update() {
 	switch(m_displayMode) {
 	case CONSOLE:
-		updateConsole();
+		while(m_gameStatus != QUIT)
+			updateConsole();
 		break;
 
 	case GRAPHIC:
@@ -60,7 +61,9 @@ e_gameStatus Game::gameSubSubStatus() const {
 
 void Game::setGameStatus(const e_gameStatus& status) {
 	m_gameStatus = status;
-	update();
+
+	if(m_displayMode != CONSOLE)
+		update();
 }
 
 Board* Game::board() {

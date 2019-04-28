@@ -22,7 +22,7 @@ private:
 	void optionsMenuInput(int userInput);
 
 	void displayParty(Board* board);
-	void playParty(int userInput);
+	void playParty();
 
 	Game* m_game;
 	Translator* m_tr;
