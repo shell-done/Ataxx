@@ -21,7 +21,7 @@ private:
 	void localGameInput(int userInput);
 	void optionsMenuInput(int userInput);
 
-	void displayParty(Board* board);
+	void displayParty();
 	void playParty();
 
 	Game* m_game;

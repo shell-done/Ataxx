@@ -62,7 +62,7 @@ void Console::displayLocalGame() {
 		break;
 
 	case LOCAL_IN_GAME:
-		displayParty(m_game->board());
+		displayParty();
 		break;
 
 	default:
@@ -170,6 +170,7 @@ void Console::localGameInput(int userInput) {
 			} else {
 				cout << m_tr->qTranslate("console:local:generating", true).arg(m_game->board()->width()).arg(m_game->board()->height()).toStdString() << endl;
 				m_game->board()->generate();
+				m_game->setGameStatus(LOCAL_IN_GAME);
 			}
 		else
 			cout << m_tr->stdTranslate("console:global:error") << endl;
@@ -215,9 +216,24 @@ void Console::optionsMenuInput(int userInput) {
 	}
 }
 
-void Console::displayParty(Board* board) {
+void Console::displayParty() {
+	Board* board = m_game->board();
+
 	cout << endl;
 	cout << m_tr->qTranslate("console:local:round", true).arg(board->round()).toStdString() << endl;
+	cout << m_tr->stdTranslate("console:local:pawnsLeft");
+
+	QMap<char, int> pawns = board->playerPawns();
+	for(int i=0; i<pawns.keys().size() - 1; i++) {
+		QString player = m_tr->qTranslate("console:local:player", true);
+		player += "(%2), ";
+		cout << player.arg(pawns.keys()[i]).arg(pawns[pawns.keys()[i]]).toStdString();
+	}
+
+	QString player = m_tr->qTranslate("console:local:player");
+	player += "(%2)";
+	cout << player.arg(pawns.lastKey()).arg(pawns[pawns.lastKey()]).toStdString() << endl;
+
 
 	cout << "   ";
 	for(int i=1; i<=board->width(); i++)
@@ -246,20 +262,41 @@ void Console::displayParty(Board* board) {
 }
 
 void Console::playParty() {
-	string userInput = "";
+	Board* board = m_game->board();
 	QPair<QPoint, QPoint> points = QPair<QPoint, QPoint>(QPoint(-1, -1), QPoint(-1, -1));
 
 	do {
+		QStringList coordinates;
 		cout << m_tr->stdTranslate("console:global:in");
-		cin >> userInput;
+
+		for(int i=0; i<4; i++) {
+			string userInput = "";
+			cin >> userInput;
+			coordinates << QString::fromStdString(userInput);
+		}
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 
-		points = m_game->board()->strToPoints(QString::fromStdString(userInput));
+		points = board->strToPoints(coordinates);
 
 		if(points.first.x() == -1)
 			cout << m_tr->stdTranslate("console:global:error") << endl;
+
 	} while(points.first.x() == -1);
 
+	if(!board->moveAllowed(points.first, points.second)) {
+		cout << m_tr->stdTranslate("console:local:incorrectMove") << endl;
+		return;
+	}
 
+	board->playMove(points.first, points.second);
+
+	char winner = board->checkWinner();
+	if(winner != board->emptyBoxCharacter) {
+		displayParty();
+		board->destroy();
+
+		cout << m_tr->qTranslate("console:local:win", true).arg(winner).toStdString() << endl;
+		m_game->setGameStatus(ON_MAIN_MENU);
+	}
 }

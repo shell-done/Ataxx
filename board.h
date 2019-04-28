@@ -11,12 +11,12 @@ public:
 
 	void generate();
 	bool exists();
+	void destroy();
 
 	char** boxes() const;
 
 	int width();
 	void setWidth(int width);
-
 	int height();
 	void setHeigh(int height);
 
@@ -27,17 +27,18 @@ public:
 	char at(const QPoint& point);
 	void setCharacter(const QPoint& point, char character);
 
-	QPair<QPoint, QPoint> strToPoints(const QString& str);
+	QPair<QPoint, QPoint> strToPoints(const QStringList& coordinates);
 	bool moveAllowed(const QPoint& origin, const QPoint& dest);
 	void playMove(const QPoint& origin, const QPoint& dest);
 
+	QMap<char, int> playerPawns();
 	char checkWinner();
 
-private:
 	static const char emptyBoxCharacter;
 	static const char P1Character;
 	static const char P2Character;
 
+private:
 	int m_width;
 	int m_height;
 

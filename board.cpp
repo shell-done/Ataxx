@@ -20,6 +20,21 @@ void Board::generate() {
 	for(int i=0; i<m_width; i++)
 		for(int j=0; j<m_height; j++)
 			m_boxes[i][j] = emptyBoxCharacter;
+
+	setCharacter(QPoint(0, 0), P1Character);
+	setCharacter(QPoint(m_width - 1, m_height - 1), P1Character);
+	setCharacter(QPoint(0, m_height - 1), P2Character);
+	setCharacter(QPoint(m_width - 1, 0), P2Character);
+}
+
+void Board::destroy() {
+	for(int i=0; i<m_width; i++)
+		delete[] m_boxes[i];
+	delete[] m_boxes;
+
+	m_boxes = nullptr;
+	m_round = 1;
+	m_currentPlayer = P1Character;
 }
 
 bool Board::exists() {
@@ -80,22 +95,20 @@ void Board::setCharacter(const QPoint &p, char character) {
 }
 
 
-QPair<QPoint, QPoint> Board::strToPoints(const QString& str) {
-	QStringList coordinates = str.split(" ");
-
+QPair<QPoint, QPoint> Board::strToPoints(const QStringList& coordinates) {
 	bool ok = true;
 	if(coordinates.size() != 4)
 		ok = false;
 
 	for(int i=0; i<coordinates.size() && ok; i++) {
-		if(i%2 == 0 && (coordinates[i].toInt() < 0 || coordinates[i].toInt() >= m_width))
+		if(i%2 == 0 && (coordinates[i].toInt() - 1 < 0 || coordinates[i].toInt() - 1 >= m_width))
 			ok = false;
-		else if(i%2 == 1 && (coordinates[i].toInt() < 0 || coordinates[i].toInt() >= m_height))
+		else if(i%2 == 1 && (coordinates[i].toInt() - 1 < 0 || coordinates[i].toInt() - 1 >= m_height))
 			ok = false;
 	}
 
 	if(ok)
-		return QPair<QPoint, QPoint>(QPoint(coordinates[0].toInt(), coordinates[1].toInt()), QPoint(coordinates[2].toInt(), coordinates[3].toInt()));
+		return QPair<QPoint, QPoint>(QPoint(coordinates[0].toInt() - 1, coordinates[1].toInt() - 1), QPoint(coordinates[2].toInt() - 1, coordinates[3].toInt() - 1));
 
 	return QPair<QPoint, QPoint>(QPoint(-1, -1), QPoint(-1, -1));
 }
@@ -130,14 +143,15 @@ void Board::playMove(const QPoint &origin, const QPoint &dest) {
 		for(int j=-1; j<=1; j++) {
 			QPoint adjacentBox = QPoint(dest.x() + i, dest.y() + j);
 			if(onGrid(adjacentBox))
-				if(at(adjacentBox) != m_currentPlayer)
+				if(at(adjacentBox) != m_currentPlayer && at(adjacentBox) != emptyBoxCharacter)
 					setCharacter(adjacentBox, m_currentPlayer);
 		}
 
 	m_currentPlayer = m_playersList[(m_playersList.indexOf(m_currentPlayer) + 1) % m_playersList.size()];
+	m_round++;
 }
 
-char Board::checkWinner() {
+QMap<char, int> Board::playerPawns() {
 	QMap<char, int> pawns;
 
 	for(int i=0; i<m_width; i++)
@@ -151,8 +165,14 @@ char Board::checkWinner() {
 		if(!m_playersList.contains(pawn))
 			pawns.remove(pawn);
 
+	return pawns;
+}
+
+char Board::checkWinner() {
+	QMap<char, int> pawns = playerPawns();
+
 	if(pawns.keys().size() == 1)
-		return pawns.key(0);
+		return pawns.firstKey();
 
 	return emptyBoxCharacter;
 }
