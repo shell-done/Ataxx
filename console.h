@@ -11,9 +11,13 @@ public:
 	Console(Game* game, QObject *parent = nullptr);
 
 private:
+	void displayMainMenu();
+	void displayOptionsMenu();
+
 	void getUserInput();
 
-	void displayMainMenu();
+	void mainMenuInput(int userInput);
+	void optionsMenuInput(int userInput);
 
 	Game* m_game;
 	Translator* m_tr;

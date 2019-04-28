@@ -14,7 +14,12 @@ typedef enum e_displayMode {
 } e_displayMode;
 
 typedef enum e_gameStatus {
-	QUIT, ON_MAIN_MENU, ON_LOCAL_MENU, IG_LOCAL, IG_ONLINE, ON_OPTIONS_MENU
+	QUIT = 000,
+	ON_MAIN_MENU = 100,
+	IG_LOCAL = 200,
+	IG_ONLINE = 300,
+	ON_OPTIONS_MENU = 400,
+		ON_LANGUAGES_MENU = 410
 } e_gameStatus;
 
 QMap<QString, QString> readArguments(int argc, char** argv, QMap<QString, QString> defaultValues = QMap<QString, QString>());

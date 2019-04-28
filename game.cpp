@@ -41,6 +41,20 @@ e_displayMode Game::displayMode() const {
 }
 
 e_gameStatus Game::gameStatus() const {
+	int status = m_gameStatus;
+	status = (status/100)*100;
+
+	return static_cast<e_gameStatus>(status);
+}
+
+e_gameStatus Game::gameSubStatus() const {
+	int status = m_gameStatus;
+	status = (status/10)*10;
+
+	return static_cast<e_gameStatus>(status);
+}
+
+e_gameStatus Game::gameSubSubStatus() const {
 	return m_gameStatus;
 }
 
@@ -49,30 +63,5 @@ void Game::setGameStatus(const e_gameStatus& status) {
 		return;
 
 	m_gameStatus = status;
-	update();
-}
-
-void Game::mainMenuInput(int userInput) {
-	switch(userInput) {
-	case 0:
-		return;
-
-	case 1:
-		m_gameStatus = IG_LOCAL;
-		break;
-
-	case 2:
-		m_gameStatus = IG_ONLINE;
-		break;
-
-	case 3:
-		m_gameStatus = ON_OPTIONS_MENU;
-		break;
-
-	default:
-		cout << m_translator->stdTranslate("console:global:error") << endl;
-		break;
-	}
-
 	update();
 }
