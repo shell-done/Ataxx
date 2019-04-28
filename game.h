@@ -22,13 +22,15 @@ public:
 	e_gameStatus gameSubSubStatus() const;
 	void setGameStatus(const e_gameStatus& gameStatus);
 
+	Board* board();
+
 private:
 	Translator* m_translator;
 	e_displayMode m_displayMode;
 
 	e_gameStatus m_gameStatus;
 
-	Board board;
+	Board m_board;
 
 signals:
 	void updateConsole();

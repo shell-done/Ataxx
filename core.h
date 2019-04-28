@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include <QString>
 #include <iostream>
+#include <cmath>
 
 #include <QDebug>
 
@@ -16,7 +17,8 @@ typedef enum e_displayMode {
 typedef enum e_gameStatus {
 	QUIT = 000,
 	ON_MAIN_MENU = 100,
-	IG_LOCAL = 200,
+	LOCAL_PARTY = 200,
+		LOCAL_IN_GAME = 210,
 	IG_ONLINE = 300,
 	ON_OPTIONS_MENU = 400,
 		ON_LANGUAGES_MENU = 410

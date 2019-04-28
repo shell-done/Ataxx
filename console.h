@@ -12,12 +12,17 @@ public:
 
 private:
 	void displayMainMenu();
+	void displayLocalGame();
 	void displayOptionsMenu();
 
 	void getUserInput();
 
 	void mainMenuInput(int userInput);
+	void localGameInput(int userInput);
 	void optionsMenuInput(int userInput);
+
+	void displayParty(Board* board);
+	void playParty(int userInput);
 
 	Game* m_game;
 	Translator* m_tr;

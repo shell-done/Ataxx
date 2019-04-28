@@ -20,6 +20,10 @@ void Console::gameUpdate() {
 		displayMainMenu();
 		break;
 
+	case LOCAL_PARTY:
+		displayLocalGame();
+		break;
+
 	case ON_OPTIONS_MENU:
 		displayOptionsMenu();
 		break;
@@ -41,6 +45,25 @@ void Console::displayMainMenu() {
 	cout << m_tr->stdTranslate("console:menu:online") << endl;
 	cout << m_tr->stdTranslate("console:menu:options") << endl;
 	cout << m_tr->stdTranslate("console:menu:quit") << endl;
+}
+
+void Console::displayLocalGame() {
+	switch(m_game->gameSubStatus()) {
+	case LOCAL_PARTY:
+		cout << m_tr->stdTranslate("console:global:border") << endl;
+		cout << m_tr->stdTranslate("console:local:title") << endl;
+		cout << m_tr->stdTranslate("console:global:border") << endl;
+		cout << m_tr->stdTranslate("console:local:start") << endl;
+		cout << m_tr->stdTranslate("console:menu:return") << endl;
+		break;
+
+	case LOCAL_IN_GAME:
+		displayParty(m_game->board());
+		break;
+
+	default:
+		cerr << "[WARNING] Unknown status" << endl;
+	}
 }
 
 void Console::displayOptionsMenu() {
@@ -65,6 +88,7 @@ void Console::displayOptionsMenu() {
 		cerr << "[WARNING] Unknown status" << endl;
 	}
 }
+
 
 void Console::getUserInput() {
 	string userInput = "";
@@ -93,6 +117,10 @@ void Console::getUserInput() {
 		mainMenuInput(uinput);
 		break;
 
+	case LOCAL_PARTY:
+		localGameInput(uinput);
+		break;
+
 	case ON_OPTIONS_MENU:
 		optionsMenuInput(uinput);
 		break;
@@ -109,7 +137,7 @@ void Console::mainMenuInput(int userInput) {
 		return;
 
 	case 1:
-		m_game->setGameStatus(IG_LOCAL);
+		m_game->setGameStatus(LOCAL_PARTY);
 		break;
 
 	case 2:
@@ -123,6 +151,33 @@ void Console::mainMenuInput(int userInput) {
 	default:
 		cout << m_tr->stdTranslate("console:global:error") << endl;
 		break;
+	}
+}
+
+void Console::localGameInput(int userInput) {
+	switch(m_game->gameSubStatus()) {
+	case LOCAL_PARTY:
+		if(userInput == 0)
+			m_game->setGameStatus(ON_MAIN_MENU);
+		else if(userInput == 1)
+			if(m_game->board()->exists()) {
+				cerr << "[WARNING] A board already exists" << endl;
+				m_game->setGameStatus(LOCAL_PARTY);
+			} else {
+				cout << m_tr->qTranslate("console:local:generating", true).arg(m_game->board()->width()).arg(m_game->board()->height()).toStdString() << endl;
+				m_game->board()->generate();
+				m_game->setGameStatus(LOCAL_IN_GAME);
+			}
+		else
+			cout << m_tr->stdTranslate("console:global:error") << endl;
+			m_game->setGameStatus(LOCAL_PARTY);
+		break;
+
+	case LOCAL_IN_GAME:
+		break;
+
+	default:
+		cerr << "[WARNING] Unknown status" << endl;
 	}
 }
 
@@ -160,4 +215,34 @@ void Console::optionsMenuInput(int userInput) {
 	default:
 		cerr << "[WARNING] Unknown status" << endl;
 	}
+}
+
+void Console::displayParty(Board* board) {
+	cout << endl;
+	cout << m_tr->qTranslate("console:local:round", true).arg(board->round()).toStdString() << endl;
+
+	cout << "   ";
+	for(int i=1; i<=board->width(); i++)
+		cout << i << " ";
+	cout << endl;
+
+	cout << "  +";
+	for(int i=2; i<=board->width(); i++)
+		cout << "--";
+	cout << "-+" << endl;
+
+	for(int i=1; i<=board->height(); i++) {
+		cout << " " << i << "|";
+		for(int j=0; j<board->width() - 1; j++)
+			cout << board->boxes()[j][i-1] << " ";
+
+		cout << board->boxes()[board->width() - 1][i-1] << "|" << endl;
+	}
+
+	cout << "  +";
+	for(int i=2; i<=board->width(); i++)
+		cout << "--";
+	cout << "-+" << endl << endl;
+
+	cout << m_tr->qTranslate("console:local:playing", true).arg(board->currentPlayer()).toStdString() << endl;
 }

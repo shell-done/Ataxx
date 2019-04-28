@@ -59,9 +59,10 @@ e_gameStatus Game::gameSubSubStatus() const {
 }
 
 void Game::setGameStatus(const e_gameStatus& status) {
-	if(m_gameStatus == status)
-		return;
-
 	m_gameStatus = status;
 	update();
+}
+
+Board* Game::board() {
+	return &m_board;
 }
