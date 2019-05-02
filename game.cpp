@@ -4,6 +4,7 @@ using namespace std;
 
 Game::Game(const QMap<QString, QString>& arguments, QObject *parent) : QObject(parent) {
 	m_translator = new Translator(DIR_LANGUAGES);
+	m_textures = nullptr;
 
 	if(arguments.value("mode", "console") == "mixed")
 		m_displayMode = MIXED;
@@ -11,6 +12,9 @@ Game::Game(const QMap<QString, QString>& arguments, QObject *parent) : QObject(p
 		m_displayMode = GRAPHIC;
 	else
 		m_displayMode = CONSOLE;
+
+	if(m_displayMode == GRAPHIC || m_displayMode == MIXED)
+		m_textures = new Textures(DIR_TEXTURES);
 
 	m_gameStatus = ON_MAIN_MENU;
 }
@@ -35,6 +39,10 @@ void Game::update() {
 
 Translator* Game::tr() const {
 	return m_translator;
+}
+
+Textures* Game::textures() const {
+	return m_textures;
 }
 
 e_displayMode Game::displayMode() const {

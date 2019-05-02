@@ -4,6 +4,7 @@
 #include <QObject>
 #include "core.h"
 #include "translator.h"
+#include "textures.h"
 #include "board.h"
 
 class Game : public QObject {
@@ -15,6 +16,7 @@ public:
 	void update();
 
 	Translator* tr() const;
+	Textures* textures() const;
 	e_displayMode displayMode() const;
 
 	e_gameStatus gameStatus() const;
@@ -26,6 +28,7 @@ public:
 
 private:
 	Translator* m_translator;
+	Textures* m_textures;
 	e_displayMode m_displayMode;
 
 	e_gameStatus m_gameStatus;

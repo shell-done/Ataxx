@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Sukyan
+TARGET = Ataxx
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -31,12 +31,18 @@ SOURCES += \
     console.cpp \
     game.cpp \
     main.cpp \
+    mainmenu.cpp \
     modular_functions.cpp \
-    translator.cpp
+    textures.cpp \
+    translator.cpp \
+    window.cpp
 
 HEADERS += \
     board.h \
     console.h \
     core.h \
     game.h \
-    translator.h
+    mainmenu.h \
+    textures.h \
+    translator.h \
+    window.h
