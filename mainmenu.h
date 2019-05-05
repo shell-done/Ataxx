@@ -2,12 +2,35 @@
 #define MAINMENU_H
 
 #include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsPixmapItem>
+#include "game.h"
 
 class MainMenu : public QGraphicsScene {
 	Q_OBJECT
 
 public:
-	MainMenu(int width, int height, QObject* parent);
+	MainMenu(int width, int height, Game* game, QObject* parent);
+
+protected:
+	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+
+private:
+	int mouseHoverText(const QPoint& mousePos);
+
+	Game* m_game;
+	Textures* m_textures;
+	Translator* m_tr;
+
+	QGraphicsPixmapItem* m_background;
+	QGraphicsPixmapItem* m_selector;
+	QGraphicsTextItem* m_texts[5];
+
+	int m_menuIdx;
+
+public slots:
+	void updateTextures();
+	void updateText();
 };
 
 #endif // MAINMENU_H

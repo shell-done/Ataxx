@@ -7,6 +7,8 @@
 #include <QColor>
 #include <QStringList>
 #include <QTextStream>
+#include <QPixmap>
+#include <QFont>
 #include <iostream>
 
 typedef struct s_textures_pack {
@@ -22,7 +24,10 @@ public:
 
 	QList<s_textures_pack> getPackList() const;
 	bool useAccents() const;
+	QColor primaryColor() const;
 
+	QPixmap loadPixmap(QString imagePath) const;
+	QFont loadFont(int pointSize) const;
 
 private:
 	static const QString defaultTexturesPack;
@@ -37,6 +42,7 @@ private:
 	QString m_description;
 	bool m_accents;
 	QColor m_primaryColor;
+	QString m_fontName;
 
 signals:
 	void updateTextures();

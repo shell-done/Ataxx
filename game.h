@@ -7,6 +7,8 @@
 #include "textures.h"
 #include "board.h"
 
+#include <QDebug> //TO DELETE LATER : DEBUG ONLY
+
 class Game : public QObject {
 	Q_OBJECT
 

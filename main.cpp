@@ -4,6 +4,7 @@
 #include "window.h"
 
 #include <iostream>
+#include <QPushButton>
 
 int main(int argc, char** argv) {
 	QMap<QString, QString> arguments;

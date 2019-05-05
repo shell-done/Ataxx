@@ -14,6 +14,7 @@ public:
 
 	void setLang(QString lang);
 	QString qTranslate(const char* string, bool replaceSpecialChars = false);
+	QString qTranslate(const QString& string, bool replaceSpecialChars = false);
 	std::string stdTranslate(const char* string);
 
 	const QStringList getAvailableLanguages(bool consoleMode = false) const;

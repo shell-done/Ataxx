@@ -27,6 +27,10 @@ Textures::Textures(QString textFolder, QObject *parent) : QObject(parent), m_tex
 				textPackConfigFile.close();
 				continue;
 			}
+			if(m_texturesAvailable.keys().contains(packName)) {
+				textPackConfigFile.close();
+				continue;
+			}
 			m_texturesAvailable.insert(packName, texturesPackFolder);
 
 			if(packName == defaultTexturesPack)
@@ -73,6 +77,7 @@ bool Textures::loadPack() {
 		m_description = "No description available";
 		m_accents = false;
 		m_primaryColor = QColor(255, 255, 255);
+		m_fontName = "";
 
 		QTextStream in(&textPackConfigFile);
 		in.readLine();
@@ -86,6 +91,9 @@ bool Textures::loadPack() {
 
 			if(data[0] == "description")
 				m_description = data[1];
+
+			if(data[0] == "font")
+				m_fontName = data[1];
 
 			if(data[0] == "use_accents") {
 				if(data[1] == "true")
@@ -122,4 +130,25 @@ bool Textures::loadPack() {
 
 QList<s_textures_pack> Textures::getPackList() const {
 	return m_texturesList;
+}
+
+bool Textures::useAccents() const {
+	return m_accents;
+}
+
+QColor Textures::primaryColor() const {
+	return m_primaryColor;
+}
+
+QPixmap Textures::loadPixmap(QString path) const {
+	QPixmap pixmap(m_texturesFolder.path() + "/" + m_currentTexturesPacks + "/" + path);
+
+	if(pixmap.isNull())
+		cout << "test" << endl;
+
+	return pixmap;
+}
+
+QFont Textures::loadFont(int pointSize) const {
+	return QFont(m_fontName, pointSize);
 }

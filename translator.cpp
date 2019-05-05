@@ -106,6 +106,10 @@ QString Translator::qTranslate(const char* string, bool replaceSpeChars) {
 	return res;
 }
 
+QString Translator::qTranslate(const QString &string, bool replaceSpecialChars) {
+	return qTranslate(string.toStdString().c_str(), replaceSpecialChars);
+}
+
 std::string Translator::stdTranslate(const char *string) {
 	QString qstr = qTranslate(string);
 	if(qstr == "")
