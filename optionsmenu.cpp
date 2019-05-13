@@ -4,12 +4,8 @@ const int OptionsMenu::topTitleY = 220;
 const int OptionsMenu::topTextY = 320;
 const int OptionsMenu::margin = 330;
 
-OptionsMenu::OptionsMenu(int width, int height, Game* game, QObject* parent) : QGraphicsScene (parent) {
+OptionsMenu::OptionsMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent) {
 	setSceneRect(0, 0, width, height);
-
-	m_game = game;
-	m_tr = game->tr();
-	m_textures = game->textures();
 
 	m_background = nullptr;
 	m_title = nullptr;
@@ -18,8 +14,6 @@ OptionsMenu::OptionsMenu(int width, int height, Game* game, QObject* parent) : Q
 		m_language[i] = nullptr;
 	}
 	m_return = nullptr;
-
-	m_menuIdx = 0;
 
 	updateTextures();
 	updateText();
@@ -41,28 +35,6 @@ void OptionsMenu::updateTextures() {
 	}
 
 	m_selector->hide();
-}
-
-void OptionsMenu::generateText(QGraphicsTextItem*& item, QString str, int fontSize, QColor color) {
-	if(item)
-		item->setPlainText(m_tr->qTranslate(str, m_textures->useAccents()));
-	else
-		item = addText(m_tr->qTranslate(str, m_textures->useAccents()));
-
-	item->setFont(m_textures->loadFont(fontSize));
-	item->setDefaultTextColor(color);
-}
-
-void OptionsMenu::hCenter(QGraphicsItem *item, int y) {
-	item->setPos((width() - item->boundingRect().width())/2, y);
-}
-
-void OptionsMenu::alignLeft(QGraphicsItem* item, int x, int y) {
-	item->setPos(x, y);
-}
-
-void OptionsMenu::alignRight(QGraphicsItem* item, int x, int y) {
-	item->setPos(width() - x - item->boundingRect().width(), y);
 }
 
 void OptionsMenu::displayArrows(QGraphicsItem* item, int margin) {

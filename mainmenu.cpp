@@ -2,12 +2,8 @@
 
 const int MainMenu::topTextY = 290;
 
-MainMenu::MainMenu(int width, int height, Game* game, QObject* parent) : QGraphicsScene(parent), m_game(game) {
+MainMenu::MainMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent) {
 	setSceneRect(0, 0, width, height);
-
-	m_menuIdx = 0;
-	m_textures = m_game->textures();
-	m_tr = m_game->tr();
 
 	m_background = nullptr;
 	m_selector = nullptr;
@@ -33,14 +29,8 @@ void MainMenu::updateText() {
 	menuText << "local" << "online" << "textures" << "options" << "quit";
 
 	for(int i=0; i<5; i++) {
-		if(m_texts[i])
-			m_texts[i]->setPlainText(m_tr->qTranslate("graphic:menu:main:" + menuText[i], m_textures->useAccents()));
-		else
-			m_texts[i] = addText(m_tr->qTranslate("graphic:menu:main:" + menuText[i], m_textures->useAccents()));
-
-		m_texts[i]->setFont(m_textures->loadFont(50));
-		m_texts[i]->setDefaultTextColor(m_textures->primaryColor());
-		m_texts[i]->setPos((width() - m_texts[i]->boundingRect().width())/2, topTextY + 75*i);
+		generateText(m_texts[i], "graphic:menu:main:" + menuText[i], 50, m_textures->primaryColor());
+		hCenter(m_texts[i], topTextY + 75*i);
 	}
 
 	m_texts[m_menuIdx]->setDefaultTextColor(m_textures->secondaryColor());

@@ -4,9 +4,10 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
+#include "menu.h"
 #include "game.h"
 
-class MainMenu : public QGraphicsScene {
+class MainMenu : public Menu {
 	Q_OBJECT
 
 public:
@@ -24,15 +25,9 @@ private:
 	void updateTextures();
 	void updateText();
 
-	Game* m_game;
-	Textures* m_textures;
-	Translator* m_tr;
-
 	QGraphicsPixmapItem* m_background;
 	QGraphicsPixmapItem* m_selector;
 	QGraphicsTextItem* m_texts[5];
-
-	int m_menuIdx;
 
 public slots:
 	void update();

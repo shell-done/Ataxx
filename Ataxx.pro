@@ -44,6 +44,7 @@ HEADERS += \
     core.h \
     game.h \
     mainmenu.h \
+    menu.h \
     optionsmenu.h \
     textures.h \
     translator.h \
