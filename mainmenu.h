@@ -14,9 +14,15 @@ public:
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
+	void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
 private:
+	static const int topTextY;
+
 	int mouseHoverText(const QPoint& mousePos);
+
+	void updateTextures();
+	void updateText();
 
 	Game* m_game;
 	Textures* m_textures;
@@ -29,8 +35,7 @@ private:
 	int m_menuIdx;
 
 public slots:
-	void updateTextures();
-	void updateText();
+	void update();
 };
 
 #endif // MAINMENU_H

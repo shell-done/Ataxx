@@ -66,6 +66,12 @@ bool Translator::loadLang() {
 	return false;
 }
 
+QString Translator::currentLanguage(bool useAccents) {
+	if(useAccents)
+		return m_currentLanguage;
+
+	return replaceSpecialChars(m_currentLanguage);
+}
 
 void Translator::setLang(QString lang) {
 	QString prevLang = m_currentLanguage;
@@ -90,7 +96,7 @@ void Translator::setLang(QString lang) {
 		m_currentLanguage = prevLang;
 		cerr << QString("[WARNING] Can't read language file : %1").arg(lang).toStdString() << endl;
 	} else {
-		cout << QString("%1 %2").arg(qTranslate("console:options:languageSet", true)).arg(replaceSpecialChars(m_currentLanguage)).toStdString() << endl;
+		//cout << QString("%1 %2").arg(qTranslate("console:options:languageSet", true)).arg(replaceSpecialChars(m_currentLanguage)).toStdString() << endl;
 	}
 }
 
@@ -120,10 +126,31 @@ std::string Translator::stdTranslate(const char *string) {
 	return qstr.toStdString();
 }
 
-const QStringList Translator::getAvailableLanguages(bool consoleMode) const {
+void Translator::setNextLang() {
+	if(availableLanguages().size() < 2)
+		return;
+
+	QString nextLang = availableLanguages()[(availableLanguages().indexOf(m_currentLanguage) + 1)%availableLanguages().size()];
+	setLang(nextLang);
+}
+
+void Translator::setPrevLang() {
+	if(availableLanguages().size() < 2)
+		return;
+
+	int idx = availableLanguages().indexOf(m_currentLanguage);
+	if(idx > 0)
+		idx--;
+	else
+		idx = availableLanguages().size() - 1;
+
+	setLang(availableLanguages()[idx]);
+}
+
+const QStringList Translator::availableLanguages(bool useAccents) const {
 	QStringList list = m_languagesAvailable.keys();
 
-	if(consoleMode)
+	if(!useAccents)
 		for(QString& str: list)
 			str = replaceSpecialChars(str);
 

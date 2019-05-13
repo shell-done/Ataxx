@@ -26,6 +26,9 @@ public:
 	e_gameStatus gameSubSubStatus() const;
 	void setGameStatus(const e_gameStatus& gameStatus);
 
+	QString volume();
+	void addVolume(int volume);
+
 	Board* board();
 
 private:
@@ -34,6 +37,7 @@ private:
 	e_displayMode m_displayMode;
 
 	e_gameStatus m_gameStatus;
+	int m_volume;
 
 	Board m_board;
 

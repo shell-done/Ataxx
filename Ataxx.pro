@@ -24,7 +24,7 @@ DEFINES += QT_SCALE_FACTOR
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 CONFIG += c++11
-#CONFIG += console
+CONFIG += console
 
 SOURCES += \
     board.cpp \
@@ -33,6 +33,7 @@ SOURCES += \
     main.cpp \
     mainmenu.cpp \
     modular_functions.cpp \
+    optionsmenu.cpp \
     textures.cpp \
     translator.cpp \
     window.cpp
@@ -43,6 +44,7 @@ HEADERS += \
     core.h \
     game.h \
     mainmenu.h \
+    optionsmenu.h \
     textures.h \
     translator.h \
     window.h

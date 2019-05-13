@@ -82,8 +82,8 @@ void Console::displayOptionsMenu() {
 
 	case ON_LANGUAGES_MENU:
 		cout << m_tr->stdTranslate("console:options:languagesAvailable") << endl;
-		for(int i=0; i<m_tr->getAvailableLanguages(true).size(); i++)
-			cout << QString("%1. %2").arg(i+1).arg(m_tr->getAvailableLanguages(true)[i]).toStdString() << endl;
+		for(int i=0; i<m_tr->availableLanguages(false).size(); i++)
+			cout << QString("%1. %2").arg(i+1).arg(m_tr->availableLanguages(false)[i]).toStdString() << endl;
 
 		cout << m_tr->stdTranslate("console:menu:return") << endl;
 		break;
@@ -203,8 +203,8 @@ void Console::optionsMenuInput(int userInput) {
 			m_game->setGameStatus(ON_OPTIONS_MENU);
 			break;
 		}
-		if(userInput >= 1 && userInput <= m_tr->getAvailableLanguages().size()) {
-			m_tr->setLang(m_tr->getAvailableLanguages()[userInput - 1]);
+		if(userInput >= 1 && userInput <= m_tr->availableLanguages().size()) {
+			m_tr->setLang(m_tr->availableLanguages()[userInput - 1]);
 			m_game->setGameStatus(ON_OPTIONS_MENU);
 		} else {
 			cout << m_tr->stdTranslate("console:global:error") << endl;

@@ -17,6 +17,7 @@ Game::Game(const QMap<QString, QString>& arguments, QObject *parent) : QObject(p
 		m_textures = new Textures(DIR_TEXTURES);
 
 	m_gameStatus = ON_MAIN_MENU;
+	m_volume = 75;
 }
 
 void Game::update() {
@@ -72,6 +73,15 @@ void Game::setGameStatus(const e_gameStatus& status) {
 
 	if(m_displayMode != CONSOLE)
 		update();
+}
+
+QString Game::volume() {
+	return QString::number(m_volume).rightJustified(3, ' ');
+}
+
+void Game::addVolume(int v) {
+	if(m_volume + v >= 0 && m_volume + v <= 100)
+		m_volume += v;
 }
 
 Board* Game::board() {

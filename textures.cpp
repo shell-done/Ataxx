@@ -92,8 +92,12 @@ bool Textures::loadPack() {
 			if(data[0] == "description")
 				m_description = data[1];
 
-			if(data[0] == "font")
-				m_fontName = data[1];
+			if(data[0] == "font") {
+				data.takeFirst();
+
+				QString font = data.join(" ");
+				m_fontName = font;
+			}
 
 			if(data[0] == "use_accents") {
 				if(data[1] == "true")
@@ -102,23 +106,11 @@ bool Textures::loadPack() {
 					m_accents = false;
 			}
 
-			if(data[0] == "primary_color") {
-				QStringList rgb = data[1].split(",");
-				bool ok;
-				bool rgbOk = true;
-				int components[3];
+			if(data[0] == "primary_color")
+				m_primaryColor = loadColor(data[1]);
 
-				for(int i=0; i<3; i++) {
-					components[i] = rgb[i].toInt(&ok);
-					if(!ok || components[i] < 0 || components[i] > 255)
-						rgbOk = false;
-				}
-
-				if(rgbOk)
-					m_primaryColor = QColor(components[0], components[1], components[2]);
-				else
-					m_primaryColor = QColor(255, 255, 255);
-			}
+			if(data[0] == "secondary_color")
+				m_secondaryColor = loadColor(data[1]);
 		}
 
 		textPackConfigFile.close();
@@ -126,6 +118,28 @@ bool Textures::loadPack() {
 	}
 
 	return false;
+}
+
+QColor Textures::loadColor(const QString &str) {
+	QColor color;
+
+	QStringList rgb = str.split(",");
+	bool ok;
+	bool rgbOk = true;
+	int components[3];
+
+	for(int i=0; i<3; i++) {
+		components[i] = rgb[i].toInt(&ok);
+		if(!ok || components[i] < 0 || components[i] > 255)
+			rgbOk = false;
+	}
+
+	if(rgbOk)
+		color = QColor(components[0], components[1], components[2]);
+	else
+		color = QColor(255, 255, 255);
+
+	return color;
 }
 
 QList<s_textures_pack> Textures::getPackList() const {
@@ -140,13 +154,21 @@ QColor Textures::primaryColor() const {
 	return m_primaryColor;
 }
 
+QColor Textures::secondaryColor() const {
+	return m_secondaryColor;
+}
+
 QPixmap Textures::loadPixmap(QString path) const {
 	QPixmap pixmap(m_texturesFolder.path() + "/" + m_currentTexturesPacks + "/" + path);
 
 	if(pixmap.isNull())
-		cout << "test" << endl;
+		cerr << "Null pixmap : " << path.toStdString() << endl;
 
 	return pixmap;
+}
+
+QPixmap Textures::loadRotatePixmap(QString imagePath, int angle) const {
+	return loadPixmap(imagePath).transformed(QMatrix().rotate(angle));
 }
 
 QFont Textures::loadFont(int pointSize) const {
