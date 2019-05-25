@@ -44,6 +44,13 @@ public:
 		item->setPos(width() - x - item->boundingRect().width(), y);
 	}
 
+	void adjustRectangles(QGraphicsItem* item, QGraphicsItem* ref) {
+		int x = ref->pos().toPoint().x() + static_cast<int>(qAbs(item->boundingRect().width() - ref->boundingRect().width())/2);
+		int y = ref->pos().toPoint().y() + static_cast<int>(qAbs(item->boundingRect().height() - ref->boundingRect().height())/2);
+
+		item->setPos(x,y);
+	}
+
 
 protected:
 	Game* m_game;

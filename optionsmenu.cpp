@@ -5,8 +5,6 @@ const int OptionsMenu::topTextY = 320;
 const int OptionsMenu::margin = 330;
 
 OptionsMenu::OptionsMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent) {
-	setSceneRect(0, 0, width, height);
-
 	m_background = nullptr;
 	m_title = nullptr;
 	for(int i=0; i<2; i++) {
@@ -18,7 +16,6 @@ OptionsMenu::OptionsMenu(int width, int height, Game* game, QObject* parent) : M
 	updateTextures();
 	updateText();
 	displayArrows(m_volume[1], 10);
-	hCenter(m_selector, static_cast<int>(m_return->pos().y() + qAbs(m_return->boundingRect().height() - m_selector->boundingRect().height())/2));
 }
 
 void OptionsMenu::updateTextures() {
@@ -65,6 +62,8 @@ void OptionsMenu::updateText() {
 
 	generateText(m_return, "graphic:menu:global:return", 50, m_textures->primaryColor());
 	hCenter(m_return, topTextY + static_cast<int>(75*3.5));
+
+	hCenter(m_selector, static_cast<int>(m_return->pos().y() + qAbs(m_return->boundingRect().height() - m_selector->boundingRect().height())/2));
 }
 
 void OptionsMenu::update() {

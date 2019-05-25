@@ -4,10 +4,10 @@
 
 using namespace std;
 
-const QString Textures::defaultTexturesPack = "Original";
+const QString Textures::defaultTexturesPack = "The Original";
 
 Textures::Textures(QString textFolder, QObject *parent) : QObject(parent), m_texturesFolder(textFolder) {
-	m_currentTexturesPacks = "";
+	m_currentTexturesPack = "";
 	QStringList texturesList = m_texturesFolder.entryList(QDir::Dirs);
 
 	for(const QString& texturesPackFolder : texturesList) {
@@ -18,34 +18,33 @@ Textures::Textures(QString textFolder, QObject *parent) : QObject(parent), m_tex
 			QString line = in.readLine();
 
 			QStringList data = line.split(" = ");
-			if(data[0] != "pack_name") {
+			if(data[0] != "pack_name" || data.size() != 2) {
 				textPackConfigFile.close();
 				continue;
 			}
+
 			QString packName = data[1];
 			if(m_texturesAvailable.keys().contains(packName)) {
 				textPackConfigFile.close();
 				continue;
 			}
-			if(m_texturesAvailable.keys().contains(packName)) {
-				textPackConfigFile.close();
-				continue;
-			}
+
 			m_texturesAvailable.insert(packName, texturesPackFolder);
 
 			if(packName == defaultTexturesPack)
-				m_currentTexturesPacks = packName;
+				m_currentTexturesPack = packName;
 
 			line = in.readLine();
 			data = line.split(" = ");
 
 			QString description;
-			if(data[0] == "description")
+			if(data[0] == "description" && data.size() == 2)
 				description = data[1];
 			else
 				description = "";
 
-			s_textures_pack pack = {packName, description};
+			QImage icon(m_texturesFolder.path() + "/" + texturesPackFolder + "/icon.png");
+			s_textures_pack pack = {packName, description, icon};
 			m_texturesList << pack;
 
 			textPackConfigFile.close();
@@ -53,25 +52,25 @@ Textures::Textures(QString textFolder, QObject *parent) : QObject(parent), m_tex
 	}
 
 	if(m_texturesAvailable.isEmpty()) {
-		m_currentTexturesPacks = "";
+		m_currentTexturesPack = "";
 		cerr << "[WARNING] No textures packs found" << endl;
 		return;
 	}
 
-	if(m_currentTexturesPacks == "") {
-		m_currentTexturesPacks = m_texturesAvailable.firstKey();
+	if(m_currentTexturesPack == "") {
+		m_currentTexturesPack = m_texturesAvailable.firstKey();
 	}
 
 
 	if(!loadPack()) {
-		m_currentTexturesPacks = "";
-		QString error = "[WARNING] Can't read textures pack config file : " + m_currentTexturesPacks;
+		m_currentTexturesPack = "";
+		QString error = "[WARNING] Can't read textures pack config file : " + m_currentTexturesPack;
 		cerr << error.toStdString() << endl;
 	}
 }
 
 bool Textures::loadPack() {
-	QFile textPackConfigFile(m_texturesFolder.path() + "/" + m_currentTexturesPacks + "/pack.conf");
+	QFile textPackConfigFile(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/pack.conf");
 
 	if(textPackConfigFile.open(QIODevice::ReadOnly)) {
 		m_description = "No description available";
@@ -111,6 +110,9 @@ bool Textures::loadPack() {
 
 			if(data[0] == "secondary_color")
 				m_secondaryColor = loadColor(data[1]);
+
+			if(data[0] == "tertiary_color")
+				m_tertiaryColor = loadColor(data[1]);
 		}
 
 		textPackConfigFile.close();
@@ -142,6 +144,49 @@ QColor Textures::loadColor(const QString &str) {
 	return color;
 }
 
+QString Textures::currentTexturePack() const {
+	return m_currentTexturesPack;
+}
+
+int Textures::currentTexturePackIdx() const {
+	for(int i=0; i<m_texturesList.size(); i++)
+		if(m_texturesList[i].name == m_currentTexturesPack)
+			return m_texturesList.size() - i - 1;
+
+	return -1;
+}
+
+void Textures::setTexturePack(QString& name) {
+	if(!m_texturesAvailable.keys().contains(name)) {
+		cerr << "[WARNING] Unknown pack : " << name.toStdString() << endl;
+		return;
+	}
+
+	QString prevPack = m_currentTexturesPack;
+	m_currentTexturesPack = name;
+
+
+	if(!loadPack()) {
+		cerr << "[WARNING] Error while loading pack : " << name.toStdString() << endl;
+		m_currentTexturesPack = prevPack;
+		loadPack();
+	}
+
+	emit updateTextures();
+}
+
+void Textures::setTexturePackIdx(int idx) {
+	if(idx < 0 || idx >= m_texturesList.size()) {
+		cerr << "[WARNING] Textures pack index out of range" << endl;
+		return;
+	}
+
+	if(idx == currentTexturePackIdx())
+		return;
+
+	setTexturePack(m_texturesList[m_texturesList.size() - idx - 1].name);
+}
+
 QList<s_textures_pack> Textures::getPackList() const {
 	return m_texturesList;
 }
@@ -158,8 +203,12 @@ QColor Textures::secondaryColor() const {
 	return m_secondaryColor;
 }
 
+QColor Textures::tertiaryColor() const {
+	return m_tertiaryColor;
+}
+
 QPixmap Textures::loadPixmap(QString path) const {
-	QPixmap pixmap(m_texturesFolder.path() + "/" + m_currentTexturesPacks + "/" + path);
+	QPixmap pixmap(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/" + path);
 
 	if(pixmap.isNull())
 		cerr << "Null pixmap : " << path.toStdString() << endl;

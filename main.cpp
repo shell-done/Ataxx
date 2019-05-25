@@ -18,12 +18,12 @@ int main(int argc, char** argv) {
 
 	Q_UNUSED(console);
 
-	if(arguments["mode"] == "console") {
+	if(game->displayMode() == CONSOLE) {
 		console = new Console(game);
 		game->update();
 
 		return 0;
-	} else if(arguments["mode"] == "graphic") {
+	} else if(game->displayMode() == GRAPHIC) {
 		QApplication app(argc, argv);
 
 		window = new Window(game);

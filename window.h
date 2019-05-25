@@ -5,6 +5,7 @@
 #include <QColor>
 #include "game.h"
 #include "mainmenu.h"
+#include "texturesmenu.h"
 #include "optionsmenu.h"
 
 class Window : public QGraphicsView {
@@ -16,10 +17,9 @@ private:
 	static const int m_width;
 	static const int m_height;
 
-	void changeScene(QGraphicsScene* scene);
-
 	Game* m_game;
 	MainMenu* m_mainMenu;
+	TexturesMenu* m_texturesMenu;
 	OptionsMenu* m_optionsMenu;
 
 

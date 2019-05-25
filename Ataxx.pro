@@ -35,6 +35,7 @@ SOURCES += \
     modular_functions.cpp \
     optionsmenu.cpp \
     textures.cpp \
+    texturesmenu.cpp \
     translator.cpp \
     window.cpp
 
@@ -47,5 +48,6 @@ HEADERS += \
     menu.h \
     optionsmenu.h \
     textures.h \
+    texturesmenu.h \
     translator.h \
     window.h

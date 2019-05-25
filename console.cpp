@@ -223,7 +223,7 @@ void Console::displayParty() {
 	cout << m_tr->qTranslate("console:local:round", true).arg(board->round()).toStdString() << endl;
 	cout << m_tr->stdTranslate("console:local:pawnsLeft");
 
-	QMap<char, int> pawns = board->playerPawns();
+	QMap<char, int> pawns = board->countPawns();
 	for(int i=0; i<pawns.keys().size() - 1; i++) {
 		QString player = m_tr->qTranslate("console:local:player", true);
 		player += "(%2), ";

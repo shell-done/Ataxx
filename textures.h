@@ -15,6 +15,7 @@
 typedef struct s_textures_pack {
 	QString name;
 	QString description;
+	QImage icon;
 } s_textures_pack;
 
 class Textures : public QObject {
@@ -23,10 +24,16 @@ class Textures : public QObject {
 public:
 	Textures(QString texturesPackFolder, QObject *parent = nullptr);
 
+	QString currentTexturePack() const;
+	int currentTexturePackIdx() const;
+	void setTexturePack(QString& name);
+	void setTexturePackIdx(int idx);
+
 	QList<s_textures_pack> getPackList() const;
 	bool useAccents() const;
 	QColor primaryColor() const;
 	QColor secondaryColor() const;
+	QColor tertiaryColor() const;
 
 	QPixmap loadPixmap(QString imagePath) const;
 	QPixmap loadRotatePixmap(QString imagePath, int angle) const;
@@ -42,11 +49,12 @@ private:
 	QMap<QString, QString> m_texturesAvailable;
 	QList<s_textures_pack> m_texturesList;
 
-	QString m_currentTexturesPacks;
+	QString m_currentTexturesPack;
 	QString m_description;
 	bool m_accents;
 	QColor m_primaryColor;
 	QColor m_secondaryColor;
+	QColor m_tertiaryColor;
 	QString m_fontName;
 
 signals:

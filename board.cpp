@@ -21,10 +21,22 @@ void Board::generate() {
 		for(int j=0; j<m_height; j++)
 			m_boxes[i][j] = emptyBoxCharacter;
 
-	setCharacter(QPoint(0, 0), P1Character);
-	setCharacter(QPoint(m_width - 1, m_height - 1), P1Character);
-	setCharacter(QPoint(0, m_height - 1), P2Character);
-	setCharacter(QPoint(m_width - 1, 0), P2Character);
+	placePawns();
+}
+
+void Board::placePawns() {
+	QVector<char> pawns;
+	if(m_playersList.size() == 2)
+		pawns << m_playersList[0] << m_playersList[1] << m_playersList[1] << m_playersList[0];
+	else if(m_playersList.size() == 3)
+		pawns << m_playersList[0] << m_playersList[1] << m_playersList[2] << emptyBoxCharacter;
+	else
+		pawns << m_playersList[0] << m_playersList[1] << m_playersList[2] << m_playersList[3];
+
+	setCharacter(QPoint(0, 0), pawns[0]);
+	setCharacter(QPoint(m_width - 1, 0), pawns[1]);
+	setCharacter(QPoint(0, m_height - 1), pawns[2]);
+	setCharacter(QPoint(m_width - 1, m_height - 1), pawns[3]);
 }
 
 void Board::destroy() {
@@ -34,7 +46,7 @@ void Board::destroy() {
 
 	m_boxes = nullptr;
 	m_round = 1;
-	m_currentPlayer = P1Character;
+	m_currentPlayer = m_playersList[0];
 }
 
 bool Board::exists() {
@@ -67,6 +79,21 @@ void Board::setHeigh(int h) {
 		cerr << "[WARNING] Cannot set height to " << h << ". Height must be between 5 and 15" << endl;
 }
 
+QVector<char> Board::playersList() {
+	return m_playersList;
+}
+
+void Board::setPlayersList(QVector<char> players) {
+	if(players.size() < 2 || players.size() > 4) {
+		cerr << "[WARNING] The number of players must be between 2 and 4" << endl;
+		return;
+	}
+
+	m_playersList.clear();
+	m_playersList = players;
+	m_currentPlayer = players[0];
+}
+
 int Board::round() {
 	return m_round;
 }
@@ -94,6 +121,22 @@ void Board::setCharacter(const QPoint &p, char character) {
 	m_boxes[p.x()][p.y()] = character;
 }
 
+QVector<QPoint> Board::movesAllowed(const QPoint& src) {
+	QVector<QPoint> allowedDest;
+
+	if(at(src) != m_currentPlayer)
+		return allowedDest;
+
+	for(int i=-2; i<=2; i++)
+		for(int j=-2; j<=2; j++) {
+			QPoint dest = src + QPoint(i, j);
+
+			if(moveAllowed(src, dest))
+				allowedDest << dest;
+		}
+
+	return allowedDest;
+}
 
 QPair<QPoint, QPoint> Board::strToPoints(const QStringList& coordinates) {
 	bool ok = true;
@@ -151,28 +194,49 @@ void Board::playMove(const QPoint &origin, const QPoint &dest) {
 	m_round++;
 }
 
-QMap<char, int> Board::playerPawns() {
+QMap<char, int> Board::countPawns() {
 	QMap<char, int> pawns;
+
+	for(char p : m_playersList)
+		pawns[p] = 0;
 
 	for(int i=0; i<m_width; i++)
 		for(int j=0; j<m_height; j++) {
-			int score = pawns.value(at(QPoint(i, j)), 0);
-			score ++;
-			pawns[at(QPoint(i, j))] = score;
-		}
+			char pawnOnBox = at(QPoint(i,j));
+			if(!m_playersList.contains(pawnOnBox))
+				continue;
 
-	for(char pawn : pawns.keys())
-		if(!m_playersList.contains(pawn))
-			pawns.remove(pawn);
+			int currentScore = pawns[pawnOnBox] + 1;
+			pawns[pawnOnBox] = currentScore;
+		}
 
 	return pawns;
 }
 
+bool Board::currentPlayerCanPlay() {
+	for(int i=0; i<m_width; i++)
+		for(int j=0; j<m_height; j++)
+			if(at(QPoint(i, j)) == m_currentPlayer)
+				if(!movesAllowed(QPoint(i, j)).isEmpty())
+					return true;
+
+	return false;
+}
+
 char Board::checkWinner() {
-	QMap<char, int> pawns = playerPawns();
+	if(currentPlayerCanPlay())
+		return emptyBoxCharacter;
 
-	if(pawns.keys().size() == 1)
-		return pawns.firstKey();
+	QMap<char, int> pawns = countPawns();
 
-	return emptyBoxCharacter;
+	char bestChar = m_playersList[0];
+	int bestScore = pawns[bestChar];
+	for(int i=1; i<m_playersList.size(); i++) {
+		if(pawns[m_playersList[i]] > bestScore) {
+			bestChar = m_playersList[i];
+			bestScore = pawns[m_playersList[i]];
+		}
+	}
+
+	return bestChar;
 }

@@ -13,8 +13,10 @@ Game::Game(const QMap<QString, QString>& arguments, QObject *parent) : QObject(p
 	else
 		m_displayMode = CONSOLE;
 
-	if(m_displayMode == GRAPHIC || m_displayMode == MIXED)
+	if(m_displayMode == GRAPHIC || m_displayMode == MIXED) {
 		m_textures = new Textures(DIR_TEXTURES);
+		connect(m_textures, SIGNAL(updateTextures()), this, SLOT(texturesUpdated()));
+	}
 
 	m_gameStatus = ON_MAIN_MENU;
 	m_volume = 75;
@@ -86,4 +88,8 @@ void Game::addVolume(int v) {
 
 Board* Game::board() {
 	return &m_board;
+}
+
+void Game::texturesUpdated() {
+	emit updateWindow();
 }

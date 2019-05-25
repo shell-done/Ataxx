@@ -41,6 +41,9 @@ private:
 
 	Board m_board;
 
+private slots:
+	void texturesUpdated();
+
 signals:
 	void updateConsole();
 	void updateWindow();

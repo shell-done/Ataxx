@@ -10,6 +10,7 @@ public:
 	Board();
 
 	void generate();
+	void placePawns();
 	bool exists();
 	void destroy();
 
@@ -19,6 +20,8 @@ public:
 	void setWidth(int width);
 	int height();
 	void setHeigh(int height);
+	QVector<char> playersList();
+	void setPlayersList(QVector<char> players);
 
 	int round();
 	char currentPlayer();
@@ -27,11 +30,13 @@ public:
 	char at(const QPoint& point);
 	void setCharacter(const QPoint& point, char character);
 
+	QVector<QPoint> movesAllowed(const QPoint& src);
 	QPair<QPoint, QPoint> strToPoints(const QStringList& coordinates);
 	bool moveAllowed(const QPoint& origin, const QPoint& dest);
 	void playMove(const QPoint& origin, const QPoint& dest);
 
-	QMap<char, int> playerPawns();
+	QMap<char, int> countPawns();
+	bool currentPlayerCanPlay();
 	char checkWinner();
 
 	static const char emptyBoxCharacter;

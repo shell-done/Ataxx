@@ -3,8 +3,6 @@
 const int MainMenu::topTextY = 290;
 
 MainMenu::MainMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent) {
-	setSceneRect(0, 0, width, height);
-
 	m_background = nullptr;
 	m_selector = nullptr;
 	for(int i=0; i<5; i++)
@@ -78,6 +76,10 @@ void MainMenu::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 	int hovered = mouseHoverText(event->scenePos().toPoint());
 	if(hovered != -1) {
 		switch(hovered) {
+		case 2:
+			m_game->setGameStatus(ON_TEXTURES_MENU);
+			break;
+
 		case 3:
 			m_game->setGameStatus(ON_OPTIONS_MENU);
 			break;
