@@ -22,6 +22,10 @@ public:
 	void setHeigh(int height);
 	QVector<char> playersList();
 	void setPlayersList(QVector<char> players);
+	void setPlayerChar(int playerIdx, char c);
+	int playersNumber();
+	bool walls();
+	void setWalls(bool);
 
 	int round();
 	char currentPlayer();
@@ -46,6 +50,7 @@ public:
 private:
 	int m_width;
 	int m_height;
+	bool m_createWalls;
 
 	int m_round;
 	char m_currentPlayer;

@@ -1,8 +1,8 @@
 #include "board.h"
 
 const char Board::emptyBoxCharacter = ' ';
-const char Board::P1Character = 'X';
-const char Board::P2Character = 'O';
+const char Board::P1Character = 'A';
+const char Board::P2Character = 'B';
 
 using namespace std;
 
@@ -92,6 +92,27 @@ void Board::setPlayersList(QVector<char> players) {
 	m_playersList.clear();
 	m_playersList = players;
 	m_currentPlayer = players[0];
+}
+
+void Board::setPlayerChar(int playerIdx, char c) {
+	if(m_playersList.contains(c)) {
+		cerr << "[WARNING] This character is already selected" << endl;
+		return;
+	}
+
+	m_playersList[playerIdx] = c;
+}
+
+int Board::playersNumber() {
+	return m_playersList.size();
+}
+
+bool Board::walls() {
+	return m_createWalls;
+}
+
+void Board::setWalls(bool b) {
+	m_createWalls = b;
 }
 
 int Board::round() {

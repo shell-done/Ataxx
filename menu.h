@@ -45,8 +45,8 @@ public:
 	}
 
 	void adjustRectangles(QGraphicsItem* item, QGraphicsItem* ref) {
-		int x = ref->pos().toPoint().x() + static_cast<int>(qAbs(item->boundingRect().width() - ref->boundingRect().width())/2);
-		int y = ref->pos().toPoint().y() + static_cast<int>(qAbs(item->boundingRect().height() - ref->boundingRect().height())/2);
+		int x = ref->pos().toPoint().x() + static_cast<int>(ref->boundingRect().width() - item->boundingRect().width())/2;
+		int y = ref->pos().toPoint().y() + static_cast<int>(ref->boundingRect().height() - item->boundingRect().height())/2;
 
 		item->setPos(x,y);
 	}

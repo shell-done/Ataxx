@@ -5,6 +5,8 @@
 #include <QColor>
 #include "game.h"
 #include "mainmenu.h"
+#include "partyoptionsmenu.h"
+#include "characterselectionmenu.h"
 #include "texturesmenu.h"
 #include "optionsmenu.h"
 
@@ -19,6 +21,8 @@ private:
 
 	Game* m_game;
 	MainMenu* m_mainMenu;
+	PartyOptionsMenu* m_partyOptionsMenu;
+	CharacterSelectionMenu* m_characterSelectionMenu;
 	TexturesMenu* m_texturesMenu;
 	OptionsMenu* m_optionsMenu;
 

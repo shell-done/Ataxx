@@ -77,6 +77,30 @@ void Game::setGameStatus(const e_gameStatus& status) {
 		update();
 }
 
+void Game::addPlayer(int p) {
+	int totPlayers = m_board.playersNumber();
+
+	if(p == 1 && totPlayers < 4) totPlayers++;
+	else if(p == -1 && totPlayers > 2) totPlayers--;
+
+	QVector<char> players;
+	for(int i = 0; i < totPlayers; i++)
+		players << static_cast<char>('A' + i);
+
+	m_board.setPlayersList(players);
+}
+
+void Game::addSize(int s) {
+	if(m_board.width() + s >= 5 && m_board.width() + s <= 15) {
+		m_board.setWidth(m_board.width() + s);
+		m_board.setHeigh(m_board.height() + s);
+	}
+}
+
+void Game::changeWall() {
+	m_board.setWalls(!m_board.walls());
+}
+
 QString Game::volume() {
 	return QString::number(m_volume).rightJustified(3, ' ');
 }

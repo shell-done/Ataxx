@@ -28,12 +28,14 @@ CONFIG += console
 
 SOURCES += \
     board.cpp \
+    characterselectionmenu.cpp \
     console.cpp \
     game.cpp \
     main.cpp \
     mainmenu.cpp \
     modular_functions.cpp \
     optionsmenu.cpp \
+    partyoptionsmenu.cpp \
     textures.cpp \
     texturesmenu.cpp \
     translator.cpp \
@@ -41,12 +43,14 @@ SOURCES += \
 
 HEADERS += \
     board.h \
+    characterselectionmenu.h \
     console.h \
     core.h \
     game.h \
     mainmenu.h \
     menu.h \
     optionsmenu.h \
+    partyoptionsmenu.h \
     textures.h \
     texturesmenu.h \
     translator.h \

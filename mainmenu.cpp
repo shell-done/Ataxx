@@ -76,6 +76,10 @@ void MainMenu::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 	int hovered = mouseHoverText(event->scenePos().toPoint());
 	if(hovered != -1) {
 		switch(hovered) {
+		case 0:
+			m_game->setGameStatus(LOCAL_OPTIONS);
+			break;
+
 		case 2:
 			m_game->setGameStatus(ON_TEXTURES_MENU);
 			break;

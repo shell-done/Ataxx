@@ -62,6 +62,7 @@ void TexturesMenu::createPackItems() {
 	while(!m_packs.isEmpty()) {
 		QGraphicsItemGroup* group = m_packs.takeFirst();
 		removeItem(group);
+		delete group;
 	}
 
 	QList<s_textures_pack> list = m_textures->getPackList();

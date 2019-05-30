@@ -26,6 +26,9 @@ public:
 	e_gameStatus gameSubSubStatus() const;
 	void setGameStatus(const e_gameStatus& gameStatus);
 
+	void addPlayer(int);
+	void addSize(int);
+	void changeWall();
 	QString volume();
 	void addVolume(int volume);
 
