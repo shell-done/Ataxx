@@ -15,27 +15,22 @@ class MainMenu : public Menu {
 public:
 	MainMenu(int width, int height, GameCore* game, QObject* parent);
 
-protected:
-	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
-	void mousePressEvent(QGraphicsSceneMouseEvent* event);
+	void update();
 
 private:
 	static const int topTextY;
 
-	int mouseHoverText(const QPoint& mousePos);
-
+	void placeButtons();
 	void updateTextures();
-	void updateText();
 
 	QGraphicsPixmapItem* m_background;
-	QGraphicsPixmapItem* m_selector;
-	QGraphicsTextItem* m_texts[5];
+	GraphicsButton* m_buttons[5];
 
-	GraphicsButton* m_button;
-
-public slots:
-	void update();
-	void test() {qDebug() << "a";}
+private slots:
+	void localGame();
+	void texturesPacks();
+	void options();
+	void quit();
 };
 
 #endif // MAINMENU_H

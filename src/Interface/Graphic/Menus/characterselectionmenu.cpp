@@ -8,12 +8,6 @@ CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, GameCore* 
 	m_background = nullptr;
 	m_title = nullptr;
 
-	m_return = nullptr;
-	m_start = nullptr;
-
-	for(int i=0; i<2; i++)
-		m_textBox[i] = nullptr;
-
 	for(int i=0; i<4; i++)
 		m_playersGroup[i] = nullptr;
 
@@ -22,6 +16,14 @@ CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, GameCore* 
 
 	m_grid = nullptr;
 
+	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:return", 50);
+	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:next", 50);
+	addItem(m_buttons[0]);
+	addItem(m_buttons[1]);
+
+	connect(m_buttons[0], SIGNAL(clicked()), this, SLOT(back()));
+	connect(m_buttons[1], SIGNAL(clicked()), this, SLOT(next()));
+
 	updateTextures();
 	updateText();
 }
@@ -29,20 +31,10 @@ CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, GameCore* 
 void CharacterSelectionMenu::updateTextures() {
 	if(m_background) {
 		m_background->setPixmap(m_textures->loadPixmap("menus/character_selection_menu.png"));
-		m_selector->setPixmap(m_textures->loadPixmap("menus/half_selector.png"));
-		m_textBox[0]->setRect(m_selector->boundingRect());
-		m_textBox[1]->setRect(m_selector->boundingRect());
+		m_background->setZValue(-1);
 	} else {
 		m_background = addPixmap(m_textures->loadPixmap("menus/character_selection_menu.png"));
-		m_selector = addPixmap(m_textures->loadPixmap("menus/half_selector.png"));
-		m_textBox[0] = addRect(m_selector->boundingRect());
-		m_textBox[1] = addRect(m_selector->boundingRect());
 	}
-
-	for(int i=0; i<2; i++)
-		m_textBox[i]->setPen(QPen(Qt::transparent));
-
-	m_selector->hide();
 
 	createPlayersGroup();
 	createThumbsGroup();
@@ -53,13 +45,16 @@ void CharacterSelectionMenu::updateText() {
 	generateText(m_title, "graphic:local:character:title", 60, m_textures->primaryColor());
 	hCenter(m_title, topTitleY);
 
-	generateText(m_return, "graphic:menu:global:return", 50, m_textures->primaryColor());
-	alignLeft(m_return, margin + 25, 601);
-	adjustRectangles(m_textBox[0], m_return);
+	alignLeft(m_buttons[0], 330, static_cast<int>(height() - 50 - m_buttons[0]->boundingRect().height()));
+	alignRight(m_buttons[1], 330, static_cast<int>(height() - 50 - m_buttons[1]->boundingRect().height()));
+}
 
-	generateText(m_start, "graphic:menu:global:next", 50, m_textures->primaryColor());
-	alignRight(m_start, margin + 25, 601);
-	adjustRectangles(m_textBox[1], m_start);
+void CharacterSelectionMenu::update() {
+	updateTextures();
+	updateText();
+
+	for(int i=0; i<2; i++)
+		m_buttons[i]->update();
 }
 
 void CharacterSelectionMenu::createPlayersGroup() {
@@ -160,16 +155,7 @@ void CharacterSelectionMenu::displayGroups() {
 	hCenter(m_grid, 175);
 }
 
-void CharacterSelectionMenu::update() {
-	updateTextures();
-	updateText();
-}
-
 QPair<int, int> CharacterSelectionMenu::mouseOverElement(const QPoint &mousePos) {
-	for(int i=0; i<2; i++)
-		if(m_textBox[i]->boundingRect().translated(m_textBox[i]->pos()).contains(mousePos))
-			return {0, i};
-
 	for(int i=0; i<4; i++)
 		if(m_playersGroup[i])
 			if(m_playersGroup[i]->boundingRect().translated(m_playersGroup[i]->pos()).contains(mousePos))
@@ -184,6 +170,7 @@ QPair<int, int> CharacterSelectionMenu::mouseOverElement(const QPoint &mousePos)
 }
 
 void CharacterSelectionMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+	QGraphicsScene::mouseMoveEvent(event);
 	QPair<int, int> el = mouseOverElement(event->scenePos().toPoint());
 
 	QVector<int> thumbsSelected;
@@ -210,22 +197,8 @@ void CharacterSelectionMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 		return;
 
 	m_elementHover = el;
-	m_selector->hide();
-	m_start->setDefaultTextColor(m_textures->primaryColor());
-	m_return->setDefaultTextColor(m_textures->primaryColor());
 
-	if(el.first == 0) {
-		if(el.second == 0) {
-			m_return->setDefaultTextColor(m_textures->secondaryColor());
-			m_selector->setPos(m_textBox[0]->pos());
-		} else {
-			m_start->setDefaultTextColor(m_textures->secondaryColor());
-			m_selector->setPos(m_textBox[1]->pos());
-		}
-
-		m_selector->show();
-
-	} else if(el.first == 1 && el.second != m_menuIdx) {
+	if(el.first == 1 && el.second != m_menuIdx) {
 		static_cast<QGraphicsPixmapItem*>(m_playersGroup[el.second]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/character_hover.png"));
 		static_cast<QGraphicsTextItem*>(m_playersGroup[el.second]->childItems()[2])->setDefaultTextColor(m_textures->secondaryColor());
 
@@ -236,6 +209,8 @@ void CharacterSelectionMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void CharacterSelectionMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+	QGraphicsScene::mousePressEvent(event);
+
 	QPair<int, int> el = mouseOverElement(event->scenePos().toPoint());
 	if(el.first == -1)
 		return;
@@ -271,4 +246,12 @@ void CharacterSelectionMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	}
 
 	mouseMoveEvent(event);
+}
+
+void CharacterSelectionMenu::back() {
+	m_game->setGameStatus(LOCAL_OPTIONS);
+}
+
+void CharacterSelectionMenu::next() {
+	m_game->setGameStatus(LOCAL_IN_GAME);
 }

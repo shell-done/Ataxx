@@ -8,6 +8,7 @@ using namespace std;
 
 Board::Board() : m_width(7), m_height(7), m_round(1), m_boxes(nullptr) {
 	m_currentPlayer = P1Character;
+	m_createWalls = false;
 
 	m_playersList << P1Character << P2Character;
 }

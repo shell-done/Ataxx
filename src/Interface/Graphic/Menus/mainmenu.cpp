@@ -4,109 +4,59 @@ const int MainMenu::topTextY = 290;
 
 MainMenu::MainMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
 	m_background = nullptr;
-	m_selector = nullptr;
-	for(int i=0; i<5; i++)
-		m_texts[i] = nullptr;
-
-	m_button = new GraphicsButton(game, "menus/selector.png", "graphic:menu:main:local", 50);
-	m_button->setZValue(10);
-	m_button->setPos(10, 10);
-	addItem(m_button);
-
-	connect(m_button, SIGNAL(clicked()), this, SLOT(test()));
 
 	updateTextures();
-	updateText();
+	placeButtons();
+}
+
+void MainMenu::placeButtons() {
+	QVector<QString> menuText;
+	menuText << "local" << "online" << "textures" << "options" << "quit";
+
+	for(int i=0; i<5; i++) {
+		m_buttons[i] = new GraphicsButton(m_game, "menus/selector.png", "graphic:menu:main:" + menuText[i], 50);
+		addItem(m_buttons[i]);
+		hCenter(m_buttons[i], topTextY + 75*i);
+	}
+
+	m_buttons[1]->setDisabled(true);
+
+	connect(m_buttons[0], SIGNAL(clicked()), this, SLOT(localGame()));
+	connect(m_buttons[2], SIGNAL(clicked()), this, SLOT(texturesPacks()));
+	connect(m_buttons[3], SIGNAL(clicked()), this, SLOT(options()));
+	connect(m_buttons[4], SIGNAL(clicked()), this, SLOT(quit()));
 }
 
 void MainMenu::updateTextures() {
 	if(m_background) {
 		m_background->setPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-		m_selector->setPixmap(m_textures->loadPixmap("menus/selector.png"));
-	} else {
+		m_background->setZValue(-1);
+	} else
 		m_background = addPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-		m_selector = addPixmap(m_textures->loadPixmap("menus/selector.png"));
-	}
-}
-
-void MainMenu::updateText() {
-	QVector<QString> menuText;
-	menuText << "local" << "online" << "textures" << "options" << "quit";
-
-	for(int i=0; i<5; i++) {
-		generateText(m_texts[i], "graphic:menu:main:" + menuText[i], 50, m_textures->primaryColor());
-		hCenter(m_texts[i], topTextY + 75*i);
-	}
-
-	m_texts[m_menuIdx]->setDefaultTextColor(m_textures->secondaryColor());
-	m_selector->setPos((width() - m_selector->boundingRect().width())/2,
-					   m_texts[m_menuIdx]->pos().y() + qAbs(m_texts[m_menuIdx]->boundingRect().height() - m_selector->boundingRect().height())/2);
 }
 
 void MainMenu::update() {
 	updateTextures();
-	updateText();
-}
-
-int MainMenu::mouseHoverText(const QPoint &mousePos) {
-	int hovered = -1;
-
-	QRect rect(static_cast<int>((width() - m_selector->boundingRect().width())/2),
-			   topTextY,
-			   m_selector->boundingRect().toRect().width(),
-			   m_selector->boundingRect().toRect().height());
 
 	for(int i=0; i<5; i++) {
-		if(rect.contains(mousePos))
-			hovered = i;
-
-		rect.translate(0, 75);
+		m_buttons[i]->update();
+		hCenter(m_buttons[i], topTextY + 75*i);
 	}
-
-	return hovered;
 }
 
-void MainMenu::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
-	int hovered = mouseHoverText(event->scenePos().toPoint());
-	if(hovered != -1)
-		m_menuIdx = hovered;
 
-	for(QGraphicsTextItem* item : m_texts)
-		item->setDefaultTextColor(m_textures->primaryColor());
-	m_texts[m_menuIdx]->setDefaultTextColor(m_textures->secondaryColor());
-
-	m_selector->setPos((width() - m_selector->boundingRect().width())/2,
-					   m_texts[m_menuIdx]->pos().y() + qAbs(m_texts[m_menuIdx]->boundingRect().height() - m_selector->boundingRect().height())/2);
-
-	QGraphicsScene::mouseMoveEvent(event);
+void MainMenu::localGame() {
+	m_game->setGameStatus(LOCAL_OPTIONS);
 }
 
-void MainMenu::mousePressEvent(QGraphicsSceneMouseEvent* event) {
-	int hovered = mouseHoverText(event->scenePos().toPoint());
-	if(hovered != -1) {
-		switch(hovered) {
-		case 0:
-			m_game->setGameStatus(LOCAL_OPTIONS);
-			break;
+void MainMenu::texturesPacks() {
+	m_game->setGameStatus(ON_TEXTURES_MENU);
+}
 
-		case 2:
-			m_game->setGameStatus(ON_TEXTURES_MENU);
-			break;
+void MainMenu::options() {
+	m_game->setGameStatus(ON_OPTIONS_MENU);
+}
 
-		case 3:
-			m_game->setGameStatus(ON_OPTIONS_MENU);
-			break;
-
-		case 4:
-			m_game->setGameStatus(QUIT);
-			break;
-
-		default:
-			break;
-		}
-
-		m_game->update();
-	} else {
-		QGraphicsScene::mousePressEvent(event);
-	}
+void MainMenu::quit() {
+	m_game->setGameStatus(QUIT);
 }

@@ -5,6 +5,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
 #include "menu.h"
+#include "src/Interface/Graphic/Items/graphicstextcarousel.h"
+#include "src/Interface/Graphic/Items/graphicsbutton.h"
 #include "src/Core/gamecore.h"
 
 class PartyOptionsMenu : public Menu {
@@ -13,37 +15,30 @@ class PartyOptionsMenu : public Menu {
 public:
 	PartyOptionsMenu(int width, int height, GameCore* game, QObject* parent);
 
+	void update();
+
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
-	void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
 private:
 	static const int topTitleY;
 	static const int topTextY;
-	static const int margin;
-
-	void displayArrows(QGraphicsItem* item, int margin);
-
-	int mouseHoverText(const QPoint& mousePos);
-	int mouseHoverArrow(const QPoint& mousePos);
 
 	void updateTextures();
 	void updateText();
 
 	QGraphicsPixmapItem* m_background;
-	QGraphicsPixmapItem* m_selector;
-	QGraphicsPixmapItem* m_arrows[2];
 	QGraphicsTextItem* m_title;
-	QGraphicsTextItem* m_players[2];
-	QGraphicsTextItem* m_mapSize[2];
-	QGraphicsTextItem* m_walls[2];
 
-	QGraphicsRectItem* m_textBox[2];
-	QGraphicsTextItem* m_return;
-	QGraphicsTextItem* m_next;
+	GraphicsTextCarousel* m_carousels[3];
+	GraphicsButton* m_buttons[2];
 
-public slots:
-	void update();
+private slots:
+	void playersNumberChanged(e_carouselArrow);
+	void mapSizeChanged(e_carouselArrow);
+	void wallsChanged(e_carouselArrow);
+	void back();
+	void next();
 };
 
 #endif // PARTYOPTIONSMENU_H

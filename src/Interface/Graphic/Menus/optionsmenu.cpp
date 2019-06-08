@@ -1,159 +1,84 @@
 #include "optionsmenu.h"
 
 const int OptionsMenu::topTitleY = 220;
-const int OptionsMenu::topTextY = 320;
-const int OptionsMenu::margin = 330;
+const int OptionsMenu::topTextY = 340;
 
 OptionsMenu::OptionsMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
 	m_background = nullptr;
 	m_title = nullptr;
-	for(int i=0; i<2; i++) {
-		m_volume[i] = nullptr;
-		m_language[i] = nullptr;
-	}
 	m_return = nullptr;
+
+	m_carousels[0] = new GraphicsTextCarousel(game, QSize(700, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:menu:options:sound", m_game->volume(), 50);
+	m_carousels[1] = new GraphicsTextCarousel(game, QSize(700, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:menu:options:language", m_tr->currentLanguage(m_textures->useAccents()), 50);
+	addItem(m_carousels[0]);
+	addItem(m_carousels[1]);
+
+	m_return = new GraphicsButton(game, "menus/selector.png", "graphic:menu:global:return", 50);
+	addItem(m_return);
+
+	connect(m_carousels[0], SIGNAL(arrowClicked(e_carouselArrow)), this, SLOT(soundCarouselChanged(e_carouselArrow)));
+	connect(m_carousels[1], SIGNAL(arrowClicked(e_carouselArrow)), this, SLOT(langCarouselChanged(e_carouselArrow)));
+	connect(m_return, SIGNAL(clicked()), this, SLOT(back()));
 
 	updateTextures();
 	updateText();
-	displayArrows(m_volume[1], 10);
 }
 
 void OptionsMenu::updateTextures() {
 	if(m_background) {
 		m_background->setPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-		m_selector->setPixmap(m_textures->loadPixmap("menus/selector.png"));
-		m_arrows[0]->setPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 90));
-		m_arrows[1]->setPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 270));
+		m_background->setZValue(-1);
 	} else {
 		m_background = addPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-		m_selector = addPixmap(m_textures->loadPixmap("menus/selector.png"));
-		m_arrows[0] = addPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 90));
-		m_arrows[1] = addPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 270));
 	}
-
-	m_selector->hide();
-}
-
-void OptionsMenu::displayArrows(QGraphicsItem* item, int margin) {
-	int y = static_cast<int>(item->y() + qAbs(item->boundingRect().height() - m_arrows[0]->boundingRect().height())/2);
-
-	m_arrows[1]->setPos(item->x() - margin - m_arrows[1]->boundingRect().width(), y);
-	m_arrows[0]->setPos(item->x() + margin + item->boundingRect().width(), y);
-
-	m_arrows[0]->show();
-	m_arrows[1]->show();
 }
 
 void OptionsMenu::updateText() {
 	generateText(m_title, "graphic:menu:options:title", 70, m_textures->primaryColor());
 	hCenter(m_title, topTitleY);
-
-	generateText(m_volume[0], "graphic:menu:options:sound", 50, m_textures->primaryColor());
-	alignLeft(m_volume[0], margin, topTextY);
-
-	generateText(m_volume[1], m_game->volume(), 50, m_textures->primaryColor());
-	alignRight(m_volume[1], margin, topTextY);
-
-	generateText(m_language[0], "graphic:menu:options:language", 50, m_textures->primaryColor());
-	alignLeft(m_language[0], margin, topTextY + 75);
-
-	generateText(m_language[1], m_tr->currentLanguage(m_textures->useAccents()), 50, m_textures->primaryColor());
-	alignRight(m_language[1], margin, topTextY + 75);
-
-	generateText(m_return, "graphic:menu:global:return", 50, m_textures->primaryColor());
-	hCenter(m_return, topTextY + static_cast<int>(75*3.5));
-
-	hCenter(m_selector, static_cast<int>(m_return->pos().y() + qAbs(m_return->boundingRect().height() - m_selector->boundingRect().height())/2));
+	hCenter(m_carousels[0], topTextY);
+	hCenter(m_carousels[1], topTextY + 70);
+	hCenter(m_return, static_cast<int>(height() - 50 - m_return->boundingRect().height()));
 }
 
 void OptionsMenu::update() {
 	updateTextures();
 	updateText();
-}
 
-int OptionsMenu::mouseHoverText(const QPoint &mousePos) {
-	QVector<QGraphicsTextItem**> options;
-	options << m_volume << m_language;
+	for(int i=0; i<2; i++)
+		m_carousels[i]->update();
 
-	for(int i = 0; i<options.size(); i++) {	
-		QGraphicsTextItem** option = options[i];
-
-		QRectF intersec = option[0]->boundingRect().translated(option[0]->pos()).united(option[1]->boundingRect().translated(option[1]->pos()));
-		intersec.translate(-50, 0);
-		intersec.setWidth(intersec.width() + 100);
-
-		if(intersec.contains(mousePos))
-			return i;
-	}
-
-	if(m_selector->boundingRect().translated(m_selector->pos()).contains(mousePos))
-		return 2;
-
-	return -1;
-}
-
-int OptionsMenu::mouseHoverArrow(const QPoint &mousePos) {
-	for(int i=0; i<=1; i++)
-		if(m_arrows[i]->boundingRect().translated(m_arrows[i]->pos()).contains(mousePos))
-			return i;
-
-	return -1;
+	m_return->update();
 }
 
 void OptionsMenu::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
-	int idx = mouseHoverText(event->scenePos().toPoint());
+	for(int i=0; i<2; i++)
+		if(m_carousels[i]->sceneBoundingRect().contains(event->scenePos()))
+			m_carousels[i]->mouseMoveEvent(event);
 
-	if(idx != -1) {
-		m_menuIdx = idx;
-		m_selector->hide();
-		m_return->setDefaultTextColor(m_textures->primaryColor());
-
-		if(idx == 0) {
-			displayArrows(m_volume[1], 10);
-		} else if(idx == 1) {
-			displayArrows(m_language[1], 10);
-		} else if(idx == 2) {
-			m_arrows[0]->hide();
-			m_arrows[1]->hide();
-			m_return->setDefaultTextColor(m_textures->secondaryColor());
-			m_selector->show();
-		}
-	}
-
-	int hovered = mouseHoverArrow(event->scenePos().toPoint());
-	for(int i=0; i<=1; i++)
-		if(i == hovered)
-			m_arrows[i]->setPixmap(m_textures->loadRotatePixmap("menus/arrow_hovered.png", 90 + 180*i));
-		else
-			m_arrows[i]->setPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 90 + 180*i));
+	QGraphicsScene::mouseMoveEvent(event);
 }
 
-void OptionsMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-	int idx = mouseHoverText(event->scenePos().toPoint());
-	if(idx == -1)
-		return;
+void OptionsMenu::soundCarouselChanged(e_carouselArrow arrow) {
+	if(arrow == LEFT)
+		m_game->addVolume(-5);
+	else
+		m_game->addVolume(5);
 
-	int arrowPressed = mouseHoverArrow(event->scenePos().toPoint());
+	m_carousels[0]->setValue(m_game->volume());
+	update();
+}
 
-	m_menuIdx = idx;
-	if(arrowPressed != -1) {
-		if(m_menuIdx == 0) {
-			if(arrowPressed == 0)
-				m_game->addVolume(+5);
-			else
-				m_game->addVolume(-5);
-		} else if(m_menuIdx == 1) {
-			if(arrowPressed == 0)
-				m_tr->setPrevLang();
-			else
-				m_tr->setNextLang();
-		}
+void OptionsMenu::langCarouselChanged(e_carouselArrow arrow) {
+	if(arrow == LEFT)
+		m_tr->setPrevLang();
+	else
+		m_tr->setNextLang();
 
-		m_game->update();
-	}
+	m_carousels[1]->setValue(m_tr->currentLanguage(m_textures->useAccents()));
+	update();
+}
 
-	if(idx == 2)
-		m_game->setGameStatus(ON_MAIN_MENU);
-
-	mouseMoveEvent(event);
+void OptionsMenu::back() {
+	m_game->setGameStatus(ON_MAIN_MENU);
 }

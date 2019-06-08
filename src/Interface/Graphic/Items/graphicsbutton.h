@@ -22,6 +22,7 @@ public:
 	void setDisabled(bool);
 	bool disabled();
 
+protected:
 	void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
 	void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
 	void mousePressEvent(QGraphicsSceneMouseEvent* event);
@@ -32,7 +33,7 @@ private:
 
 	QString m_imgPath;
 
-	QGraphicsPixmapItem* graphicsPixmap;
+	QGraphicsPixmapItem* m_graphicsPixmap;
 	QGraphicsTextItem* m_graphicsLabel;
 	QString m_label;
 	int m_fontSize;

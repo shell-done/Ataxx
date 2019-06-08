@@ -14,12 +14,10 @@ GraphicsButton::GraphicsButton(GameCore* game, QString buttonImg, QString button
 	m_disabled = false;
 	m_clickStart = false;
 
-	graphicsPixmap = new QGraphicsPixmapItem(this);
+	m_graphicsPixmap = new QGraphicsPixmapItem(this);
 
 	m_fontSize = fontSize;
 	m_graphicsLabel = new QGraphicsTextItem(m_tr->qTranslate(m_label, m_textures->useAccents()), this);
-	m_graphicsLabel->setDefaultTextColor(m_textures->primaryColor());
-	m_graphicsLabel->setFont(m_textures->loadFont(m_fontSize));
 
 	setCursor(Qt::PointingHandCursor);
 
@@ -36,15 +34,17 @@ void GraphicsButton::update() {
 	else
 		backgroundPixmap = m_textures->loadPixmap(m_imgPath);
 
-	graphicsPixmap->setPixmap(backgroundPixmap);
+	m_graphicsPixmap->setPixmap(backgroundPixmap);
 
 	m_graphicsLabel->setPlainText(m_tr->qTranslate(m_label, m_textures->useAccents()));
 	m_graphicsLabel->setFont(m_textures->loadFont(m_fontSize));
 
-	if(m_hover)
-		m_graphicsLabel->setDefaultTextColor(m_textures->secondaryColor());
-	else
-		m_graphicsLabel->setDefaultTextColor(m_textures->primaryColor());
+	if(!m_disabled) {
+		if(m_hover)
+			m_graphicsLabel->setDefaultTextColor(m_textures->secondaryColor());
+		else
+			m_graphicsLabel->setDefaultTextColor(m_textures->primaryColor());
+	}
 
 	int x = static_cast<int>((size.width() - m_graphicsLabel->boundingRect().width())/2);
 	int y = static_cast<int>((size.height() - m_graphicsLabel->boundingRect().height())/2);

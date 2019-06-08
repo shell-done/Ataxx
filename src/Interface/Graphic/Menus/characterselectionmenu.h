@@ -7,12 +7,15 @@
 #include <QGraphicsItemGroup>
 #include "menu.h"
 #include "src/Core/gamecore.h"
+#include "src/Interface/Graphic/Items/graphicsbutton.h"
 
 class CharacterSelectionMenu : public Menu {
 	Q_OBJECT
 
 public:
 	CharacterSelectionMenu(int width, int height, GameCore* game, QObject* parent);
+
+	void update();
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
@@ -35,19 +38,17 @@ private:
 	QPair<int, int> m_elementHover;
 
 	QGraphicsPixmapItem* m_background;
-	QGraphicsPixmapItem* m_selector;
 	QGraphicsTextItem* m_title;
 
-	QGraphicsRectItem* m_textBox[2];
-	QGraphicsTextItem* m_return;
-	QGraphicsTextItem* m_start;
+	GraphicsButton* m_buttons[2];
 
 	QGraphicsItemGroup* m_playersGroup[4];
 	QGraphicsItemGroup* m_thumbsGroup[20];
 	QGraphicsItemGroup* m_grid;
 
-public slots:
-	void update();
+private slots:
+	void back();
+	void next();
 };
 
 #endif // CHARACTERSELECTIONMENU_H
