@@ -4,7 +4,7 @@ const int PartyOptionsMenu::topTitleY = 220;
 const int PartyOptionsMenu::topTextY = 320;
 const int PartyOptionsMenu::margin = 330;
 
-PartyOptionsMenu::PartyOptionsMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent) {
+PartyOptionsMenu::PartyOptionsMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
 	m_background = nullptr;
 	m_title = nullptr;
 

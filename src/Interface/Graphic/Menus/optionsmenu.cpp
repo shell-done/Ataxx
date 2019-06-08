@@ -4,7 +4,7 @@ const int OptionsMenu::topTitleY = 220;
 const int OptionsMenu::topTextY = 320;
 const int OptionsMenu::margin = 330;
 
-OptionsMenu::OptionsMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent) {
+OptionsMenu::OptionsMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
 	m_background = nullptr;
 	m_title = nullptr;
 	for(int i=0; i<2; i++) {

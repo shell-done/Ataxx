@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Console::Console(Game* game, QObject *parent) : QObject(parent), m_game(game) {
+Console::Console(GameCore* game, QObject *parent) : QObject(parent), m_game(game) {
 	connect(game, SIGNAL(updateConsole()), this, SLOT(gameUpdate()));
 
 	m_tr = game->tr();
@@ -291,7 +291,7 @@ void Console::playParty() {
 
 	board->playMove(points.first, points.second);
 
-	char winner = board->checkWinner();
+	char winner = board->checkVictory();
 	if(winner != board->emptyBoxCharacter) {
 		displayParty();
 		board->destroy();

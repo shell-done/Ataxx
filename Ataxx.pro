@@ -27,31 +27,35 @@ CONFIG += c++11
 CONFIG += console
 
 SOURCES += \
-    board.cpp \
-    characterselectionmenu.cpp \
-    console.cpp \
-    game.cpp \
     main.cpp \
-    mainmenu.cpp \
-    modular_functions.cpp \
-    optionsmenu.cpp \
-    partyoptionsmenu.cpp \
-    textures.cpp \
-    texturesmenu.cpp \
-    translator.cpp \
-    window.cpp
+    src/Core/board.cpp \
+    src/Core/gamecore.cpp \
+    src/Core/textures.cpp \
+    src/Core/translator.cpp \
+    src/Interface/Console/console.cpp \
+    src/Interface/Graphic/Items/graphicsboarditem.cpp \
+    src/Interface/Graphic/Menus/boardscreen.cpp \
+    src/Interface/Graphic/Menus/characterselectionmenu.cpp \
+    src/Interface/Graphic/Menus/mainmenu.cpp \
+    src/Interface/Graphic/Menus/optionsmenu.cpp \
+    src/Interface/Graphic/Menus/partyoptionsmenu.cpp \
+    src/Interface/Graphic/Menus/texturesmenu.cpp \
+    src/Interface/Graphic/window.cpp \
+    utils.cpp
 
 HEADERS += \
-    board.h \
-    characterselectionmenu.h \
-    console.h \
     core.h \
-    game.h \
-    mainmenu.h \
-    menu.h \
-    optionsmenu.h \
-    partyoptionsmenu.h \
-    textures.h \
-    texturesmenu.h \
-    translator.h \
-    window.h
+    src/Core/board.h \
+    src/Core/gamecore.h \
+    src/Core/textures.h \
+    src/Core/translator.h \
+    src/Interface/Console/console.h \
+    src/Interface/Graphic/Items/graphicsboarditem.h \
+    src/Interface/Graphic/Menus/boardscreen.h \
+    src/Interface/Graphic/Menus/characterselectionmenu.h \
+    src/Interface/Graphic/Menus/mainmenu.h \
+    src/Interface/Graphic/Menus/menu.h \
+    src/Interface/Graphic/Menus/optionsmenu.h \
+    src/Interface/Graphic/Menus/partyoptionsmenu.h \
+    src/Interface/Graphic/Menus/texturesmenu.h \
+    src/Interface/Graphic/window.h \

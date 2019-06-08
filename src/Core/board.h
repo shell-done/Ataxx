@@ -33,15 +33,16 @@ public:
 	bool onGrid(const QPoint& point);
 	char at(const QPoint& point);
 	void setCharacter(const QPoint& point, char character);
+	bool boxBelongByCurrentPlayer(const QPoint& point);
 
-	QVector<QPoint> movesAllowed(const QPoint& src);
 	QPair<QPoint, QPoint> strToPoints(const QStringList& coordinates);
 	bool moveAllowed(const QPoint& origin, const QPoint& dest);
+	QVector<QPoint> movesAllowed(const QPoint& src);
 	void playMove(const QPoint& origin, const QPoint& dest);
 
 	QMap<char, int> countPawns();
 	bool currentPlayerCanPlay();
-	char checkWinner();
+	char checkVictory();
 
 	static const char emptyBoxCharacter;
 	static const char P1Character;

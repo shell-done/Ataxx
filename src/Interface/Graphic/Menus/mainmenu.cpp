@@ -2,7 +2,7 @@
 
 const int MainMenu::topTextY = 290;
 
-MainMenu::MainMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent) {
+MainMenu::MainMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
 	m_background = nullptr;
 	m_selector = nullptr;
 	for(int i=0; i<5; i++)

@@ -3,29 +3,32 @@
 
 #include <QGraphicsView>
 #include <QColor>
-#include "game.h"
-#include "mainmenu.h"
-#include "partyoptionsmenu.h"
-#include "characterselectionmenu.h"
-#include "texturesmenu.h"
-#include "optionsmenu.h"
+#include "src/Core/gamecore.h"
+#include "Menus/mainmenu.h"
+#include "Menus/partyoptionsmenu.h"
+#include "Menus/characterselectionmenu.h"
+#include "Menus/texturesmenu.h"
+#include "Menus/optionsmenu.h"
+#include "Menus/boardscreen.h"
 
 class Window : public QGraphicsView {
 	Q_OBJECT
 public:
-	Window(Game* game);
+	Window(GameCore* game);
 
 private:
 	static const int m_width;
 	static const int m_height;
 
-	Game* m_game;
+	e_gameStatus m_prevStatus;
+
+	GameCore* m_game;
 	MainMenu* m_mainMenu;
 	PartyOptionsMenu* m_partyOptionsMenu;
 	CharacterSelectionMenu* m_characterSelectionMenu;
 	TexturesMenu* m_texturesMenu;
 	OptionsMenu* m_optionsMenu;
-
+	BoardScreen* m_boardScreen;
 
 private slots:
 	void gameUpdate();

@@ -4,13 +4,13 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
-#include "game.h"
+#include "src/Core/gamecore.h"
 
 class Menu : public QGraphicsScene {
 	Q_OBJECT
 
 public:
-	Menu(int width, int height, Game* game, QObject* parent) : QGraphicsScene(parent), m_game(game) {
+	Menu(int width, int height, GameCore* game, QObject* parent) : QGraphicsScene(parent), m_game(game) {
 		setSceneRect(0, 0, width, height);
 
 		m_menuIdx = 0;
@@ -36,6 +36,10 @@ public:
 		item->setPos(x, (height() - item->boundingRect().height())/2);
 	}
 
+	void center(QGraphicsItem* item) {
+		item->setPos((width() - item->boundingRect().width())/2, (height() - item->boundingRect().height())/2);
+	}
+
 	void alignLeft(QGraphicsItem* item, int x, int y) {
 		item->setPos(x, y);
 	}
@@ -53,7 +57,7 @@ public:
 
 
 protected:
-	Game* m_game;
+	GameCore* m_game;
 	Translator* m_tr;
 	Textures* m_textures;
 

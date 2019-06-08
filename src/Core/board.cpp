@@ -62,10 +62,10 @@ int Board::width() {
 }
 
 void Board::setWidth(int w) {
-	if(w >= 5 && w <= 15)
+	if(w >= 5 && w <= 12)
 		m_width = w;
 	else
-		cerr << "[WARNING] Cannot set width to " << w << ". Width must be between 5 and 15" << endl;
+		cerr << "[WARNING] Cannot set width to " << w << ". Width must be between 5 and 12" << endl;
 }
 
 int Board::height() {
@@ -73,10 +73,10 @@ int Board::height() {
 }
 
 void Board::setHeigh(int h) {
-	if(h >= 5 && h <= 15)
+	if(h >= 5 && h <= 12)
 		m_height = h;
 	else
-		cerr << "[WARNING] Cannot set height to " << h << ". Height must be between 5 and 15" << endl;
+		cerr << "[WARNING] Cannot set height to " << h << ". Height must be between 5 and 12" << endl;
 }
 
 QVector<char> Board::playersList() {
@@ -142,21 +142,13 @@ void Board::setCharacter(const QPoint &p, char character) {
 	m_boxes[p.x()][p.y()] = character;
 }
 
-QVector<QPoint> Board::movesAllowed(const QPoint& src) {
-	QVector<QPoint> allowedDest;
+bool Board::boxBelongByCurrentPlayer(const QPoint& p) {
+	Q_ASSERT(onGrid(p));
 
-	if(at(src) != m_currentPlayer)
-		return allowedDest;
+	if(at(p) == m_currentPlayer)
+		return true;
 
-	for(int i=-2; i<=2; i++)
-		for(int j=-2; j<=2; j++) {
-			QPoint dest = src + QPoint(i, j);
-
-			if(moveAllowed(src, dest))
-				allowedDest << dest;
-		}
-
-	return allowedDest;
+	return false;
 }
 
 QPair<QPoint, QPoint> Board::strToPoints(const QStringList& coordinates) {
@@ -191,6 +183,23 @@ bool Board::moveAllowed(const QPoint &origin, const QPoint &dest) {
 		return false;
 
 	return true;
+}
+
+QVector<QPoint> Board::movesAllowed(const QPoint& src) {
+	QVector<QPoint> allowedDest;
+
+	if(at(src) != m_currentPlayer)
+		return allowedDest;
+
+	for(int i=-2; i<=2; i++)
+		for(int j=-2; j<=2; j++) {
+			QPoint dest = src + QPoint(i, j);
+
+			if(moveAllowed(src, dest))
+				allowedDest << dest;
+		}
+
+	return allowedDest;
 }
 
 void Board::playMove(const QPoint &origin, const QPoint &dest) {
@@ -244,7 +253,7 @@ bool Board::currentPlayerCanPlay() {
 	return false;
 }
 
-char Board::checkWinner() {
+char Board::checkVictory() {
 	if(currentPlayerCanPlay())
 		return emptyBoxCharacter;
 

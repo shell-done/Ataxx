@@ -4,7 +4,7 @@ const int TexturesMenu::topTitleY = 210;
 const int TexturesMenu::topTextY = 330;
 const int TexturesMenu::margin = 335;
 
-TexturesMenu::TexturesMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent){
+TexturesMenu::TexturesMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent){
 	m_background = nullptr;
 	m_selector = nullptr;
 	m_title = nullptr;

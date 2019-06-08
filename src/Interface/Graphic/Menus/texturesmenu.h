@@ -6,13 +6,13 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItemGroup>
 #include "menu.h"
-#include "game.h"
+#include "src/Core/gamecore.h"
 
 class TexturesMenu : public Menu {
 	Q_OBJECT
 
 public:
-	TexturesMenu(int width, int height, Game* game, QObject* parent);
+	TexturesMenu(int width, int height, GameCore* game, QObject* parent);
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);

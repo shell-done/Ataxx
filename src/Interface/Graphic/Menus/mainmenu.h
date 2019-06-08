@@ -5,13 +5,13 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
 #include "menu.h"
-#include "game.h"
+#include "src/Core/gamecore.h"
 
 class MainMenu : public Menu {
 	Q_OBJECT
 
 public:
-	MainMenu(int width, int height, Game* game, QObject* parent);
+	MainMenu(int width, int height, GameCore* game, QObject* parent);
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);

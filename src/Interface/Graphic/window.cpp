@@ -3,12 +3,13 @@
 const int Window::m_width = 1280;
 const int Window::m_height = 720;
 
-Window::Window(Game* game) : QGraphicsView(), m_game(game) {
+Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 	m_mainMenu = new MainMenu(m_width, m_height, game, this);
 	m_partyOptionsMenu = new PartyOptionsMenu(m_width, m_height, game, this);
 	m_characterSelectionMenu = new CharacterSelectionMenu(m_width, m_height, game, this);
 	m_texturesMenu = new TexturesMenu(m_width, m_height, game, this);
 	m_optionsMenu = new OptionsMenu(m_width, m_height, game, this);
+	m_boardScreen = new BoardScreen(m_width, m_height, game, this);
 
 	setFixedSize(m_width + 2, m_height + 2);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -44,6 +45,15 @@ void Window::gameUpdate() {
 		m_characterSelectionMenu->update();
 		break;
 
+	case LOCAL_IN_GAME:
+		setScene(m_boardScreen);
+		if(m_prevStatus != LOCAL_IN_GAME)
+			m_boardScreen->generateBoard();
+		else
+			m_boardScreen->update();
+
+		break;
+
 	case ON_TEXTURES_MENU:
 		setScene(m_texturesMenu);
 		m_texturesMenu->update();
@@ -57,4 +67,6 @@ void Window::gameUpdate() {
 	default:
 		break;
 	}
+
+	m_prevStatus = m_game->gameSubSubStatus();
 }

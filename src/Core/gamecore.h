@@ -9,12 +9,11 @@
 
 #include <QDebug> //TO DELETE LATER : DEBUG ONLY
 
-class Game : public QObject {
+class GameCore : public QObject {
 	Q_OBJECT
 
 public:
-	Game(const QMap<QString, QString>& arguments, QObject *parent = nullptr);
-	void start();
+	GameCore(const QMap<QString, QString>& arguments, QObject *parent = nullptr);
 	void update();
 
 	Translator* tr() const;

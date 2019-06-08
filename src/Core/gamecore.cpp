@@ -1,8 +1,8 @@
-#include "game.h"
+#include "gamecore.h"
 
 using namespace std;
 
-Game::Game(const QMap<QString, QString>& arguments, QObject *parent) : QObject(parent) {
+GameCore::GameCore(const QMap<QString, QString>& arguments, QObject *parent) : QObject(parent) {
 	m_translator = new Translator(DIR_LANGUAGES);
 	m_textures = nullptr;
 
@@ -22,7 +22,7 @@ Game::Game(const QMap<QString, QString>& arguments, QObject *parent) : QObject(p
 	m_volume = 75;
 }
 
-void Game::update() {
+void GameCore::update() {
 	switch(m_displayMode) {
 	case CONSOLE:
 		while(m_gameStatus != QUIT)
@@ -40,44 +40,44 @@ void Game::update() {
 	}
 }
 
-Translator* Game::tr() const {
+Translator* GameCore::tr() const {
 	return m_translator;
 }
 
-Textures* Game::textures() const {
+Textures* GameCore::textures() const {
 	return m_textures;
 }
 
-e_displayMode Game::displayMode() const {
+e_displayMode GameCore::displayMode() const {
 	return m_displayMode;
 }
 
-e_gameStatus Game::gameStatus() const {
+e_gameStatus GameCore::gameStatus() const {
 	int status = m_gameStatus;
 	status = (status/100)*100;
 
 	return static_cast<e_gameStatus>(status);
 }
 
-e_gameStatus Game::gameSubStatus() const {
+e_gameStatus GameCore::gameSubStatus() const {
 	int status = m_gameStatus;
 	status = (status/10)*10;
 
 	return static_cast<e_gameStatus>(status);
 }
 
-e_gameStatus Game::gameSubSubStatus() const {
+e_gameStatus GameCore::gameSubSubStatus() const {
 	return m_gameStatus;
 }
 
-void Game::setGameStatus(const e_gameStatus& status) {
+void GameCore::setGameStatus(const e_gameStatus& status) {
 	m_gameStatus = status;
 
 	if(m_displayMode != CONSOLE)
 		update();
 }
 
-void Game::addPlayer(int p) {
+void GameCore::addPlayer(int p) {
 	int totPlayers = m_board.playersNumber();
 
 	if(p == 1 && totPlayers < 4) totPlayers++;
@@ -90,30 +90,30 @@ void Game::addPlayer(int p) {
 	m_board.setPlayersList(players);
 }
 
-void Game::addSize(int s) {
-	if(m_board.width() + s >= 5 && m_board.width() + s <= 15) {
+void GameCore::addSize(int s) {
+	if(m_board.width() + s >= 5 && m_board.width() + s <= 12) {
 		m_board.setWidth(m_board.width() + s);
 		m_board.setHeigh(m_board.height() + s);
 	}
 }
 
-void Game::changeWall() {
+void GameCore::changeWall() {
 	m_board.setWalls(!m_board.walls());
 }
 
-QString Game::volume() {
+QString GameCore::volume() {
 	return QString::number(m_volume).rightJustified(3, ' ');
 }
 
-void Game::addVolume(int v) {
+void GameCore::addVolume(int v) {
 	if(m_volume + v >= 0 && m_volume + v <= 100)
 		m_volume += v;
 }
 
-Board* Game::board() {
+Board* GameCore::board() {
 	return &m_board;
 }
 
-void Game::texturesUpdated() {
+void GameCore::texturesUpdated() {
 	emit updateWindow();
 }

@@ -4,7 +4,7 @@ const int CharacterSelectionMenu::topTitleY = 30;
 const int CharacterSelectionMenu::topTextY = 140;
 const int CharacterSelectionMenu::margin = 330;
 
-CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, Game* game, QObject* parent) : Menu(width, height, game, parent) {
+CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
 	m_background = nullptr;
 	m_title = nullptr;
 
@@ -75,14 +75,14 @@ void CharacterSelectionMenu::createPlayersGroup() {
 	QVector<char> playersChar = m_game->board()->playersList();
 
 	for(int i=0; i<m_game->board()->playersNumber(); i++) {
-		QGraphicsPixmapItem* icon = addPixmap(m_textures->loadPixmap(QString("characters/large/%1.png").arg(playersChar[i] - 'A')));
+		QGraphicsPixmapItem* icon = addPixmap(m_textures->loadPixmap(QString("characters/thumbs/%1.png").arg(playersChar[i] - 'A')));
 		icon->setPos(4, 4);
 
 		QGraphicsPixmapItem* box;
 		if(i == m_menuIdx)
-			box = addPixmap(m_textures->loadPixmap("menus/char_selection_selector_selected.png"));
+			box = addPixmap(m_textures->loadPixmap("menus/character_selected.png"));
 		else
-			box = addPixmap(m_textures->loadPixmap("menus/char_selection_selector.png"));
+			box = addPixmap(m_textures->loadPixmap("menus/character_selector.png"));
 
 		QGraphicsTextItem* playerName = addText(m_tr->qTranslate("graphic:local:character:name", m_textures->useAccents()).arg(i+1));
 		playerName->setFont(m_textures->loadFont(30));
@@ -118,7 +118,7 @@ void CharacterSelectionMenu::createThumbsGroup() {
 	m_grid = createItemGroup(QList<QGraphicsItem*>());
 
 	for(int i=0; i<20; i++) {
-		QGraphicsPixmapItem* icon = addPixmap(m_textures->loadPixmap(QString("characters/thumbnails/%1.png").arg(i)));
+		QGraphicsPixmapItem* icon = addPixmap(m_textures->loadPixmap(QString("characters/pawns/%1.png").arg(i)));
 		icon->setPos(3, 3);
 
 		QGraphicsPixmapItem* box;
@@ -129,9 +129,9 @@ void CharacterSelectionMenu::createThumbsGroup() {
 		}
 
 		if(selected)
-			box = addPixmap(m_textures->loadPixmap("menus/char_selection_thumb_selector_selected.png"));
+			box = addPixmap(m_textures->loadPixmap("menus/pawn_selected.png"));
 		else
-			box = addPixmap(m_textures->loadPixmap("menus/char_selection_thumb_selector.png"));
+			box = addPixmap(m_textures->loadPixmap("menus/pawn_selector.png"));
 
 		m_thumbsGroup[i] = createItemGroup(QList<QGraphicsItem*>() << icon << box);
 
@@ -193,13 +193,13 @@ void CharacterSelectionMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	if(el.first != 1) {
 		for(int i=0; i<4; i++)
 			if(m_playersGroup[i] && i != m_menuIdx) {
-				static_cast<QGraphicsPixmapItem*>(m_playersGroup[i]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/char_selection_selector.png"));
+				static_cast<QGraphicsPixmapItem*>(m_playersGroup[i]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/character_selector.png"));
 				static_cast<QGraphicsTextItem*>(m_playersGroup[i]->childItems()[2])->setDefaultTextColor(m_textures->primaryColor());
 			}
 
 		for(int i=0; i<m_grid->childItems().size(); i++) {
 			if(!thumbsSelected.contains(i)) {
-				static_cast<QGraphicsPixmapItem*>(m_thumbsGroup[i]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/char_selection_thumb_selector.png"));
+				static_cast<QGraphicsPixmapItem*>(m_thumbsGroup[i]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/pawn_selector.png"));
 				static_cast<QGraphicsItemGroup*>(m_thumbsGroup[i])->setZValue(0);
 			}
 		}
@@ -226,11 +226,11 @@ void CharacterSelectionMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 		m_selector->show();
 
 	} else if(el.first == 1 && el.second != m_menuIdx) {
-		static_cast<QGraphicsPixmapItem*>(m_playersGroup[el.second]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/char_selection_selector_hover.png"));
+		static_cast<QGraphicsPixmapItem*>(m_playersGroup[el.second]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/character_hover.png"));
 		static_cast<QGraphicsTextItem*>(m_playersGroup[el.second]->childItems()[2])->setDefaultTextColor(m_textures->secondaryColor());
 
 	} else if(el.first == 2 && !thumbsSelected.contains(el.second)) {
-		static_cast<QGraphicsPixmapItem*>(m_thumbsGroup[el.second]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/char_selection_thumb_selector_selected.png"));
+		static_cast<QGraphicsPixmapItem*>(m_thumbsGroup[el.second]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/pawn_selected.png"));
 		static_cast<QGraphicsItemGroup*>(m_thumbsGroup[el.second])->setZValue(1);
 	}
 }
@@ -245,14 +245,17 @@ void CharacterSelectionMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 		if(el.second == 0) {
 			m_game->setGameStatus(LOCAL_OPTIONS);
 			m_menuIdx = 0;
+		} else if(el.second == 1) {
+			m_game->setGameStatus(LOCAL_IN_GAME);
+			m_menuIdx = 0;
 		}
 
 	} else if(el.first == 1) {
-		static_cast<QGraphicsPixmapItem*>(m_playersGroup[m_menuIdx]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/char_selection_selector.png"));
+		static_cast<QGraphicsPixmapItem*>(m_playersGroup[m_menuIdx]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/pawn_selector.png"));
 		static_cast<QGraphicsTextItem*>(m_playersGroup[m_menuIdx]->childItems()[2])->setDefaultTextColor(m_textures->primaryColor());
 
 		m_menuIdx = el.second;
-		static_cast<QGraphicsPixmapItem*>(m_playersGroup[el.second]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/char_selection_selector_selected.png"));
+		static_cast<QGraphicsPixmapItem*>(m_playersGroup[el.second]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/character_selected.png"));
 
 	} else if(el.first == 2) {
 		QVector<int> thumbsSelected;

@@ -1,17 +1,17 @@
-#ifndef OPTIONSMENU_H
-#define OPTIONSMENU_H
+#ifndef PARTYOPTIONSMENU_H
+#define PARTYOPTIONSMENU_H
 
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
 #include "menu.h"
-#include "game.h"
+#include "src/Core/gamecore.h"
 
-class OptionsMenu : public Menu {
+class PartyOptionsMenu : public Menu {
 	Q_OBJECT
 
 public:
-	OptionsMenu(int width, int height, Game* game, QObject* parent);
+	PartyOptionsMenu(int width, int height, GameCore* game, QObject* parent);
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
@@ -34,12 +34,16 @@ private:
 	QGraphicsPixmapItem* m_selector;
 	QGraphicsPixmapItem* m_arrows[2];
 	QGraphicsTextItem* m_title;
-	QGraphicsTextItem* m_volume[2];
-	QGraphicsTextItem* m_language[2];
+	QGraphicsTextItem* m_players[2];
+	QGraphicsTextItem* m_mapSize[2];
+	QGraphicsTextItem* m_walls[2];
+
+	QGraphicsRectItem* m_textBox[2];
 	QGraphicsTextItem* m_return;
+	QGraphicsTextItem* m_next;
 
 public slots:
 	void update();
 };
 
-#endif // OPTIONSMENU_H
+#endif // PARTYOPTIONSMENU_H

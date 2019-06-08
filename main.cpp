@@ -1,7 +1,7 @@
 #include <QApplication>
-#include "game.h"
-#include "console.h"
-#include "window.h"
+#include "src/Core/gamecore.h"
+#include "src/Interface/Console/console.h"
+#include "src/Interface/Graphic/window.h"
 
 #include <iostream>
 #include <QPushButton>
@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
 
 	arguments = readArguments(argc, argv, arguments);
 
-	Game* game = new Game(arguments);
+	GameCore* game = new GameCore(arguments);
 	Console* console = nullptr;
 	Window* window = nullptr;
 
@@ -23,11 +23,14 @@ int main(int argc, char** argv) {
 		game->update();
 
 		return 0;
-	} else if(game->displayMode() == GRAPHIC) {
+	} else if(game->displayMode() == GRAPHIC || game->displayMode() == MIXED) {
 		QApplication app(argc, argv);
 
 		window = new Window(game);
 		window->show();
+
+		if(game->displayMode() == MIXED)
+			console = new Console(game);
 
 		game->update();
 

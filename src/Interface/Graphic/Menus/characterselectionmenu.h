@@ -6,13 +6,13 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItemGroup>
 #include "menu.h"
-#include "game.h"
+#include "src/Core/gamecore.h"
 
 class CharacterSelectionMenu : public Menu {
 	Q_OBJECT
 
 public:
-	CharacterSelectionMenu(int width, int height, Game* game, QObject* parent);
+	CharacterSelectionMenu(int width, int height, GameCore* game, QObject* parent);
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
