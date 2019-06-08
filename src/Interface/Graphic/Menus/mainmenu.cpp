@@ -8,6 +8,13 @@ MainMenu::MainMenu(int width, int height, GameCore* game, QObject* parent) : Men
 	for(int i=0; i<5; i++)
 		m_texts[i] = nullptr;
 
+	m_button = new GraphicsButton(game, "menus/selector.png", "graphic:menu:main:local", 50);
+	m_button->setZValue(10);
+	m_button->setPos(10, 10);
+	addItem(m_button);
+
+	connect(m_button, SIGNAL(clicked()), this, SLOT(test()));
+
 	updateTextures();
 	updateText();
 }
@@ -70,6 +77,8 @@ void MainMenu::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
 
 	m_selector->setPos((width() - m_selector->boundingRect().width())/2,
 					   m_texts[m_menuIdx]->pos().y() + qAbs(m_texts[m_menuIdx]->boundingRect().height() - m_selector->boundingRect().height())/2);
+
+	QGraphicsScene::mouseMoveEvent(event);
 }
 
 void MainMenu::mousePressEvent(QGraphicsSceneMouseEvent* event) {
@@ -97,5 +106,7 @@ void MainMenu::mousePressEvent(QGraphicsSceneMouseEvent* event) {
 		}
 
 		m_game->update();
+	} else {
+		QGraphicsScene::mousePressEvent(event);
 	}
 }

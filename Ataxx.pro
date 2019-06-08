@@ -34,6 +34,7 @@ SOURCES += \
     src/Core/translator.cpp \
     src/Interface/Console/console.cpp \
     src/Interface/Graphic/Items/graphicsboarditem.cpp \
+    src/Interface/Graphic/Items/graphicsbutton.cpp \
     src/Interface/Graphic/Menus/boardscreen.cpp \
     src/Interface/Graphic/Menus/characterselectionmenu.cpp \
     src/Interface/Graphic/Menus/mainmenu.cpp \
@@ -51,6 +52,7 @@ HEADERS += \
     src/Core/translator.h \
     src/Interface/Console/console.h \
     src/Interface/Graphic/Items/graphicsboarditem.h \
+    src/Interface/Graphic/Items/graphicsbutton.h \
     src/Interface/Graphic/Menus/boardscreen.h \
     src/Interface/Graphic/Menus/characterselectionmenu.h \
     src/Interface/Graphic/Menus/mainmenu.h \
