@@ -87,7 +87,7 @@ void GraphicsTextCarousel::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 	QGraphicsRectItem::hoverLeaveEvent(event);
 }
 
-void GraphicsTextCarousel::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+void GraphicsTextCarousel::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 	int arrowHover = mouseOnArrow(event->scenePos().toPoint());
 
 	if(prevArrowHover != -1 && prevArrowHover != arrowHover)
@@ -97,7 +97,7 @@ void GraphicsTextCarousel::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 		m_arrowItem[arrowHover]->setPixmap(m_textures->loadRotatePixmap(m_arrowHoverImg, -90 + 180*arrowHover));
 
 	prevArrowHover = arrowHover;
-	QGraphicsRectItem::mouseMoveEvent(event);
+	QGraphicsRectItem::hoverMoveEvent(event);
 }
 
 void GraphicsTextCarousel::mousePressEvent(QGraphicsSceneMouseEvent *event) {
@@ -105,7 +105,7 @@ void GraphicsTextCarousel::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 	if(arrowHover == 0)
 		emit arrowClicked(LEFT);
-	else
+	else if(arrowHover == 1)
 		emit arrowClicked(RIGHT);
 
 	QGraphicsRectItem::mousePressEvent(event);

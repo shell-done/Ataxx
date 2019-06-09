@@ -41,6 +41,9 @@ private:
 	QGraphicsPixmapItem*** m_boxes;
 
 	QPoint m_boxClicked;
+
+signals:
+	void pawnMoved();
 };
 
 #endif // GRAPHICBOARDITEM_H

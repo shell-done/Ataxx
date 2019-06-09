@@ -8,8 +8,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneHoverEvent>
 #include "src/Core/gamecore.h"
-#include "src/Core/textures.h"
-#include "src/Core/translator.h"
 
 class GraphicsButton : public QObject, public QGraphicsRectItem {
 	Q_OBJECT

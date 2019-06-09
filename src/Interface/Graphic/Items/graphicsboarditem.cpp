@@ -57,7 +57,6 @@ void GraphicsBoardItem::initBoxes() {
 		for(int j=0; j<width; j++) {
 			m_boxes[i][j] = new QGraphicsPixmapItem(transparentPixmap, this);
 			m_boxes[i][j]->setPos(3 + (m_boxesSize - 1)*i, 3 + (m_boxesSize - 1)*j);
-			m_boxes[i][j]->setCursor(Qt::PointingHandCursor);
 		}
 	}
 }
@@ -70,15 +69,20 @@ void GraphicsBoardItem::updateBoard() {
 
 	for(int i=0; i<width; i++) {
 		for(int j=0;j< width; j++) {
-			int charID = -1;
+			char character = -1;
 
 			if(m_game->board()->at(QPoint(i, j)) != m_game->board()->emptyBoxCharacter)
-				charID = m_game->board()->at(QPoint(i, j)) - 'A';
+				character = m_game->board()->at(QPoint(i, j));
 
-			if(charID == -1)
+			if(character == -1)
 				m_boxes[i][j]->setPixmap(transparentPixmap);
 			else
-				m_boxes[i][j]->setPixmap(m_texture->loadPixmap(QString("characters/pawns/%1.png").arg(charID)).scaled(m_boxesSize - 6, m_boxesSize - 6));
+				m_boxes[i][j]->setPixmap(m_texture->loadPixmap(QString("characters/pawns/%1.png").arg(character)).scaled(m_boxesSize - 6, m_boxesSize - 6));
+
+			if(m_game->board()->boxBelongByCurrentPlayer(QPoint(i, j)))
+				m_boxes[i][j]->setCursor(Qt::PointingHandCursor);
+			else
+				m_boxes[i][j]->setCursor(Qt::ArrowCursor);
 		}
 	}
 }
@@ -122,19 +126,23 @@ void GraphicsBoardItem::boxClicked(QPoint box) {
 void GraphicsBoardItem::displayAllowedBoxes(QPoint src) {
 	QVector<QPoint> boxes = m_game->board()->movesAllowed(src);
 
+	QCursor newCursor = Qt::ArrowCursor;
 	QPixmap newPixmap(m_boxesSize - 6, m_boxesSize - 6);
 	newPixmap.fill(QColor(255, 255, 255, 1));
-	int currentPlayerID = m_game->board()->currentPlayer() - 'A';
 
 	if(m_boxClicked.x() == -1) {
 		QPainter painter(&newPixmap);
 		painter.setOpacity(0.4);
-		painter.drawPixmap(0, 0, m_texture->loadPixmap(QString("characters/pawns/%1.png").arg(currentPlayerID)).scaled(m_boxesSize - 6, m_boxesSize - 6));
+		painter.drawPixmap(0, 0, m_texture->loadPixmap(QString("characters/pawns/%1.png").arg(m_game->board()->currentPlayer())).scaled(m_boxesSize - 6, m_boxesSize - 6));
 		painter.end();
+
+		newCursor = Qt::PointingHandCursor;
 	}
 
-	for(const QPoint& b : boxes)
+	for(const QPoint& b : boxes) {
+		m_boxes[b.x()][b.y()]->setCursor(newCursor);
 		m_boxes[b.x()][b.y()]->setPixmap(newPixmap);
+	}
 }
 
 void GraphicsBoardItem::movePawn(QPoint dest) {
@@ -143,4 +151,6 @@ void GraphicsBoardItem::movePawn(QPoint dest) {
 
 	m_game->board()->playMove(m_boxClicked, dest);
 	m_game->update();
+
+	emit pawnMoved();
 }

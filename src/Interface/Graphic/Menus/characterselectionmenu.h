@@ -8,6 +8,7 @@
 #include "menu.h"
 #include "src/Core/gamecore.h"
 #include "src/Interface/Graphic/Items/graphicsbutton.h"
+#include "src/Interface/Graphic/Items/graphicsplayerframeitem.h"
 
 class CharacterSelectionMenu : public Menu {
 	Q_OBJECT
@@ -31,24 +32,26 @@ private:
 
 	QPair<int, int> mouseOverElement(const QPoint& mousePos);
 
-	void createPlayersGroup();
 	void createThumbsGroup();
 	void displayGroups();
 
-	QPair<int, int> m_elementHover;
 
-	QGraphicsPixmapItem* m_background;
+	QPair<int, int> m_elementHover;
+	int m_playersDisplayed;
+	int m_playerSelected;
+
 	QGraphicsTextItem* m_title;
 
 	GraphicsButton* m_buttons[2];
+	GraphicsPlayerFrameItem* m_playersGroup[4];
 
-	QGraphicsItemGroup* m_playersGroup[4];
 	QGraphicsItemGroup* m_thumbsGroup[20];
 	QGraphicsItemGroup* m_grid;
 
 private slots:
 	void back();
 	void next();
+	void characterClicked();
 };
 
 #endif // CHARACTERSELECTIONMENU_H

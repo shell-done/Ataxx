@@ -7,12 +7,15 @@
 #include <QGraphicsItemGroup>
 #include "menu.h"
 #include "src/Core/gamecore.h"
+#include "src/Interface/Graphic/Items/graphicsbutton.h"
 
 class TexturesMenu : public Menu {
 	Q_OBJECT
 
 public:
 	TexturesMenu(int width, int height, GameCore* game, QObject* parent);
+
+	void update();
 
 protected:
 	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
@@ -32,10 +35,8 @@ private:
 	int mouseHoverText(const QPoint& mousePos);
 	int mouseHoverArrow(const QPoint& mousePos);
 
-	QGraphicsPixmapItem* m_background;
-	QGraphicsPixmapItem* m_selector;
 	QGraphicsTextItem* m_title;
-	QGraphicsTextItem* m_return;
+	GraphicsButton* m_ret;
 	QGraphicsPixmapItem* m_arrows[2];
 
 	QGraphicsPixmapItem* m_packSelected;
@@ -44,8 +45,9 @@ private:
 
 	int m_packIdx;
 
-public slots:
-	void update();
+private slots:
+	void back();
+
 };
 
 #endif // TEXTURESMENU_H

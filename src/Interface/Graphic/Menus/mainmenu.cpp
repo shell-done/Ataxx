@@ -2,10 +2,9 @@
 
 const int MainMenu::topTextY = 290;
 
-MainMenu::MainMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
+MainMenu::MainMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, "menus/main_menu.png", parent) {
 	m_background = nullptr;
 
-	updateTextures();
 	placeButtons();
 }
 
@@ -27,21 +26,13 @@ void MainMenu::placeButtons() {
 	connect(m_buttons[4], SIGNAL(clicked()), this, SLOT(quit()));
 }
 
-void MainMenu::updateTextures() {
-	if(m_background) {
-		m_background->setPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-		m_background->setZValue(-1);
-	} else
-		m_background = addPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-}
-
 void MainMenu::update() {
-	updateTextures();
-
 	for(int i=0; i<5; i++) {
 		m_buttons[i]->update();
 		hCenter(m_buttons[i], topTextY + 75*i);
 	}
+
+	Menu::update();
 }
 
 

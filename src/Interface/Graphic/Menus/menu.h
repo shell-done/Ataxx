@@ -10,12 +10,20 @@ class Menu : public QGraphicsScene {
 	Q_OBJECT
 
 public:
-	Menu(int width, int height, GameCore* game, QObject* parent) : QGraphicsScene(parent), m_game(game) {
+	Menu(int width, int height, GameCore* game, QString backgroundImg, QObject* parent) : QGraphicsScene(parent), m_game(game) {
 		setSceneRect(0, 0, width, height);
 
 		m_menuIdx = 0;
 		m_textures = m_game->textures();
 		m_tr = m_game->tr();
+
+		m_backgroundImg = backgroundImg;
+		m_graphicsBackground = addPixmap(m_textures->loadPixmap(m_backgroundImg));
+		m_graphicsBackground->setZValue(-1);
+	}
+
+	virtual void update() {
+		m_graphicsBackground->setPixmap(m_textures->loadPixmap(m_backgroundImg));
 	}
 
 	void generateText(QGraphicsTextItem*& item, QString str, int fontSize, QColor color) {
@@ -60,6 +68,9 @@ protected:
 	GameCore* m_game;
 	Translator* m_tr;
 	Textures* m_textures;
+
+	QString m_backgroundImg;
+	QGraphicsPixmapItem* m_graphicsBackground;
 
 	int m_menuIdx;
 };

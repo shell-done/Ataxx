@@ -102,6 +102,9 @@ void Board::setPlayerChar(int playerIdx, char c) {
 	}
 
 	m_playersList[playerIdx] = c;
+
+	if(playerIdx == 0)
+		m_currentPlayer = m_playersList[playerIdx];
 }
 
 int Board::playersNumber() {

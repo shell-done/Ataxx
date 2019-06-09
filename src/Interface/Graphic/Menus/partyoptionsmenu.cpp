@@ -3,8 +3,7 @@
 const int PartyOptionsMenu::topTitleY = 220;
 const int PartyOptionsMenu::topTextY = 340;
 
-PartyOptionsMenu::PartyOptionsMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
-	m_background = nullptr;
+PartyOptionsMenu::PartyOptionsMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, "menus/main_menu.png", parent) {
 	m_title = nullptr;
 
 	m_carousels[0] = new GraphicsTextCarousel(game, QSize(700, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:local:menu:players", QString::number(m_game->board()->playersNumber()), 50);
@@ -27,17 +26,7 @@ PartyOptionsMenu::PartyOptionsMenu(int width, int height, GameCore* game, QObjec
 	connect(m_buttons[0], SIGNAL(clicked()), this, SLOT(back()));
 	connect(m_buttons[1], SIGNAL(clicked()), this, SLOT(next()));
 
-	updateTextures();
 	updateText();
-}
-
-void PartyOptionsMenu::updateTextures() {
-	if(m_background) {
-		m_background->setPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-		m_background->setZValue(-1);
-	} else {
-		m_background = addPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-	}
 }
 
 void PartyOptionsMenu::updateText() {
@@ -52,7 +41,6 @@ void PartyOptionsMenu::updateText() {
 }
 
 void PartyOptionsMenu::update() {
-	updateTextures();
 	updateText();
 
 	for(int i=0; i<3; i++)
@@ -60,14 +48,8 @@ void PartyOptionsMenu::update() {
 
 	for(int i=0; i<2; i++)
 		m_buttons[i]->update();
-}
 
-void PartyOptionsMenu::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
-	for(int i=0; i<3; i++)
-		if(m_carousels[i]->sceneBoundingRect().contains(event->scenePos()))
-			m_carousels[i]->mouseMoveEvent(event);
-
-	QGraphicsScene::mouseMoveEvent(event);
+	Menu::update();
 }
 
 void PartyOptionsMenu::playersNumberChanged(e_carouselArrow arrow) {

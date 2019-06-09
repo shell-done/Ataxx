@@ -21,7 +21,6 @@ private:
 	static const int topTextY;
 
 	void placeButtons();
-	void updateTextures();
 
 	QGraphicsPixmapItem* m_background;
 	GraphicsButton* m_buttons[5];

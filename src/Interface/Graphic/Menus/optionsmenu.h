@@ -17,14 +17,10 @@ public:
 
 	void update();
 
-protected:
-	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
-
 private:
 	static const int topTitleY;
 	static const int topTextY;
 
-	void updateTextures();
 	void updateText();
 
 	QGraphicsPixmapItem* m_background;

@@ -8,8 +8,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneHoverEvent>
 #include "src/Core/gamecore.h"
-#include "src/Core/textures.h"
-#include "src/Core/translator.h"
 
 typedef enum e_carouselArrow {LEFT, RIGHT} e_carouselArrow;
 
@@ -24,11 +22,10 @@ public:
 
 	void update();
 
-	void mouseMoveEvent(QGraphicsSceneMouseEvent* event);
-
 protected:
 	void hoverEnterEvent(QGraphicsSceneHoverEvent* event);
 	void hoverLeaveEvent(QGraphicsSceneHoverEvent* event);
+	void hoverMoveEvent(QGraphicsSceneHoverEvent* event);
 	void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
 private:

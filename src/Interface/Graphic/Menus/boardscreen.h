@@ -1,8 +1,11 @@
 #ifndef BOARDSCREEN_H
 #define BOARDSCREEN_H
 
+#include <QTimer>
+#include <QTextDocument>
 #include "menu.h"
 #include "src/Interface/Graphic/Items/graphicsbutton.h"
+#include "src/Interface/Graphic/Items/graphicsplayerframeitem.h"
 #include "src/Interface/Graphic/Items/graphicsboarditem.h"
 
 class BoardScreen : public Menu {
@@ -14,16 +17,27 @@ public:
 private:
 	void placeItems();
 
-	QGraphicsPixmapItem* m_background;
 	GraphicsBoardItem* m_graphicsBoardItem;
 
+	GraphicsPlayerFrameItem* m_graphicsPlayerFrames[4];
+	QGraphicsTextItem* m_graphicsTimer;
+
+	GraphicsPlayerFrameItem* m_graphicsCurrentPlayerFrame;
+	QGraphicsTextItem* m_graphicsCurrentPlayerText;
 	GraphicsButton* m_buttons[2];
+
+	QTimer* m_timer;
+	int m_minutes;
+	int m_seconds;
 
 public slots:
 	void generateBoard();
 	void update();
 
 private slots:
+	void addSecondToTimer();
+	void pawnMoved();
+
 	void quit();
 };
 

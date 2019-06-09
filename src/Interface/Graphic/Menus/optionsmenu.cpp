@@ -3,7 +3,7 @@
 const int OptionsMenu::topTitleY = 220;
 const int OptionsMenu::topTextY = 340;
 
-OptionsMenu::OptionsMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, parent) {
+OptionsMenu::OptionsMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, "menus/main_menu.png", parent) {
 	m_background = nullptr;
 	m_title = nullptr;
 	m_return = nullptr;
@@ -20,17 +20,7 @@ OptionsMenu::OptionsMenu(int width, int height, GameCore* game, QObject* parent)
 	connect(m_carousels[1], SIGNAL(arrowClicked(e_carouselArrow)), this, SLOT(langCarouselChanged(e_carouselArrow)));
 	connect(m_return, SIGNAL(clicked()), this, SLOT(back()));
 
-	updateTextures();
-	updateText();
-}
-
-void OptionsMenu::updateTextures() {
-	if(m_background) {
-		m_background->setPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-		m_background->setZValue(-1);
-	} else {
-		m_background = addPixmap(m_textures->loadPixmap("menus/main_menu.png"));
-	}
+	update();
 }
 
 void OptionsMenu::updateText() {
@@ -42,21 +32,14 @@ void OptionsMenu::updateText() {
 }
 
 void OptionsMenu::update() {
-	updateTextures();
 	updateText();
 
 	for(int i=0; i<2; i++)
 		m_carousels[i]->update();
 
 	m_return->update();
-}
 
-void OptionsMenu::mouseMoveEvent(QGraphicsSceneMouseEvent* event) {
-	for(int i=0; i<2; i++)
-		if(m_carousels[i]->sceneBoundingRect().contains(event->scenePos()))
-			m_carousels[i]->mouseMoveEvent(event);
-
-	QGraphicsScene::mouseMoveEvent(event);
+	Menu::update();
 }
 
 void OptionsMenu::soundCarouselChanged(e_carouselArrow arrow) {
