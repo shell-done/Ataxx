@@ -6,11 +6,11 @@
 #include <QGraphicsPixmapItem>
 #include "src/Core/gamecore.h"
 
-class Menu : public QGraphicsScene {
+class Screen : public QGraphicsScene {
 	Q_OBJECT
 
 public:
-	Menu(int width, int height, GameCore* game, QString backgroundImg, QObject* parent) : QGraphicsScene(parent), m_game(game) {
+	Screen(int width, int height, GameCore* game, QString backgroundImg, QObject* parent) : QGraphicsScene(parent), m_game(game) {
 		setSceneRect(0, 0, width, height);
 
 		m_textures = m_game->textures();

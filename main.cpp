@@ -1,10 +1,8 @@
 #include <QApplication>
+#include "src/utils.h"
 #include "src/Core/gamecore.h"
 #include "src/Interface/Console/console.h"
 #include "src/Interface/Graphic/window.h"
-
-#include <iostream>
-#include <QPushButton>
 
 int main(int argc, char** argv) {
 	QMap<QString, QString> arguments;

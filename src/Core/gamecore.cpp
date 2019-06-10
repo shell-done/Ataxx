@@ -1,9 +1,10 @@
 #include "gamecore.h"
 
-using namespace std;
+const QString GameCore::langsDirectory = "./langs/";
+const QString GameCore::texturesPacksDirectory = "./textures packs/";
 
 GameCore::GameCore(const QMap<QString, QString>& arguments, QObject *parent) : QObject(parent) {
-	m_translator = new Translator(DIR_LANGUAGES);
+	m_translator = new Translator(langsDirectory);
 	m_textures = nullptr;
 
 	if(arguments.value("mode", "graphic") == "mixed")
@@ -21,7 +22,7 @@ GameCore::GameCore(const QMap<QString, QString>& arguments, QObject *parent) : Q
 
 void GameCore::loadTextures() {
 	if(m_displayMode == GRAPHIC || m_displayMode == MIXED) {
-		m_textures = new Textures(DIR_TEXTURES);
+		m_textures = new Textures(texturesPacksDirectory);
 		connect(m_textures, SIGNAL(updateTextures()), this, SLOT(texturesUpdated()));
 	}
 }
@@ -97,7 +98,7 @@ void GameCore::addPlayer(int p) {
 void GameCore::addSize(int s) {
 	if(m_board.width() + s >= 5 && m_board.width() + s <= 12) {
 		m_board.setWidth(m_board.width() + s);
-		m_board.setHeigh(m_board.height() + s);
+		m_board.setHeight(m_board.height() + s);
 	}
 }
 

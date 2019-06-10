@@ -1,6 +1,6 @@
 #include "boardscreen.h"
 
-BoardScreen::BoardScreen(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, "menus/game_background.png", parent) {
+BoardScreen::BoardScreen(int width, int height, GameCore* game, QObject* parent) : Screen(width, height, game, "menus/game_background.png", parent) {
 	m_graphicsBoardItem = nullptr;
 
 	for(int i=0; i<4; i++)
@@ -18,14 +18,14 @@ BoardScreen::BoardScreen(int width, int height, GameCore* game, QObject* parent)
 	m_graphicsCurrentPlayerFrame = new GraphicsPlayerFrameItem(game, QSize(200, 200), 1, 'A', 40);
 	addItem(m_graphicsCurrentPlayerFrame);
 
-	m_graphicsCurrentPlayerText = addText(m_tr->qTranslate("graphic:local:game:currentPlayer").arg(1), m_textures->loadFont(30));
+	m_graphicsCurrentPlayerText = addText(m_tr->qTranslate("graphic:local:game:currentPlayer", m_textures->removeAccents()).arg(1), m_textures->loadFont(30));
 	m_graphicsCurrentPlayerText->setDefaultTextColor(m_textures->primaryColor());
 	QTextOption option = m_graphicsCurrentPlayerText->document()->defaultTextOption();
 	option.setAlignment(Qt::AlignCenter);
 	m_graphicsCurrentPlayerText->document()->setDefaultTextOption(option);
 
-	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:local:game:restart", 40);
-	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:local:game:quit", 40);
+	m_buttons[0] = new GraphicsButtonItem(game, "menus/half_selector.png", "graphic:local:game:restart", 40);
+	m_buttons[1] = new GraphicsButtonItem(game, "menus/half_selector.png", "graphic:local:game:quit", 40);
 	addItem(m_buttons[0]);
 	addItem(m_buttons[1]);
 
@@ -94,13 +94,15 @@ void BoardScreen::update() {
 	m_graphicsTimer->setDefaultTextColor(m_textures->primaryColor());
 	m_graphicsTimer->setFont(m_textures->loadFont(50));
 
+	int currentPlayer = m_game->board()->playersList().indexOf(m_game->board()->currentPlayer()) + 1;
+	m_graphicsCurrentPlayerText->setPlainText(m_tr->qTranslate("graphic:local:game:currentPlayer", m_textures->removeAccents()).arg(currentPlayer));
 	m_graphicsCurrentPlayerText->setDefaultTextColor(m_textures->primaryColor());
 	m_graphicsCurrentPlayerText->setFont(m_textures->loadFont(30));
 
 	m_graphicsCurrentPlayerFrame->update();
 	placeItems();
 
-	Menu::update();
+	Screen::update();
 }
 
 void BoardScreen::placeItems() {
@@ -163,7 +165,7 @@ void BoardScreen::pawnMoved() {
 	m_graphicsCurrentPlayerFrame->setCharacter(m_game->board()->currentPlayer());
 	m_graphicsCurrentPlayerFrame->setPlayer(currentPlayer);
 
-	m_graphicsCurrentPlayerText->setPlainText(m_tr->qTranslate("graphic:local:game:currentPlayer").arg(currentPlayer));
+	m_graphicsCurrentPlayerText->setPlainText(m_tr->qTranslate("graphic:local:game:currentPlayer", m_textures->removeAccents()).arg(currentPlayer));
 
 	if(m_game->board()->stopGame()) {
 		char winner = m_game->board()->winner();
@@ -173,7 +175,7 @@ void BoardScreen::pawnMoved() {
 		m_timer->stop();
 
 		if(winner == 'Z') {
-			m_graphicsCurrentPlayerText->setPlainText(m_tr->qTranslate("graphic:local:game:tie"));
+			m_graphicsCurrentPlayerText->setPlainText(m_tr->qTranslate("graphic:local:game:tie", m_textures->removeAccents()));
 			m_graphicsCurrentPlayerFrame->setCharacter('Z');
 			m_graphicsCurrentPlayerFrame->setPlayer(-1);
 		} else {

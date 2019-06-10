@@ -1,17 +1,17 @@
-#include "texturesmenu.h"
+#include "texturespacksscreen.h"
 
-const int TexturesMenu::topTitleY = 220;
-const int TexturesMenu::topTextY = 330;
-const int TexturesMenu::margin = 335;
+const int TexturesPacksScreen::topTitleY = 220;
+const int TexturesPacksScreen::topTextY = 330;
+const int TexturesPacksScreen::margin = 335;
 
-TexturesMenu::TexturesMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, "menus/main_menu.png", parent) {
+TexturesPacksScreen::TexturesPacksScreen(int width, int height, GameCore* game, QObject* parent) : Screen(width, height, game, "menus/main_menu.png", parent) {
 	m_title = nullptr;
 	m_packSelected = nullptr;
 
 	m_arrows[0] = nullptr;
 	m_arrows[1] = nullptr;
 
-	m_return = new GraphicsButton(game, "menus/selector.png", "graphic:menu:global:return", 40);
+	m_return = new GraphicsButtonItem(game, "menus/selector.png", "graphic:menu:global:return", 40);
 	addItem(m_return);
 	connect(m_return, SIGNAL(clicked()), this, SLOT(back()));
 
@@ -21,7 +21,7 @@ TexturesMenu::TexturesMenu(int width, int height, GameCore* game, QObject* paren
 	updateText();
 }
 
-void TexturesMenu::updateTextures() {
+void TexturesPacksScreen::updateTextures() {
 	if(m_packSelected) {
 		m_packSelected->setPixmap(m_textures->loadPixmap("menus/pack_selected.png"));
 		m_arrows[0]->setPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 0));
@@ -37,25 +37,27 @@ void TexturesMenu::updateTextures() {
 			m_arrows[i]->setCursor(Qt::PointingHandCursor);
 	}
 
+	m_return->update();
+
 	createPackItems();
 	displayPackItems();
 }
 
-void TexturesMenu::updateText() {
+void TexturesPacksScreen::updateText() {
 	generateText(m_title, "graphic:menu:textures:title", 50, m_textures->primaryColor());
 	hCenter(m_title, topTitleY);
 
 	hCenter(m_return, static_cast<int>(height() - 50 - m_return->boundingRect().height()));
 }
 
-void TexturesMenu::update() {
+void TexturesPacksScreen::update() {
 	updateTextures();
 	updateText();
 
-	Menu::update();
+	Screen::update();
 }
 
-void TexturesMenu::createPackItems() {
+void TexturesPacksScreen::createPackItems() {
 	while(!m_packs.isEmpty()) {
 		QGraphicsItemGroup* group = m_packs.takeFirst();
 		removeItem(group);
@@ -86,7 +88,7 @@ void TexturesMenu::createPackItems() {
 	}
 }
 
-void TexturesMenu::displayPackItems() {
+void TexturesPacksScreen::displayPackItems() {
 	for(QGraphicsItemGroup*& group : m_packs)
 		group->setVisible(false);
 
@@ -115,7 +117,7 @@ void TexturesMenu::displayPackItems() {
 	}
 }
 
-int TexturesMenu::mouseOverText(const QPoint& mousePos) {
+int TexturesPacksScreen::mouseOverText(const QPoint& mousePos) {
 	for(int i=m_packIdx; i<m_packs.size() && i<=m_packIdx+1; i++) {
 		if(m_packs[i]->childrenBoundingRect().translated(m_packs[i]->pos()).contains(mousePos))
 			return i;
@@ -124,7 +126,7 @@ int TexturesMenu::mouseOverText(const QPoint& mousePos) {
 	return -1;
 }
 
-int TexturesMenu::mouseOverArrow(const QPoint &mousePos) {
+int TexturesPacksScreen::mouseOverArrow(const QPoint &mousePos) {
 	for(int i=0; i<2; i++)
 		if(m_arrows[i]->boundingRect().translated(m_arrows[i]->pos()).contains(mousePos))
 			return i;
@@ -132,7 +134,7 @@ int TexturesMenu::mouseOverArrow(const QPoint &mousePos) {
 	return -1;
 }
 
-void TexturesMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+void TexturesPacksScreen::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mouseMoveEvent(event);
 
 	int arrowIdx = mouseOverArrow(event->scenePos().toPoint());
@@ -154,7 +156,7 @@ void TexturesMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 		static_cast<QGraphicsTextItem*>(m_packs[idx]->childItems()[1])->setDefaultTextColor(m_textures->secondaryColor());
 }
 
-void TexturesMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void TexturesPacksScreen::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mousePressEvent(event);
 
 	int idx = mouseOverText(event->scenePos().toPoint());
@@ -178,6 +180,6 @@ void TexturesMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	mouseMoveEvent(event);
 }
 
-void TexturesMenu::back() {
+void TexturesPacksScreen::back() {
 	m_game->setGameStatus(ON_MAIN_MENU);
 }

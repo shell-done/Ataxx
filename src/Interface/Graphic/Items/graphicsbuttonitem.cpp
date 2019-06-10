@@ -1,6 +1,6 @@
-#include "graphicsbutton.h"
+#include "graphicsbuttonitem.h"
 
-GraphicsButton::GraphicsButton(GameCore* game, QString buttonImg, QString buttonLabel, int fontSize, QGraphicsItem* parent) : QObject(), QGraphicsRectItem(parent) {
+GraphicsButtonItem::GraphicsButtonItem(GameCore* game, QString buttonImg, QString buttonLabel, int fontSize, QGraphicsItem* parent) : QObject(), QGraphicsRectItem(parent) {
 	m_textures = game->textures();
 	m_tr = game->tr();
 
@@ -25,7 +25,7 @@ GraphicsButton::GraphicsButton(GameCore* game, QString buttonImg, QString button
 	update();
 }
 
-void GraphicsButton::update() {
+void GraphicsButtonItem::update() {
 	QSize size = boundingRect().toRect().size();
 	QPixmap backgroundPixmap(size);
 
@@ -51,7 +51,7 @@ void GraphicsButton::update() {
 	m_graphicsLabel->setPos(x, y);
 }
 
-void GraphicsButton::setDisabled(bool d) {
+void GraphicsButtonItem::setDisabled(bool d) {
 	m_disabled = d;
 
 	if(m_disabled) {
@@ -63,11 +63,11 @@ void GraphicsButton::setDisabled(bool d) {
 	}
 }
 
-bool GraphicsButton::disabled() {
+bool GraphicsButtonItem::disabled() {
 	return m_disabled;
 }
 
-void GraphicsButton::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
+void GraphicsButtonItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 	if(!m_disabled) {
 		m_hover = true;
 		update();
@@ -76,7 +76,7 @@ void GraphicsButton::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 	QGraphicsRectItem::hoverEnterEvent(event);
 }
 
-void GraphicsButton::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
+void GraphicsButtonItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 	if(!m_disabled) {
 		m_hover = false;
 		update();
@@ -85,7 +85,7 @@ void GraphicsButton::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 	QGraphicsRectItem::hoverLeaveEvent(event);
 }
 
-void GraphicsButton::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void GraphicsButtonItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	if(!m_disabled)
 		emit clicked();
 

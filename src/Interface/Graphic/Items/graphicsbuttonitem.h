@@ -10,11 +10,11 @@
 #include <QGraphicsSceneHoverEvent>
 #include "src/Core/gamecore.h"
 
-class GraphicsButton : public QObject, public QGraphicsRectItem {
+class GraphicsButtonItem : public QObject, public QGraphicsRectItem {
 	Q_OBJECT
 
 public:
-	GraphicsButton(GameCore* game, QString imgPath, QString label, int fontSize, QGraphicsItem* parent = nullptr);
+	GraphicsButtonItem(GameCore* game, QString imgPath, QString label, int fontSize, QGraphicsItem* parent = nullptr);
 
 	void update();
 

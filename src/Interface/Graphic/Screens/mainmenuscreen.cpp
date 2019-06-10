@@ -1,19 +1,19 @@
-#include "mainmenu.h"
+#include "mainmenuscreen.h"
 
-const int MainMenu::topTextY = 310;
+const int MainMenuScreen::topTextY = 310;
 
-MainMenu::MainMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, "menus/main_menu.png", parent) {
+MainMenuScreen::MainMenuScreen(int width, int height, GameCore* game, QObject* parent) : Screen(width, height, game, "menus/main_menu.png", parent) {
 	m_background = nullptr;
 
 	placeButtons();
 }
 
-void MainMenu::placeButtons() {
+void MainMenuScreen::placeButtons() {
 	QVector<QString> menuText;
 	menuText << "local" << "online" << "textures" << "options" << "quit";
 
 	for(int i=0; i<5; i++) {
-		m_buttons[i] = new GraphicsButton(m_game, "menus/selector.png", "graphic:menu:main:" + menuText[i], 40);
+		m_buttons[i] = new GraphicsButtonItem(m_game, "menus/selector.png", "graphic:menu:main:" + menuText[i], 40);
 		addItem(m_buttons[i]);
 	}
 
@@ -27,28 +27,28 @@ void MainMenu::placeButtons() {
 	update();
 }
 
-void MainMenu::update() {
+void MainMenuScreen::update() {
 	for(int i=0; i<5; i++) {
 		m_buttons[i]->update();
 		hCenter(m_buttons[i], topTextY + 65*i);
 	}
 
-	Menu::update();
+	Screen::update();
 }
 
 
-void MainMenu::localGame() {
+void MainMenuScreen::localGame() {
 	m_game->setGameStatus(LOCAL_OPTIONS);
 }
 
-void MainMenu::texturesPacks() {
+void MainMenuScreen::texturesPacks() {
 	m_game->setGameStatus(ON_TEXTURES_MENU);
 }
 
-void MainMenu::options() {
+void MainMenuScreen::options() {
 	m_game->setGameStatus(ON_OPTIONS_MENU);
 }
 
-void MainMenu::quit() {
+void MainMenuScreen::quit() {
 	m_game->setGameStatus(QUIT);
 }

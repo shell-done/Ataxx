@@ -4,16 +4,16 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
-#include "menu.h"
-#include "src/Interface/Graphic/Items/graphicstextcarousel.h"
-#include "src/Interface/Graphic/Items/graphicsbutton.h"
+#include "screen.h"
+#include "src/Interface/Graphic/Items/graphicstextcarouselitem.h"
+#include "src/Interface/Graphic/Items/graphicsbuttonitem.h"
 #include "src/Core/gamecore.h"
 
-class PartyOptionsMenu : public Menu {
+class PartyOptionsScreen : public Screen {
 	Q_OBJECT
 
 public:
-	PartyOptionsMenu(int width, int height, GameCore* game, QObject* parent);
+	PartyOptionsScreen(int width, int height, GameCore* game, QObject* parent);
 
 	void update();
 
@@ -25,8 +25,8 @@ private:
 
 	QGraphicsTextItem* m_title;
 
-	GraphicsTextCarousel* m_carousels[3];
-	GraphicsButton* m_buttons[2];
+	GraphicsTextCarouselItem* m_carousels[3];
+	GraphicsButtonItem* m_buttons[2];
 
 private slots:
 	void playersNumberChanged(e_carouselArrow);

@@ -6,11 +6,11 @@ const int Window::m_height = 720;
 Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 	setWindowTitle("Ataxx - ISEN Yncréa Ouest Rennes - CIR 2 C++ Project | Alexandre THOMAS");
 
-	m_mainMenu = new MainMenu(m_width, m_height, game, this);
-	m_partyOptionsMenu = new PartyOptionsMenu(m_width, m_height, game, this);
-	m_characterSelectionMenu = new CharacterSelectionMenu(m_width, m_height, game, this);
-	m_texturesMenu = new TexturesMenu(m_width, m_height, game, this);
-	m_optionsMenu = new OptionsMenu(m_width, m_height, game, this);
+	m_mainMenu = new MainMenuScreen(m_width, m_height, game, this);
+	m_partyOptionsScreen = new PartyOptionsScreen(m_width, m_height, game, this);
+	m_characterSelectionScreen = new CharacterSelectionScreen(m_width, m_height, game, this);
+	m_texturesPacksScreen = new TexturesPacksScreen(m_width, m_height, game, this);
+	m_optionsScreen = new OptionsScreen(m_width, m_height, game, this);
 	m_boardScreen = new BoardScreen(m_width, m_height, game, this);
 
 	setFixedSize(m_width + 2, m_height + 2);
@@ -47,13 +47,13 @@ void Window::gameUpdate() {
 		break;
 
 	case LOCAL_OPTIONS:
-		setScene(m_partyOptionsMenu);
-		m_partyOptionsMenu->update();
+		setScene(m_partyOptionsScreen);
+		m_partyOptionsScreen->update();
 		break;
 
 	case LOCAL_CHARACTER_SELECTION:
-		setScene(m_characterSelectionMenu);
-		m_characterSelectionMenu->update();
+		setScene(m_characterSelectionScreen);
+		m_characterSelectionScreen->update();
 		break;
 
 	case LOCAL_IN_GAME:
@@ -66,13 +66,13 @@ void Window::gameUpdate() {
 		break;
 
 	case ON_TEXTURES_MENU:
-		setScene(m_texturesMenu);
-		m_texturesMenu->update();
+		setScene(m_texturesPacksScreen);
+		m_texturesPacksScreen->update();
 		break;
 
 	case ON_OPTIONS_MENU:
-		setScene(m_optionsMenu);
-		m_optionsMenu->update();
+		setScene(m_optionsScreen);
+		m_optionsScreen->update();
 		break;
 
 	default:

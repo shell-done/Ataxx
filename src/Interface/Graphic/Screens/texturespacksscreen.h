@@ -6,15 +6,15 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItemGroup>
 #include <QCursor>
-#include "menu.h"
+#include "screen.h"
 #include "src/Core/gamecore.h"
-#include "src/Interface/Graphic/Items/graphicsbutton.h"
+#include "src/Interface/Graphic/Items/graphicsbuttonitem.h"
 
-class TexturesMenu : public Menu {
+class TexturesPacksScreen : public Screen {
 	Q_OBJECT
 
 public:
-	TexturesMenu(int width, int height, GameCore* game, QObject* parent);
+	TexturesPacksScreen(int width, int height, GameCore* game, QObject* parent);
 
 	void update();
 
@@ -37,7 +37,7 @@ private:
 	int mouseOverArrow(const QPoint& mousePos);
 
 	QGraphicsTextItem* m_title;
-	GraphicsButton* m_return;
+	GraphicsButtonItem* m_return;
 	QGraphicsPixmapItem* m_arrows[2];
 
 	QGraphicsPixmapItem* m_packSelected;

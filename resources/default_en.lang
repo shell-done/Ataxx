@@ -20,7 +20,7 @@ console:local:round = Round %1 :
 console:local:pawnsLeft = Pawns left : 
 console:local:player = Player %1
 console:local:playing = Player %1's turns to play
-console:local:incorrectMove = Incorrect move
+console:local:incorrectMove = Incorrect move or incorrect input (correct input > srcX srcY destX destY)
 console:local:win = Player %1 has won the game, returning to the main menu.
 
 console:options:title = |            Ataxx - Options          |

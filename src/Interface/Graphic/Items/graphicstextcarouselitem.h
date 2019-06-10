@@ -12,11 +12,11 @@
 typedef enum e_carouselArrow {LEFT, RIGHT} e_carouselArrow;
 
 //Merci à théo pour avoir trouvé le nom
-class GraphicsTextCarousel : public QObject, public QGraphicsRectItem {
+class GraphicsTextCarouselItem : public QObject, public QGraphicsRectItem {
 	Q_OBJECT
 
 public:
-	GraphicsTextCarousel(GameCore* game, QSize size, QString arrowImg, QString arrowHoverImg, QString label, QString value, int fontSize, QGraphicsItem* parent = nullptr);
+	GraphicsTextCarouselItem(GameCore* game, QSize size, QString arrowImg, QString arrowHoverImg, QString label, QString value, int fontSize, QGraphicsItem* parent = nullptr);
 
 	void setValue(const QString& value);
 
@@ -42,6 +42,8 @@ private:
 	QString m_arrowHoverImg;
 
 	int prevArrowHover;
+	QString m_label;
+	QString m_value;
 
 	QGraphicsTextItem* m_graphicsLabel;
 	QGraphicsTextItem* m_graphicsValue;

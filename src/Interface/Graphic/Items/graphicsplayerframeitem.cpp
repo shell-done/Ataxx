@@ -19,7 +19,7 @@ GraphicsPlayerFrameItem::GraphicsPlayerFrameItem(GameCore* game, QSize rectSize,
 
 	m_graphicsCharacter = new QGraphicsPixmapItem(m_textures->loadPixmap(charactersThumbs.arg(character)).scaled(rectSize), this);
 	m_graphicsFrame = new QGraphicsPixmapItem(m_textures->loadPixmap(characterSelector).scaled(rectSize), this);
-	m_graphicsText = new QGraphicsTextItem(m_tr->qTranslate("graphic:local:character:name").arg(player), this);
+	m_graphicsText = new QGraphicsTextItem(m_tr->qTranslate("graphic:local:character:name", m_textures->removeAccents()).arg(player), this);
 
 	setRect(0, 0, rectSize.width(), rectSize.height());
 	setPen(QPen(Qt::transparent));
@@ -41,9 +41,9 @@ void GraphicsPlayerFrameItem::update() {
 
 	if(m_player != -1) {
 		if(m_score == -1)
-			m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name").arg(m_player));
+			m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name", m_textures->removeAccents()).arg(m_player));
 		else
-			m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name").arg(m_player) + " - " + QString::number(m_score));
+			m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name", m_textures->removeAccents()).arg(m_player) + " - " + QString::number(m_score));
 	} else {
 		m_graphicsText->setPlainText("");
 	}

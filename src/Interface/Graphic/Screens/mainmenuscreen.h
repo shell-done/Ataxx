@@ -5,15 +5,15 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
-#include "menu.h"
-#include "src/Interface/Graphic/Items/graphicsbutton.h"
+#include "screen.h"
+#include "src/Interface/Graphic/Items/graphicsbuttonitem.h"
 #include "src/Core/gamecore.h"
 
-class MainMenu : public Menu {
+class MainMenuScreen : public Screen {
 	Q_OBJECT
 
 public:
-	MainMenu(int width, int height, GameCore* game, QObject* parent);
+	MainMenuScreen(int width, int height, GameCore* game, QObject* parent);
 
 	void update();
 
@@ -23,7 +23,7 @@ private:
 	void placeButtons();
 
 	QGraphicsPixmapItem* m_background;
-	GraphicsButton* m_buttons[5];
+	GraphicsButtonItem* m_buttons[5];
 
 private slots:
 	void localGame();

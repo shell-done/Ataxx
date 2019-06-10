@@ -1,10 +1,10 @@
-#include "characterselectionmenu.h"
+#include "characterselectionscreen.h"
 
-const int CharacterSelectionMenu::topTitleY = 30;
-const int CharacterSelectionMenu::topTextY = 140;
-const int CharacterSelectionMenu::margin = 330;
+const int CharacterSelectionScreen::topTitleY = 30;
+const int CharacterSelectionScreen::topTextY = 140;
+const int CharacterSelectionScreen::margin = 330;
 
-CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, "menus/character_selection_menu.png", parent) {
+CharacterSelectionScreen::CharacterSelectionScreen(int width, int height, GameCore* game, QObject* parent) : Screen(width, height, game, "menus/character_selection_menu.png", parent) {
 	m_title = nullptr;
 
 	for(int i=0; i<4; i++)
@@ -15,8 +15,8 @@ CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, GameCore* 
 
 	m_grid = nullptr;
 
-	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:return", 40);
-	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:next", 40);
+	m_buttons[0] = new GraphicsButtonItem(game, "menus/half_selector.png", "graphic:menu:global:return", 40);
+	m_buttons[1] = new GraphicsButtonItem(game, "menus/half_selector.png", "graphic:menu:global:next", 40);
 	addItem(m_buttons[0]);
 	addItem(m_buttons[1]);
 
@@ -30,7 +30,7 @@ CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, GameCore* 
 	updateText();
 }
 
-void CharacterSelectionMenu::updateTextures() {
+void CharacterSelectionScreen::updateTextures() {
 	QVector<char> playersChar = m_game->board()->playersList();
 
 	if(m_playersDisplayed != playersChar.size()) {
@@ -58,7 +58,7 @@ void CharacterSelectionMenu::updateTextures() {
 	displayGroups();
 }
 
-void CharacterSelectionMenu::updateText() {
+void CharacterSelectionScreen::updateText() {
 	generateText(m_title, "graphic:local:character:title", 60, m_textures->primaryColor());
 	hCenter(m_title, topTitleY);
 
@@ -66,7 +66,7 @@ void CharacterSelectionMenu::updateText() {
 	alignRight(m_buttons[1], 330, static_cast<int>(height() - 50 - m_buttons[1]->boundingRect().height()));
 }
 
-void CharacterSelectionMenu::update() {
+void CharacterSelectionScreen::update() {
 	updateTextures();
 	updateText();
 
@@ -77,10 +77,10 @@ void CharacterSelectionMenu::update() {
 		if(m_playersGroup[i])
 			m_playersGroup[i]->update();
 
-	Menu::update();
+	Screen::update();
 }
 
-void CharacterSelectionMenu::createThumbsGroup() {
+void CharacterSelectionScreen::createThumbsGroup() {
 	QVector<char> playersChar = m_game->board()->playersList();
 
 	if(m_grid) {
@@ -127,7 +127,7 @@ void CharacterSelectionMenu::createThumbsGroup() {
 	}
 }
 
-void CharacterSelectionMenu::displayGroups() {
+void CharacterSelectionScreen::displayGroups() {
 	for(int i=0; i<4; i++) {
 		if(!m_playersGroup[i])
 			continue;
@@ -141,7 +141,7 @@ void CharacterSelectionMenu::displayGroups() {
 	hCenter(m_grid, 175);
 }
 
-int CharacterSelectionMenu::mouseOverThumb(const QPoint &mousePos) {
+int CharacterSelectionScreen::mouseOverThumb(const QPoint &mousePos) {
 	for(int i=0; i<20; i++)
 		if(m_thumbsGroup[i]->boundingRect().translated(m_thumbsGroup[i]->pos() + m_grid->pos()).contains(mousePos))
 			return i;
@@ -149,7 +149,7 @@ int CharacterSelectionMenu::mouseOverThumb(const QPoint &mousePos) {
 	return -1;
 }
 
-void CharacterSelectionMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+void CharacterSelectionScreen::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mouseMoveEvent(event);
 	int thumbHovered = mouseOverThumb(event->scenePos().toPoint());
 
@@ -171,7 +171,7 @@ void CharacterSelectionMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	}
 }
 
-void CharacterSelectionMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void CharacterSelectionScreen::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mousePressEvent(event);
 
 	int thumbHovered = mouseOverThumb(event->scenePos().toPoint());
@@ -191,15 +191,15 @@ void CharacterSelectionMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	mouseMoveEvent(event);
 }
 
-void CharacterSelectionMenu::back() {
+void CharacterSelectionScreen::back() {
 	m_game->setGameStatus(LOCAL_OPTIONS);
 }
 
-void CharacterSelectionMenu::next() {
+void CharacterSelectionScreen::next() {
 	m_game->setGameStatus(LOCAL_IN_GAME);
 }
 
-void CharacterSelectionMenu::characterClicked() {
+void CharacterSelectionScreen::characterClicked() {
 	GraphicsPlayerFrameItem* frameItem = static_cast<GraphicsPlayerFrameItem*>(sender());
 	m_playerSelected = frameItem->player() - 1;
 

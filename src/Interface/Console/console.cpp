@@ -233,7 +233,7 @@ void Console::displayParty() {
 		cout << player.arg(pawns.keys()[i]).arg(pawns[pawns.keys()[i]]).toStdString();
 	}
 
-	QString player = m_tr->qTranslate("console:local:player");
+	QString player = m_tr->qTranslate("console:local:player", true);
 	player += "(%2)";
 	cout << player.arg(pawns.lastKey()).arg(pawns[pawns.lastKey()]).toStdString() << endl;
 

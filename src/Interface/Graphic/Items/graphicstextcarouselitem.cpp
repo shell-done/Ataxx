@@ -1,8 +1,8 @@
-#include "graphicstextcarousel.h"
+#include "graphicstextcarouselitem.h"
 
-const int GraphicsTextCarousel::arrowMargin = 16;
+const int GraphicsTextCarouselItem::arrowMargin = 16;
 
-GraphicsTextCarousel::GraphicsTextCarousel(GameCore* game, QSize size, QString arrowImg, QString arrowHoverImg, QString label, QString value, int fontSize, QGraphicsItem* parent) : QObject(), QGraphicsRectItem(parent) {
+GraphicsTextCarouselItem::GraphicsTextCarouselItem(GameCore* game, QSize size, QString arrowImg, QString arrowHoverImg, QString label, QString value, int fontSize, QGraphicsItem* parent) : QObject(), QGraphicsRectItem(parent) {
 	m_textures = game->textures();
 	m_tr = game->tr();
 
@@ -13,6 +13,9 @@ GraphicsTextCarousel::GraphicsTextCarousel(GameCore* game, QSize size, QString a
 	m_arrowImg = arrowImg;
 	m_arrowHoverImg = arrowHoverImg;
 	prevArrowHover = -1;
+
+	m_label = label;
+	m_value = value;
 
 	m_graphicsLabel = new QGraphicsTextItem(m_tr->qTranslate(label, m_textures->removeAccents()), this);
 	m_graphicsLabel->setFont(m_textures->loadFont(fontSize));
@@ -34,7 +37,7 @@ GraphicsTextCarousel::GraphicsTextCarousel(GameCore* game, QSize size, QString a
 	update();
 }
 
-void GraphicsTextCarousel::placeCarousel() {
+void GraphicsTextCarouselItem::placeCarousel() {
 	int textY = static_cast<int>((boundingRect().height() - m_graphicsLabel->boundingRect().height())/2);
 	int arrowY = static_cast<int>((boundingRect().height() - m_arrowItem[0]->boundingRect().height())/2);
 
@@ -46,7 +49,7 @@ void GraphicsTextCarousel::placeCarousel() {
 	m_arrowItem[0]->setPos(m_graphicsValue->x() - 0.5*arrowMargin - m_arrowItem[0]->boundingRect().width(), arrowY);
 }
 
-int GraphicsTextCarousel::mouseOnArrow(const QPoint& p) {
+int GraphicsTextCarouselItem::mouseOnArrow(const QPoint& p) {
 	for(int i=0; i<2; i++)
 		if(m_arrowItem[i]->sceneBoundingRect().contains(p))
 			return i;
@@ -54,31 +57,36 @@ int GraphicsTextCarousel::mouseOnArrow(const QPoint& p) {
 	return -1;
 }
 
-void GraphicsTextCarousel::update() {
+void GraphicsTextCarouselItem::update() {
 	m_arrowItem[0]->setPixmap(m_textures->loadRotatePixmap(m_arrowImg, -90));
 	m_arrowItem[1]->setPixmap(m_textures->loadRotatePixmap(m_arrowImg, 90));
 
+	m_graphicsLabel->setPlainText(m_tr->qTranslate(m_label, m_textures->removeAccents()));
 	m_graphicsLabel->setDefaultTextColor(m_textures->primaryColor());
 	m_graphicsLabel->setFont(m_textures->loadFont(m_fontSize));
+
+	m_graphicsValue->setPlainText(m_tr->qTranslate(m_value, m_textures->removeAccents()));
 	m_graphicsValue->setDefaultTextColor(m_textures->primaryColor());
 	m_graphicsValue->setFont(m_textures->loadFont(m_fontSize));
 
 	placeCarousel();
 }
 
-void GraphicsTextCarousel::setValue(const QString &value) {
+void GraphicsTextCarouselItem::setValue(const QString &value) {
 	m_graphicsValue->setPlainText(m_tr->qTranslate(value, m_textures->removeAccents()));
+	m_value = value;
+
 	placeCarousel();
 }
 
-void GraphicsTextCarousel::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
+void GraphicsTextCarouselItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 	m_arrowItem[0]->show();
 	m_arrowItem[1]->show();
 
 	QGraphicsRectItem::hoverEnterEvent(event);
 }
 
-void GraphicsTextCarousel::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
+void GraphicsTextCarouselItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 	m_arrowItem[0]->hide();
 	m_arrowItem[1]->hide();
 
@@ -90,7 +98,7 @@ void GraphicsTextCarousel::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 	QGraphicsRectItem::hoverLeaveEvent(event);
 }
 
-void GraphicsTextCarousel::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
+void GraphicsTextCarouselItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 	int arrowHover = mouseOnArrow(event->scenePos().toPoint());
 
 	if(prevArrowHover != -1 && prevArrowHover != arrowHover)
@@ -103,7 +111,7 @@ void GraphicsTextCarousel::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 	QGraphicsRectItem::hoverMoveEvent(event);
 }
 
-void GraphicsTextCarousel::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+void GraphicsTextCarouselItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	int arrowHover = mouseOnArrow(event->scenePos().toPoint());
 
 	if(arrowHover == 0)

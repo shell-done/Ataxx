@@ -5,12 +5,12 @@
 #include <QTimer>
 #include <QTextDocument>
 #include <QMediaPlayer>
-#include "menu.h"
-#include "src/Interface/Graphic/Items/graphicsbutton.h"
+#include "screen.h"
+#include "src/Interface/Graphic/Items/graphicsbuttonitem.h"
 #include "src/Interface/Graphic/Items/graphicsplayerframeitem.h"
 #include "src/Interface/Graphic/Items/graphicsboarditem.h"
 
-class BoardScreen : public Menu {
+class BoardScreen : public Screen {
 	Q_OBJECT
 
 public:
@@ -26,7 +26,7 @@ private:
 
 	GraphicsPlayerFrameItem* m_graphicsCurrentPlayerFrame;
 	QGraphicsTextItem* m_graphicsCurrentPlayerText;
-	GraphicsButton* m_buttons[2];
+	GraphicsButtonItem* m_buttons[2];
 
 	QTimer* m_timer;
 	int m_minutes;

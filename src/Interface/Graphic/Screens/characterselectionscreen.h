@@ -5,16 +5,16 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItemGroup>
-#include "menu.h"
+#include "screen.h"
 #include "src/Core/gamecore.h"
-#include "src/Interface/Graphic/Items/graphicsbutton.h"
+#include "src/Interface/Graphic/Items/graphicsbuttonitem.h"
 #include "src/Interface/Graphic/Items/graphicsplayerframeitem.h"
 
-class CharacterSelectionMenu : public Menu {
+class CharacterSelectionScreen : public Screen {
 	Q_OBJECT
 
 public:
-	CharacterSelectionMenu(int width, int height, GameCore* game, QObject* parent);
+	CharacterSelectionScreen(int width, int height, GameCore* game, QObject* parent);
 
 	void update();
 
@@ -41,7 +41,7 @@ private:
 
 	QGraphicsTextItem* m_title;
 
-	GraphicsButton* m_buttons[2];
+	GraphicsButtonItem* m_buttons[2];
 	GraphicsPlayerFrameItem* m_playersGroup[4];
 
 	QGraphicsItemGroup* m_thumbsGroup[20];

@@ -4,16 +4,16 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
-#include "menu.h"
-#include "src/Interface/Graphic/Items/graphicstextcarousel.h"
-#include "src/Interface/Graphic/Items/graphicsbutton.h"
+#include "screen.h"
+#include "src/Interface/Graphic/Items/graphicstextcarouselitem.h"
+#include "src/Interface/Graphic/Items/graphicsbuttonitem.h"
 #include "src/Core/gamecore.h"
 
-class OptionsMenu : public Menu {
+class OptionsScreen : public Screen {
 	Q_OBJECT
 
 public:
-	OptionsMenu(int width, int height, GameCore* game, QObject* parent);
+	OptionsScreen(int width, int height, GameCore* game, QObject* parent);
 
 	void update();
 
@@ -26,8 +26,8 @@ private:
 	QGraphicsPixmapItem* m_background;
 	QGraphicsTextItem* m_title;
 
-	GraphicsTextCarousel* m_carousels[2];
-	GraphicsButton* m_return;
+	GraphicsTextCarouselItem* m_carousels[2];
+	GraphicsButtonItem* m_return;
 
 private slots:
 	void soundCarouselChanged(e_carouselArrow);

@@ -34,37 +34,37 @@ SOURCES += \
     src/Core/translator.cpp \
     src/Interface/Console/console.cpp \
     src/Interface/Graphic/Items/graphicsboarditem.cpp \
-    src/Interface/Graphic/Items/graphicsbutton.cpp \
+    src/Interface/Graphic/Items/graphicsbuttonitem.cpp \
     src/Interface/Graphic/Items/graphicsplayerframeitem.cpp \
-    src/Interface/Graphic/Items/graphicstextcarousel.cpp \
-    src/Interface/Graphic/Menus/boardscreen.cpp \
-    src/Interface/Graphic/Menus/characterselectionmenu.cpp \
-    src/Interface/Graphic/Menus/mainmenu.cpp \
-    src/Interface/Graphic/Menus/optionsmenu.cpp \
-    src/Interface/Graphic/Menus/partyoptionsmenu.cpp \
-    src/Interface/Graphic/Menus/texturesmenu.cpp \
+    src/Interface/Graphic/Items/graphicstextcarouselitem.cpp \
+    src/Interface/Graphic/Screens/boardscreen.cpp \
+    src/Interface/Graphic/Screens/characterselectionscreen.cpp \
+    src/Interface/Graphic/Screens/mainmenuscreen.cpp \
+    src/Interface/Graphic/Screens/optionsscreen.cpp \
+    src/Interface/Graphic/Screens/partyoptionsscreen.cpp \
+    src/Interface/Graphic/Screens/texturespacksscreen.cpp \
     src/Interface/Graphic/window.cpp \
-    utils.cpp
+    src/utils.cpp \
 
 HEADERS += \
-    core.h \
     src/Core/board.h \
     src/Core/gamecore.h \
     src/Core/textures.h \
     src/Core/translator.h \
     src/Interface/Console/console.h \
     src/Interface/Graphic/Items/graphicsboarditem.h \
-    src/Interface/Graphic/Items/graphicsbutton.h \
+    src/Interface/Graphic/Items/graphicsbuttonitem.h \
     src/Interface/Graphic/Items/graphicsplayerframeitem.h \
-    src/Interface/Graphic/Items/graphicstextcarousel.h \
-    src/Interface/Graphic/Menus/boardscreen.h \
-    src/Interface/Graphic/Menus/characterselectionmenu.h \
-    src/Interface/Graphic/Menus/mainmenu.h \
-    src/Interface/Graphic/Menus/menu.h \
-    src/Interface/Graphic/Menus/optionsmenu.h \
-    src/Interface/Graphic/Menus/partyoptionsmenu.h \
-    src/Interface/Graphic/Menus/texturesmenu.h \
-    src/Interface/Graphic/window.h \
+    src/Interface/Graphic/Items/graphicstextcarouselitem.h \
+    src/Interface/Graphic/Screens/boardscreen.h \
+    src/Interface/Graphic/Screens/characterselectionscreen.h \
+    src/Interface/Graphic/Screens/mainmenuscreen.h \
+    src/Interface/Graphic/Screens/optionsscreen.h \
+    src/Interface/Graphic/Screens/partyoptionsscreen.h \
+    src/Interface/Graphic/Screens/screen.h \
+    src/Interface/Graphic/Screens/texturespacksscreen.h \
+    src/Interface/Graphic/window.h \ \
+    src/utils.h
 
 RESOURCES += \
     resources.qrc
