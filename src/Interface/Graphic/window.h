@@ -3,6 +3,7 @@
 
 #include <QGraphicsView>
 #include <QColor>
+#include <QIcon>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include "src/Core/gamecore.h"
@@ -36,7 +37,7 @@ private:
 
 private slots:
 	void gameUpdate();
-	void changeMusic();
+	void changeResources();
 };
 
 #endif // WINDOW_H

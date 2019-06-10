@@ -4,6 +4,8 @@ const int Window::m_width = 1280;
 const int Window::m_height = 720;
 
 Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
+	setWindowTitle("Ataxx - ISEN Yncréa Ouest Rennes - CIR 2 C++ Project | Alexandre THOMAS");
+
 	m_mainMenu = new MainMenu(m_width, m_height, game, this);
 	m_partyOptionsMenu = new PartyOptionsMenu(m_width, m_height, game, this);
 	m_characterSelectionMenu = new CharacterSelectionMenu(m_width, m_height, game, this);
@@ -19,21 +21,18 @@ Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 	setScene(m_mainMenu);
 
 	QMediaPlaylist* playlist = new QMediaPlaylist(this);
-	QUrl bgMusicUrl = m_game->textures()->loadSoundUrl("background_music.wav");
-
-	if(!bgMusicUrl.isEmpty())
-		playlist->addMedia(bgMusicUrl);
 	playlist->setPlaybackMode(QMediaPlaylist::Loop);
 
 	m_backgroundMusicPlayer = new QMediaPlayer(this);
 	m_backgroundMusicPlayer->setPlaylist(playlist);
 	m_backgroundMusicPlayer->setVolume(m_game->volume());
-	m_backgroundMusicPlayer->play();
+
+	changeResources();
 
 	connect(m_game, SIGNAL(volumeChanged(int)), m_backgroundMusicPlayer, SLOT(setVolume(int)));
 
 	connect(m_game, SIGNAL(updateWindow()), this, SLOT(gameUpdate()));
-	connect(m_game->textures(), SIGNAL(updateTextures()), this, SLOT(changeMusic()));
+	connect(m_game->textures(), SIGNAL(updateTextures()), this, SLOT(changeResources()));
 }
 
 void Window::gameUpdate() {
@@ -83,7 +82,9 @@ void Window::gameUpdate() {
 	m_prevStatus = m_game->gameSubSubStatus();
 }
 
-void Window::changeMusic() {
+void Window::changeResources() {
+	setWindowIcon(QIcon(m_game->textures()->loadPixmap("icon.png")));
+
 	QMediaPlaylist* playlist = m_backgroundMusicPlayer->playlist();
 	playlist->clear();
 

@@ -58,5 +58,6 @@
         <file>resources/pack.conf</file>
         <file>resources/default_en.lang</file>
         <file>resources/font.ttf</file>
+        <file>resources/icon.png</file>
     </qresource>
 </RCC>
