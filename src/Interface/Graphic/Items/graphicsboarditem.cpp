@@ -9,6 +9,7 @@ GraphicsBoardItem::GraphicsBoardItem(GameCore* game, QGraphicsItem* parent) : QO
 	m_boxesSize = maxGridSize/game->board()->width();
 	m_width = (m_boxesSize - 1)*game->board()->width() + 1;
 
+	m_blocked = false;
 	m_boxClicked = QPoint(-1, -1);
 
 	initBackground();
@@ -51,7 +52,7 @@ void GraphicsBoardItem::initBoxes() {
 		m_boxes[i] = new QGraphicsPixmapItem*[width];
 
 	QPixmap transparentPixmap(m_boxesSize - 6, m_boxesSize - 6);
-	transparentPixmap.fill(QColor(255, 255, 255, 1));
+	transparentPixmap.fill(Qt::transparent);
 
 	for(int i=0; i<width; i++) {
 		for(int j=0; j<width; j++) {
@@ -63,7 +64,7 @@ void GraphicsBoardItem::initBoxes() {
 
 void GraphicsBoardItem::updateBoard() {
 	QPixmap transparentPixmap(m_boxesSize - 6, m_boxesSize - 6);
-	transparentPixmap.fill(QColor(255, 255, 255, 1));
+	transparentPixmap.fill(Qt::transparent);
 
 	int width = m_game->board()->width();
 
@@ -76,15 +77,21 @@ void GraphicsBoardItem::updateBoard() {
 
 			if(character == -1)
 				m_boxes[i][j]->setPixmap(transparentPixmap);
+			else if(character == '-')
+				m_boxes[i][j]->setPixmap(m_texture->loadPixmap(QString("grid/wall_box.png")).scaled(m_boxesSize - 6, m_boxesSize - 6));
 			else
 				m_boxes[i][j]->setPixmap(m_texture->loadPixmap(QString("characters/pawns/%1.png").arg(character)).scaled(m_boxesSize - 6, m_boxesSize - 6));
 
-			if(m_game->board()->boxBelongByCurrentPlayer(QPoint(i, j)))
+			if(m_game->board()->boxBelongByCurrentPlayer(QPoint(i, j)) && !m_blocked)
 				m_boxes[i][j]->setCursor(Qt::PointingHandCursor);
 			else
 				m_boxes[i][j]->setCursor(Qt::ArrowCursor);
 		}
 	}
+}
+
+void GraphicsBoardItem::block(bool b) {
+	m_blocked = b;
 }
 
 void GraphicsBoardItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
@@ -101,6 +108,9 @@ void GraphicsBoardItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 }
 
 void GraphicsBoardItem::boxClicked(QPoint box) {
+	if(m_blocked)
+		return;
+
 	if(m_game->board()->boxBelongByCurrentPlayer(box)) {
 		if(m_boxClicked.x() == -1 || m_boxClicked == box) {
 			displayAllowedBoxes(box);
@@ -117,7 +127,7 @@ void GraphicsBoardItem::boxClicked(QPoint box) {
 		else
 			m_boxClicked = QPoint(-1, -1);
 
-	} else if(m_game->board()->at(box) == m_game->board()->emptyBoxCharacter) {
+	} else if(m_game->board()->currentPlayerAllowedMove(m_boxClicked, box)) {
 		movePawn(box);
 		m_boxClicked = QPoint(-1, -1);
 	}
@@ -128,7 +138,7 @@ void GraphicsBoardItem::displayAllowedBoxes(QPoint src) {
 
 	QCursor newCursor = Qt::ArrowCursor;
 	QPixmap newPixmap(m_boxesSize - 6, m_boxesSize - 6);
-	newPixmap.fill(QColor(255, 255, 255, 1));
+	newPixmap.fill(Qt::transparent);
 
 	if(m_boxClicked.x() == -1) {
 		QPainter painter(&newPixmap);

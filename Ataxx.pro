@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -35,7 +35,6 @@ SOURCES += \
     src/Interface/Console/console.cpp \
     src/Interface/Graphic/Items/graphicsboarditem.cpp \
     src/Interface/Graphic/Items/graphicsbutton.cpp \
-    src/Interface/Graphic/Items/graphicslabelitem.cpp \
     src/Interface/Graphic/Items/graphicsplayerframeitem.cpp \
     src/Interface/Graphic/Items/graphicstextcarousel.cpp \
     src/Interface/Graphic/Menus/boardscreen.cpp \
@@ -56,7 +55,6 @@ HEADERS += \
     src/Interface/Console/console.h \
     src/Interface/Graphic/Items/graphicsboarditem.h \
     src/Interface/Graphic/Items/graphicsbutton.h \
-    src/Interface/Graphic/Items/graphicslabelitem.h \
     src/Interface/Graphic/Items/graphicsplayerframeitem.h \
     src/Interface/Graphic/Items/graphicstextcarousel.h \
     src/Interface/Graphic/Menus/boardscreen.h \

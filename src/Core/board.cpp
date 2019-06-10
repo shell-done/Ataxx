@@ -1,6 +1,7 @@
 #include "board.h"
 
 const char Board::emptyBoxCharacter = ' ';
+const char Board::wallCharacter = '-';
 const char Board::P1Character = 'A';
 const char Board::P2Character = 'B';
 
@@ -23,8 +24,14 @@ void Board::generate() {
 
 void Board::reset() {
 	for(int i=0; i<m_width; i++)
-		for(int j=0; j<m_height; j++)
+		for(int j=0; j<m_height; j++) {
 			m_boxes[i][j] = emptyBoxCharacter;
+
+			if(m_createWalls && rand()%10 == 0) {
+				m_boxes[i][j] = wallCharacter;
+			}
+		}
+
 
 	m_currentPlayer = m_playersList[0];
 	placePawns();
@@ -233,11 +240,16 @@ void Board::playMove(const QPoint &origin, const QPoint &dest) {
 		for(int j=-1; j<=1; j++) {
 			QPoint adjacentBox = QPoint(dest.x() + i, dest.y() + j);
 			if(onGrid(adjacentBox))
-				if(at(adjacentBox) != m_currentPlayer && at(adjacentBox) != emptyBoxCharacter)
+				if(m_playersList.contains(at(adjacentBox)))
 					setCharacter(adjacentBox, m_currentPlayer);
 		}
 
-	m_currentPlayer = m_playersList[(m_playersList.indexOf(m_currentPlayer) + 1) % m_playersList.size()];
+	if(!stopGame()) {
+		do {
+			m_currentPlayer = m_playersList[(m_playersList.indexOf(m_currentPlayer) + 1) % m_playersList.size()];
+		} while(!currentPlayerCanPlay());
+	}
+
 	m_round++;
 }
 

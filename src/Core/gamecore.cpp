@@ -20,6 +20,8 @@ GameCore::GameCore(const QMap<QString, QString>& arguments, QObject *parent) : Q
 
 	m_gameStatus = ON_MAIN_MENU;
 	m_volume = 75;
+
+	srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 void GameCore::update() {
@@ -101,13 +103,15 @@ void GameCore::changeWall() {
 	m_board.setWalls(!m_board.walls());
 }
 
-QString GameCore::volume() {
-	return QString::number(m_volume).rightJustified(3, ' ');
+int GameCore::volume() {
+	return m_volume;
 }
 
 void GameCore::addVolume(int v) {
 	if(m_volume + v >= 0 && m_volume + v <= 100)
 		m_volume += v;
+
+	emit volumeChanged(m_volume);
 }
 
 Board* GameCore::board() {

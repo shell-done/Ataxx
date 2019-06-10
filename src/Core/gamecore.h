@@ -28,7 +28,7 @@ public:
 	void addPlayer(int);
 	void addSize(int);
 	void changeWall();
-	QString volume();
+	int volume();
 	void addVolume(int volume);
 
 	Board* board();
@@ -49,6 +49,7 @@ private slots:
 signals:
 	void updateConsole();
 	void updateWindow();
+	void volumeChanged(int);
 };
 
 #endif // GAME_H

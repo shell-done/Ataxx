@@ -5,6 +5,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsItemGroup>
+#include <QCursor>
 #include "menu.h"
 #include "src/Core/gamecore.h"
 #include "src/Interface/Graphic/Items/graphicsbutton.h"
@@ -32,8 +33,8 @@ private:
 	void createPackItems();
 	void displayPackItems();
 
-	int mouseHoverText(const QPoint& mousePos);
-	int mouseHoverArrow(const QPoint& mousePos);
+	int mouseOverText(const QPoint& mousePos);
+	int mouseOverArrow(const QPoint& mousePos);
 
 	QGraphicsTextItem* m_title;
 	GraphicsButton* m_return;

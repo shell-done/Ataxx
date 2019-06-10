@@ -3,6 +3,8 @@
 
 #include <QGraphicsView>
 #include <QColor>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include "src/Core/gamecore.h"
 #include "Menus/mainmenu.h"
 #include "Menus/partyoptionsmenu.h"
@@ -30,8 +32,11 @@ private:
 	OptionsMenu* m_optionsMenu;
 	BoardScreen* m_boardScreen;
 
+	QMediaPlayer* m_backgroundMusicPlayer;
+
 private slots:
 	void gameUpdate();
+	void changeMusic();
 };
 
 #endif // WINDOW_H

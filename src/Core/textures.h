@@ -10,6 +10,7 @@
 #include <QPixmap>
 #include <QFont>
 #include <QMatrix>
+#include <QUrl>
 #include <iostream>
 
 typedef struct s_textures_pack {
@@ -38,6 +39,7 @@ public:
 	QPixmap loadPixmap(QString imagePath) const;
 	QPixmap loadRotatePixmap(QString imagePath, int angle) const;
 	QFont loadFont(int pointSize) const;
+	QUrl loadSoundUrl(QString soundPath) const;
 
 private:
 	static const QString defaultTexturesPack;

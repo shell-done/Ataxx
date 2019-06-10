@@ -32,6 +32,9 @@ void TexturesMenu::updateTextures() {
 		m_packSelected = addPixmap(m_textures->loadPixmap("menus/pack_selected.png"));
 		m_arrows[0] = addPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 0));
 		m_arrows[1] = addPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 180));
+
+		for(int i=0; i<2; i++)
+			m_arrows[i]->setCursor(Qt::PointingHandCursor);
 	}
 
 	createPackItems();
@@ -69,7 +72,7 @@ void TexturesMenu::createPackItems() {
 		QGraphicsRectItem* boundingRect = addRect(QRect(-5, -5, static_cast<int>(width()) - 2*margin - 70, 102));
 		boundingRect->setPen(QPen(Qt::transparent));
 
-		generateText(title, pack.name.left(15), 35, m_textures->primaryColor());
+		generateText(title, pack.name.left(15), 30, m_textures->primaryColor());
 		generateText(description, pack.description.left(29) + QString("..."), 20, m_textures->tertiaryColor());
 
 		title->setPos(icon->boundingRect().width() + 15, 3);
@@ -79,6 +82,7 @@ void TexturesMenu::createPackItems() {
 		m_packs.push_front(group);
 
 		group->setVisible(false);
+		group->setCursor(Qt::PointingHandCursor);
 	}
 }
 
@@ -101,18 +105,26 @@ void TexturesMenu::displayPackItems() {
 		alignLeft(m_packs[i + m_packIdx], margin, topTextY + 130*i);
 		m_packs[i + m_packIdx]->setVisible(true);
 	}
+
+	if(m_packs.size() < 3) {
+		m_arrows[0]->hide();
+		m_arrows[1]->hide();
+	} else {
+		m_arrows[0]->show();
+		m_arrows[1]->show();
+	}
 }
 
-int TexturesMenu::mouseHoverText(const QPoint& mousePos) {
+int TexturesMenu::mouseOverText(const QPoint& mousePos) {
 	for(int i=m_packIdx; i<m_packs.size() && i<=m_packIdx+1; i++) {
 		if(m_packs[i]->childrenBoundingRect().translated(m_packs[i]->pos()).contains(mousePos))
 			return i;
 	}
 
-	return -2;
+	return -1;
 }
 
-int TexturesMenu::mouseHoverArrow(const QPoint &mousePos) {
+int TexturesMenu::mouseOverArrow(const QPoint &mousePos) {
 	for(int i=0; i<2; i++)
 		if(m_arrows[i]->boundingRect().translated(m_arrows[i]->pos()).contains(mousePos))
 			return i;
@@ -123,46 +135,38 @@ int TexturesMenu::mouseHoverArrow(const QPoint &mousePos) {
 void TexturesMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mouseMoveEvent(event);
 
-	int arrowIdx = mouseHoverArrow(event->scenePos().toPoint());
+	int arrowIdx = mouseOverArrow(event->scenePos().toPoint());
 	for(int i=0; i<=1; i++)
 		if(i == arrowIdx)
-			m_arrows[i]->setPixmap(m_textures->loadRotatePixmap("menus/arrow_hovered.png", 180*i));
+			m_arrows[i]->setPixmap(m_textures->loadRotatePixmap("menus/arrow_onHover.png", 180*i));
 		else
 			m_arrows[i]->setPixmap(m_textures->loadRotatePixmap("menus/arrow.png", 180*i));
-
-	int idx = mouseHoverText(event->scenePos().toPoint());
-	if(idx == -2 || m_menuIdx == idx)
-		return;
-
-	m_menuIdx = idx;
 
 	for(int i=0; i<m_packs.size(); i++)
 		static_cast<QGraphicsTextItem*>(m_packs[i]->childItems()[1])->setDefaultTextColor(m_textures->primaryColor());
 
-	if(idx != -1) {
+
+	int idx = mouseOverText(event->scenePos().toPoint());
+	if(idx == -1)
+		return;
+
+	if(idx != -1)
 		static_cast<QGraphicsTextItem*>(m_packs[idx]->childItems()[1])->setDefaultTextColor(m_textures->secondaryColor());
-	}
 }
 
 void TexturesMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mousePressEvent(event);
 
-	int idx = mouseHoverText(event->scenePos().toPoint());
-	int arrowIdx = mouseHoverArrow(event->scenePos().toPoint());
+	int idx = mouseOverText(event->scenePos().toPoint());
+	int arrowIdx = mouseOverArrow(event->scenePos().toPoint());
 
-	if(idx == -2 && arrowIdx == -1)
+	if(idx == -1 && arrowIdx == -1)
 		return;
 
-	if(idx != -2) {
-		m_menuIdx = idx;
-		if(idx == -1)
-			m_game->setGameStatus(ON_MAIN_MENU);
-		else {
-			m_textures->setTexturePackIdx(idx);
-		}
+	if(idx != -1) {
+		m_textures->setTexturePackIdx(idx);
 	}
-
-	if(arrowIdx != -1) {
+	else if(arrowIdx != -1) {
 		if(arrowIdx == 0 && m_packIdx != 0)
 			m_packIdx--;
 		else if(arrowIdx == 1 && m_packIdx < m_packs.size() - 2)

@@ -39,10 +39,14 @@ void GraphicsPlayerFrameItem::update() {
 
 	m_graphicsCharacter->setPixmap(m_textures->loadPixmap(charactersThumbs.arg(m_character)).scaled(boundingRect().size().toSize()));
 
-	if(m_score == -1)
-		m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name").arg(m_player));
-	else
-		m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name").arg(m_player) + " - " + QString::number(m_score));
+	if(m_player != -1) {
+		if(m_score == -1)
+			m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name").arg(m_player));
+		else
+			m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name").arg(m_player) + " - " + QString::number(m_score));
+	} else {
+		m_graphicsText->setPlainText("");
+	}
 
 	m_graphicsText->setFont(m_textures->loadFont(m_fontSize));
 

@@ -13,7 +13,6 @@ public:
 	Menu(int width, int height, GameCore* game, QString backgroundImg, QObject* parent) : QGraphicsScene(parent), m_game(game) {
 		setSceneRect(0, 0, width, height);
 
-		m_menuIdx = 0;
 		m_textures = m_game->textures();
 		m_tr = m_game->tr();
 
@@ -71,8 +70,6 @@ protected:
 
 	QString m_backgroundImg;
 	QGraphicsPixmapItem* m_graphicsBackground;
-
-	int m_menuIdx;
 };
 
 #endif

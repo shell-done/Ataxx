@@ -141,69 +141,52 @@ void CharacterSelectionMenu::displayGroups() {
 	hCenter(m_grid, 175);
 }
 
-QPair<int, int> CharacterSelectionMenu::mouseOverElement(const QPoint &mousePos) {
+int CharacterSelectionMenu::mouseOverThumb(const QPoint &mousePos) {
 	for(int i=0; i<20; i++)
-		if(m_thumbsGroup[i]->boundingRect().translated(m_thumbsGroup[i]->pos() + m_grid->pos()).contains(mousePos)) {
-			return {2, i};
-		}
+		if(m_thumbsGroup[i]->boundingRect().translated(m_thumbsGroup[i]->pos() + m_grid->pos()).contains(mousePos))
+			return i;
 
-	return {-1, 0};
+	return -1;
 }
 
 void CharacterSelectionMenu::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mouseMoveEvent(event);
-	QPair<int, int> el = mouseOverElement(event->scenePos().toPoint());
+	int thumbHovered = mouseOverThumb(event->scenePos().toPoint());
 
 	QVector<char> thumbsSelected = m_game->board()->playersList();
 
-	if(el.first != 1) {
-		for(int i=0; i<m_grid->childItems().size(); i++) {
-			if(!thumbsSelected.contains(static_cast<char>('A' + i))) {
-				static_cast<QGraphicsPixmapItem*>(m_thumbsGroup[i]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/pawn_selector.png"));
-				static_cast<QGraphicsItemGroup*>(m_thumbsGroup[i])->setZValue(0);
-			}
+	for(int i=0; i<m_grid->childItems().size(); i++) {
+		if(!thumbsSelected.contains(static_cast<char>('A' + i))) {
+			static_cast<QGraphicsPixmapItem*>(m_thumbsGroup[i]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/pawn_selector.png"));
+			static_cast<QGraphicsItemGroup*>(m_thumbsGroup[i])->setZValue(0);
 		}
 	}
 
-	if(el.first == -1)
+	if(thumbHovered == -1)
 		return;
 
-	m_elementHover = el;
-
-	if(el.first == 2 && !thumbsSelected.contains(static_cast<char>('A' + el.second))) {
-		static_cast<QGraphicsPixmapItem*>(m_thumbsGroup[el.second]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/pawn_selected.png"));
-		static_cast<QGraphicsItemGroup*>(m_thumbsGroup[el.second])->setZValue(1);
+	if(!thumbsSelected.contains(static_cast<char>('A' + thumbHovered))) {
+		static_cast<QGraphicsPixmapItem*>(m_thumbsGroup[thumbHovered]->childItems()[1])->setPixmap(m_textures->loadPixmap("menus/pawn_selected.png"));
+		static_cast<QGraphicsItemGroup*>(m_thumbsGroup[thumbHovered])->setZValue(1);
 	}
 }
 
 void CharacterSelectionMenu::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mousePressEvent(event);
 
-	QPair<int, int> el = mouseOverElement(event->scenePos().toPoint());
-	if(el.first == -1)
+	int thumbHovered = mouseOverThumb(event->scenePos().toPoint());
+	if(thumbHovered == -1)
 		return;
 
-	m_elementHover = el;
-	if(el.first == 0) {
-		if(el.second == 0) {
-			m_game->setGameStatus(LOCAL_OPTIONS);
-			m_menuIdx = 0;
-		} else if(el.second == 1) {
-			m_game->setGameStatus(LOCAL_IN_GAME);
-			m_menuIdx = 0;
-		}
+	QVector<char> thumbsSelected = m_game->board()->playersList();
 
-	} else if(el.first == 2) {
-		QVector<char> thumbsSelected = m_game->board()->playersList();
+	if(thumbsSelected.contains(static_cast<char>('A' + thumbHovered)))
+		return;
 
-		if(thumbsSelected.contains(static_cast<char>('A' + el.second)))
-			return;
+	m_game->board()->setPlayerChar(m_playerSelected, static_cast<char>(thumbHovered + 'A'));
+	m_playersGroup[m_playerSelected]->setCharacter(static_cast<char>(thumbHovered + 'A'));
 
-		m_game->board()->setPlayerChar(m_playerSelected, static_cast<char>(el.second + 'A'));
-		m_playersGroup[m_playerSelected]->setCharacter(static_cast<char>(el.second + 'A'));
-
-		update();
-	}
+	update();
 
 	mouseMoveEvent(event);
 }

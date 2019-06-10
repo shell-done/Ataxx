@@ -8,7 +8,7 @@ OptionsMenu::OptionsMenu(int width, int height, GameCore* game, QObject* parent)
 	m_title = nullptr;
 	m_return = nullptr;
 
-	m_carousels[0] = new GraphicsTextCarousel(game, QSize(600, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:menu:options:sound", m_game->volume(), 40);
+	m_carousels[0] = new GraphicsTextCarousel(game, QSize(600, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:menu:options:sound", QString::number(m_game->volume()), 40);
 	m_carousels[1] = new GraphicsTextCarousel(game, QSize(600, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:menu:options:language", m_tr->currentLanguage(m_textures->removeAccents()), 40);
 	addItem(m_carousels[0]);
 	addItem(m_carousels[1]);
@@ -48,7 +48,7 @@ void OptionsMenu::soundCarouselChanged(e_carouselArrow arrow) {
 	else
 		m_game->addVolume(5);
 
-	m_carousels[0]->setValue(m_game->volume());
+	m_carousels[0]->setValue(QString::number(m_game->volume()).rightJustified(3, ' '));
 	update();
 }
 

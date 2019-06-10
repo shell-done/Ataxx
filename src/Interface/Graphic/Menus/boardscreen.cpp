@@ -31,6 +31,11 @@ BoardScreen::BoardScreen(int width, int height, GameCore* game, QObject* parent)
 
 	connect(m_buttons[0], SIGNAL(clicked()), this, SLOT(restart()));
 	connect(m_buttons[1], SIGNAL(clicked()), this, SLOT(quit()));
+
+	m_soundPlayer = new QMediaPlayer(this);
+	m_soundPlayer->setVolume(m_game->volume());
+
+	connect(m_game, SIGNAL(volumeChanged(int)), m_soundPlayer, SLOT(setVolume(int)));
 }
 
 void BoardScreen::generateBoard() {
@@ -150,26 +155,58 @@ void BoardScreen::pawnMoved() {
 	QVector<char> players = m_game->board()->playersList();
 	QMap<char, int> pawns = m_game->board()->countPawns();
 
+	int currentPlayer = players.indexOf(m_game->board()->currentPlayer()) + 1;
+
 	for(int i=0; i<players.size(); i++)
 		m_graphicsPlayerFrames[i]->setScore(pawns[players[i]]);
 
 	m_graphicsCurrentPlayerFrame->setCharacter(m_game->board()->currentPlayer());
-	m_graphicsCurrentPlayerFrame->setPlayer(players.indexOf(m_game->board()->currentPlayer()) + 1);
+	m_graphicsCurrentPlayerFrame->setPlayer(currentPlayer);
+
+	m_graphicsCurrentPlayerText->setPlainText(m_tr->qTranslate("graphic:local:game:currentPlayer").arg(currentPlayer));
 
 	if(m_game->board()->stopGame()) {
+		char winner = m_game->board()->winner();
+		int pWinner = m_game->board()->playersList().indexOf(winner) + 1;
+
+		m_graphicsBoardItem->block(true);
 		m_timer->stop();
-		qDebug() << "a";
+
+		if(winner == 'Z') {
+			m_graphicsCurrentPlayerText->setPlainText(m_tr->qTranslate("graphic:local:game:tie"));
+			m_graphicsCurrentPlayerFrame->setCharacter('Z');
+			m_graphicsCurrentPlayerFrame->setPlayer(-1);
+		} else {
+			m_graphicsCurrentPlayerText->setPlainText(m_tr->qTranslate("graphic:local:game:win", m_textures->removeAccents()).arg(pWinner));
+			m_graphicsCurrentPlayerFrame->setCharacter(winner);
+			m_graphicsCurrentPlayerFrame->setPlayer(pWinner);
+		}
+
+		m_graphicsCurrentPlayerText->setDefaultTextColor(m_textures->secondaryColor());
+		m_graphicsCurrentPlayerFrame->setSelected(true);
+
+		m_soundPlayer->setMedia(m_textures->loadSoundUrl("win_sound.wav"));
+	} else {
+		m_soundPlayer->setMedia(m_textures->loadSoundUrl("move_sound.wav"));
 	}
+
+	m_soundPlayer->play();
 }
 
 void BoardScreen::restart() {
 	m_game->board()->reset();
 
+	m_graphicsBoardItem->block(false);
 	m_graphicsBoardItem->updateBoard();
 	pawnMoved();
 
 	m_minutes = 0;
 	m_seconds = -1;
+	m_timer->start(1000);
+
+	m_graphicsCurrentPlayerText->setDefaultTextColor(m_textures->primaryColor());
+	m_graphicsCurrentPlayerFrame->setSelected(false);
+
 	addSecondToTimer();
 }
 

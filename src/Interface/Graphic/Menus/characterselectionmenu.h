@@ -30,13 +30,12 @@ private:
 	void updateTextures();
 	void updateText();
 
-	QPair<int, int> mouseOverElement(const QPoint& mousePos);
+	int mouseOverThumb(const QPoint& mousePos);
 
 	void createThumbsGroup();
 	void displayGroups();
 
 
-	QPair<int, int> m_elementHover;
 	int m_playersDisplayed;
 	int m_playerSelected;
 

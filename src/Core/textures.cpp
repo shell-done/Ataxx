@@ -223,3 +223,7 @@ QPixmap Textures::loadRotatePixmap(QString imagePath, int angle) const {
 QFont Textures::loadFont(int pointSize) const {
 	return QFont(m_fontName, pointSize);
 }
+
+QUrl Textures::loadSoundUrl(QString soundPath) const {
+	return QUrl(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/sounds/" + soundPath);
+}

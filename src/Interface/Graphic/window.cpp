@@ -18,13 +18,22 @@ Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 	setMouseTracking(true);
 	setScene(m_mainMenu);
 
+	QMediaPlaylist* playlist = new QMediaPlaylist(this);
+	playlist->addMedia(m_game->textures()->loadSoundUrl("background_music.wav"));
+	playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
+	m_backgroundMusicPlayer = new QMediaPlayer(this);
+	m_backgroundMusicPlayer->setPlaylist(playlist);
+	m_backgroundMusicPlayer->setVolume(m_game->volume());
+	m_backgroundMusicPlayer->play();
+
+	connect(m_game, SIGNAL(volumeChanged(int)), m_backgroundMusicPlayer, SLOT(setVolume(int)));
+
 	connect(m_game, SIGNAL(updateWindow()), this, SLOT(gameUpdate()));
+	connect(m_game->textures(), SIGNAL(updateTextures()), this, SLOT(changeMusic()));
 }
 
 void Window::gameUpdate() {
-	if(m_game->gameStatus() == QUIT)
-		close();
-
 	switch(m_game->gameSubSubStatus()) {
 	case QUIT:
 		close();
@@ -69,4 +78,14 @@ void Window::gameUpdate() {
 	}
 
 	m_prevStatus = m_game->gameSubSubStatus();
+}
+
+void Window::changeMusic() {
+	QMediaPlaylist* playlist = m_backgroundMusicPlayer->playlist();
+	playlist->clear();
+	playlist->addMedia(m_game->textures()->loadSoundUrl("background_music.wav"));
+
+	m_backgroundMusicPlayer->stop();
+	m_backgroundMusicPlayer->setPlaylist(playlist);
+	m_backgroundMusicPlayer->play();
 }

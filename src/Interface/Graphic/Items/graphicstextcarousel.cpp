@@ -24,8 +24,11 @@ GraphicsTextCarousel::GraphicsTextCarousel(GameCore* game, QSize size, QString a
 
 	m_arrowItem[0] = new QGraphicsPixmapItem(m_textures->loadRotatePixmap(arrowImg, -90), this);
 	m_arrowItem[1] = new QGraphicsPixmapItem(m_textures->loadRotatePixmap(arrowImg, 90), this);
-	m_arrowItem[0]->hide();
-	m_arrowItem[1]->hide();
+
+	for(int i=0; i<2; i++) {
+		m_arrowItem[i]->hide();
+		m_arrowItem[i]->setCursor(Qt::PointingHandCursor);
+	}
 
 	setAcceptHoverEvents(true);
 	update();

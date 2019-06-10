@@ -19,6 +19,7 @@ public:
 	~GraphicsBoardItem();
 
 	void updateBoard();
+	void block(bool b);
 
 protected:
 	void mousePressEvent(QGraphicsSceneMouseEvent* event);
@@ -40,6 +41,7 @@ private:
 	int m_boxesSize;
 	QGraphicsPixmapItem*** m_boxes;
 
+	bool m_blocked;
 	QPoint m_boxClicked;
 
 signals:

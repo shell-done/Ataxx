@@ -4,8 +4,8 @@
 #include <QGraphicsItemGroup>
 #include <QTimer>
 #include <QTextDocument>
+#include <QMediaPlayer>
 #include "menu.h"
-#include "src/Interface/Graphic/Items/graphicslabelitem.h"
 #include "src/Interface/Graphic/Items/graphicsbutton.h"
 #include "src/Interface/Graphic/Items/graphicsplayerframeitem.h"
 #include "src/Interface/Graphic/Items/graphicsboarditem.h"
@@ -31,6 +31,8 @@ private:
 	QTimer* m_timer;
 	int m_minutes;
 	int m_seconds;
+
+	QMediaPlayer* m_soundPlayer;
 
 public slots:
 	void generateBoard();

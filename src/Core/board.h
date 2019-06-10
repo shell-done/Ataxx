@@ -3,6 +3,8 @@
 
 #include <QPoint>
 #include <QVector>
+#include <time.h>
+#include <cstdlib>
 #include "core.h"
 
 class Board {
@@ -51,6 +53,7 @@ public:
 	char winner();
 
 	static const char emptyBoxCharacter;
+	static const char wallCharacter;
 	static const char P1Character;
 	static const char P2Character;
 

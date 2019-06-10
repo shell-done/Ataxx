@@ -296,7 +296,6 @@ void Console::playParty() {
 
 	if(board->stopGame()) {
 		displayParty();
-		board->destroy();
 
 		char winner = board->winner();
 
@@ -305,6 +304,7 @@ void Console::playParty() {
 		else
 			cout << m_tr->qTranslate("console:local:win", true).arg(winner).toStdString() << endl;
 
+		board->destroy();
 		m_game->setGameStatus(ON_MAIN_MENU);
 	}
 }
