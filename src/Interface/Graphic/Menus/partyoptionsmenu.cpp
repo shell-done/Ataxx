@@ -1,20 +1,20 @@
 #include "partyoptionsmenu.h"
 
 const int PartyOptionsMenu::topTitleY = 220;
-const int PartyOptionsMenu::topTextY = 340;
+const int PartyOptionsMenu::topTextY = 330;
 
 PartyOptionsMenu::PartyOptionsMenu(int width, int height, GameCore* game, QObject* parent) : Menu(width, height, game, "menus/main_menu.png", parent) {
 	m_title = nullptr;
 
-	m_carousels[0] = new GraphicsTextCarousel(game, QSize(700, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:local:menu:players", QString::number(m_game->board()->playersNumber()), 50);
-	m_carousels[1] = new GraphicsTextCarousel(game, QSize(700, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:local:menu:mapSize", QString("%1x%1").arg(m_game->board()->width()), 50);
-	m_carousels[2] = new GraphicsTextCarousel(game, QSize(700, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:local:menu:walls", QString("graphic:menu:global:") + (m_game->board()->walls() ? "yes" : "no"), 50);
+	m_carousels[0] = new GraphicsTextCarousel(game, QSize(600, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:local:menu:players", QString::number(m_game->board()->playersNumber()), 40);
+	m_carousels[1] = new GraphicsTextCarousel(game, QSize(600, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:local:menu:mapSize", QString("%1x%1").arg(m_game->board()->width()), 40);
+	m_carousels[2] = new GraphicsTextCarousel(game, QSize(600, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:local:menu:walls", QString("graphic:menu:global:") + (m_game->board()->walls() ? "yes" : "no"), 40);
 
 	for(int i=0; i<3; i++)
 		addItem(m_carousels[i]);
 
-	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:return", 50);
-	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:next", 50);
+	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:return", 40);
+	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:next", 40);
 
 	for(int i=0; i<2; i++)
 		addItem(m_buttons[i]);
@@ -30,11 +30,11 @@ PartyOptionsMenu::PartyOptionsMenu(int width, int height, GameCore* game, QObjec
 }
 
 void PartyOptionsMenu::updateText() {
-	generateText(m_title, "graphic:local:menu:title", 60, m_textures->primaryColor());
+	generateText(m_title, "graphic:local:menu:title", 50, m_textures->primaryColor());
 	hCenter(m_title, topTitleY);
 
 	for(int i=0; i<3; i++)
-		hCenter(m_carousels[i], topTextY+70*i);
+		hCenter(m_carousels[i], topTextY+60*i);
 
 	alignLeft(m_buttons[0], 330, static_cast<int>(height() - 50 - m_buttons[0]->boundingRect().height()));
 	alignRight(m_buttons[1], 330, static_cast<int>(height() - 50 - m_buttons[1]->boundingRect().height()));

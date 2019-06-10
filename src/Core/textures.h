@@ -30,7 +30,7 @@ public:
 	void setTexturePackIdx(int idx);
 
 	QList<s_textures_pack> getPackList() const;
-	bool useAccents() const;
+	bool removeAccents() const;
 	QColor primaryColor() const;
 	QColor secondaryColor() const;
 	QColor tertiaryColor() const;

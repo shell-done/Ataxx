@@ -36,7 +36,7 @@ private:
 	int mouseHoverArrow(const QPoint& mousePos);
 
 	QGraphicsTextItem* m_title;
-	GraphicsButton* m_ret;
+	GraphicsButton* m_return;
 	QGraphicsPixmapItem* m_arrows[2];
 
 	QGraphicsPixmapItem* m_packSelected;

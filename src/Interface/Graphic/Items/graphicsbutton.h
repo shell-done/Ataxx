@@ -1,6 +1,7 @@
 #ifndef GRAPHICSBUTTON_H
 #define GRAPHICSBUTTON_H
 
+#include <QGraphicsRectItem>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsTextItem>
 #include <QCursor>

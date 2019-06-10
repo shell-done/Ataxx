@@ -6,9 +6,9 @@ GameCore::GameCore(const QMap<QString, QString>& arguments, QObject *parent) : Q
 	m_translator = new Translator(DIR_LANGUAGES);
 	m_textures = nullptr;
 
-	if(arguments.value("mode", "console") == "mixed")
+	if(arguments.value("mode", "graphic") == "mixed")
 		m_displayMode = MIXED;
-	else if(arguments.value("mode", "console") == "graphic")
+	else if(arguments.value("mode", "graphic") == "graphic")
 		m_displayMode = GRAPHIC;
 	else
 		m_displayMode = CONSOLE;

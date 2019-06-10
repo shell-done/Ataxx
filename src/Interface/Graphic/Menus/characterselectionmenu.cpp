@@ -15,8 +15,8 @@ CharacterSelectionMenu::CharacterSelectionMenu(int width, int height, GameCore* 
 
 	m_grid = nullptr;
 
-	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:return", 50);
-	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:next", 50);
+	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:return", 40);
+	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:menu:global:next", 40);
 	addItem(m_buttons[0]);
 	addItem(m_buttons[1]);
 

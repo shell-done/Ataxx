@@ -24,11 +24,12 @@ BoardScreen::BoardScreen(int width, int height, GameCore* game, QObject* parent)
 	option.setAlignment(Qt::AlignCenter);
 	m_graphicsCurrentPlayerText->document()->setDefaultTextOption(option);
 
-	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:local:game:restart", 50);
-	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:local:game:quit", 50);
+	m_buttons[0] = new GraphicsButton(game, "menus/half_selector.png", "graphic:local:game:restart", 40);
+	m_buttons[1] = new GraphicsButton(game, "menus/half_selector.png", "graphic:local:game:quit", 40);
 	addItem(m_buttons[0]);
 	addItem(m_buttons[1]);
 
+	connect(m_buttons[0], SIGNAL(clicked()), this, SLOT(restart()));
 	connect(m_buttons[1], SIGNAL(clicked()), this, SLOT(quit()));
 }
 
@@ -92,7 +93,6 @@ void BoardScreen::update() {
 	m_graphicsCurrentPlayerText->setFont(m_textures->loadFont(30));
 
 	m_graphicsCurrentPlayerFrame->update();
-
 	placeItems();
 
 	Menu::update();
@@ -129,9 +129,8 @@ void BoardScreen::placeItems() {
 	int buttonX = static_cast<int>(rightColumnX + (columnWidth - m_buttons[0]->boundingRect().width())/2);
 	m_buttons[1]->setPos(buttonX, height() - m_buttons[1]->boundingRect().height() - 50);
 	m_buttons[0]->setPos(buttonX, m_buttons[1]->y() - m_buttons[0]->boundingRect().height() - 20);
-
-	m_buttons[0]->setZValue(10);
 }
+
 
 void BoardScreen::addSecondToTimer() {
 	m_seconds++;
@@ -156,11 +155,25 @@ void BoardScreen::pawnMoved() {
 
 	m_graphicsCurrentPlayerFrame->setCharacter(m_game->board()->currentPlayer());
 	m_graphicsCurrentPlayerFrame->setPlayer(players.indexOf(m_game->board()->currentPlayer()) + 1);
+
+	if(m_game->board()->stopGame()) {
+		m_timer->stop();
+		qDebug() << "a";
+	}
+}
+
+void BoardScreen::restart() {
+	m_game->board()->reset();
+
+	m_graphicsBoardItem->updateBoard();
+	pawnMoved();
+
+	m_minutes = 0;
+	m_seconds = -1;
+	addSecondToTimer();
 }
 
 void BoardScreen::quit() {
-	m_timer->stop();
-
 	m_game->board()->destroy();
 	m_game->setGameStatus(ON_MAIN_MENU);
 }

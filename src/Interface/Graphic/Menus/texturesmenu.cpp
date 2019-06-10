@@ -1,6 +1,6 @@
 #include "texturesmenu.h"
 
-const int TexturesMenu::topTitleY = 210;
+const int TexturesMenu::topTitleY = 220;
 const int TexturesMenu::topTextY = 330;
 const int TexturesMenu::margin = 335;
 
@@ -11,9 +11,9 @@ TexturesMenu::TexturesMenu(int width, int height, GameCore* game, QObject* paren
 	m_arrows[0] = nullptr;
 	m_arrows[1] = nullptr;
 
-	m_ret = new GraphicsButton(game, "menus/selector.png", "graphic:menu:global:return", 50);
-	addItem(m_ret);
-	connect(m_ret, SIGNAL(clicked()), this, SLOT(back()));
+	m_return = new GraphicsButton(game, "menus/selector.png", "graphic:menu:global:return", 40);
+	addItem(m_return);
+	connect(m_return, SIGNAL(clicked()), this, SLOT(back()));
 
 	m_packIdx = 0;
 
@@ -39,10 +39,10 @@ void TexturesMenu::updateTextures() {
 }
 
 void TexturesMenu::updateText() {
-	generateText(m_title, "graphic:menu:textures:title", 60, m_textures->primaryColor());
+	generateText(m_title, "graphic:menu:textures:title", 50, m_textures->primaryColor());
 	hCenter(m_title, topTitleY);
 
-	hCenter(m_ret, static_cast<int>(height() - 50 - m_ret->boundingRect().height()));
+	hCenter(m_return, static_cast<int>(height() - 50 - m_return->boundingRect().height()));
 }
 
 void TexturesMenu::update() {

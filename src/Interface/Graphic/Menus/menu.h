@@ -28,9 +28,9 @@ public:
 
 	void generateText(QGraphicsTextItem*& item, QString str, int fontSize, QColor color) {
 		if(item)
-			item->setPlainText(m_tr->qTranslate(str, m_textures->useAccents()));
+			item->setPlainText(m_tr->qTranslate(str, m_textures->removeAccents()));
 		else
-			item = addText(m_tr->qTranslate(str, m_textures->useAccents()));
+			item = addText(m_tr->qTranslate(str, m_textures->removeAccents()));
 
 		item->setFont(m_textures->loadFont(fontSize));
 		item->setDefaultTextColor(color);

@@ -18,10 +18,15 @@ void Board::generate() {
 	for(int i=0; i<m_width; i++)
 		m_boxes[i] = new char[m_height];
 
+	reset();
+}
+
+void Board::reset() {
 	for(int i=0; i<m_width; i++)
 		for(int j=0; j<m_height; j++)
 			m_boxes[i][j] = emptyBoxCharacter;
 
+	m_currentPlayer = m_playersList[0];
 	placePawns();
 }
 
@@ -173,11 +178,11 @@ QPair<QPoint, QPoint> Board::strToPoints(const QStringList& coordinates) {
 	return QPair<QPoint, QPoint>(QPoint(-1, -1), QPoint(-1, -1));
 }
 
-bool Board::moveAllowed(const QPoint &origin, const QPoint &dest) {
+bool Board::allowedMove(const QPoint &origin, const QPoint &dest, char player) {
 	if(!onGrid(origin) || !onGrid(dest))
 		return false;
 
-	if(at(origin) != m_currentPlayer)
+	if(at(origin) != player)
 		return false;
 
 	if(at(dest) != emptyBoxCharacter)
@@ -189,25 +194,33 @@ bool Board::moveAllowed(const QPoint &origin, const QPoint &dest) {
 	return true;
 }
 
-QVector<QPoint> Board::movesAllowed(const QPoint& src) {
+bool Board::currentPlayerAllowedMove(const QPoint &origin, const QPoint &dest) {
+	return allowedMove(origin, dest, m_currentPlayer);
+}
+
+QVector<QPoint> Board::allowedMoves(const QPoint &src, char player) {
 	QVector<QPoint> allowedDest;
 
-	if(at(src) != m_currentPlayer)
+	if(at(src) != player)
 		return allowedDest;
 
 	for(int i=-2; i<=2; i++)
 		for(int j=-2; j<=2; j++) {
 			QPoint dest = src + QPoint(i, j);
 
-			if(moveAllowed(src, dest))
+			if(allowedMove(src, dest, player))
 				allowedDest << dest;
 		}
 
 	return allowedDest;
 }
 
+QVector<QPoint> Board::currentPlayerAllowedMoves(const QPoint& src) {
+	return allowedMoves(src, m_currentPlayer);
+}
+
 void Board::playMove(const QPoint &origin, const QPoint &dest) {
-	Q_ASSERT(moveAllowed(origin, dest));
+	Q_ASSERT(currentPlayerAllowedMove(origin, dest));
 
 	if(pow(origin.x() - dest.x(), 2) + pow(origin.y() - dest.y(), 2) >= 4) {
 		setCharacter(origin, emptyBoxCharacter);
@@ -247,30 +260,52 @@ QMap<char, int> Board::countPawns() {
 	return pawns;
 }
 
-bool Board::currentPlayerCanPlay() {
+bool Board::playerCanPlay(char player) {
 	for(int i=0; i<m_width; i++)
 		for(int j=0; j<m_height; j++)
-			if(at(QPoint(i, j)) == m_currentPlayer)
-				if(!movesAllowed(QPoint(i, j)).isEmpty())
+			if(at(QPoint(i, j)) == player)
+				if(!allowedMoves(QPoint(i, j), player).isEmpty())
 					return true;
 
 	return false;
 }
 
-char Board::checkVictory() {
-	if(currentPlayerCanPlay())
-		return emptyBoxCharacter;
+bool Board::currentPlayerCanPlay() {
+	return playerCanPlay(m_currentPlayer);
+}
 
+bool Board::stopGame() {
+	int playersCanPlay = 0;
+
+	for(char c: m_playersList)
+		if(playerCanPlay(c))
+			playersCanPlay++;
+
+	if(playersCanPlay < 2)
+		return true;
+
+	return false;
+}
+
+char Board::winner() {
 	QMap<char, int> pawns = countPawns();
 
 	char bestChar = m_playersList[0];
 	int bestScore = pawns[bestChar];
+	bool tie = false;
+
 	for(int i=1; i<m_playersList.size(); i++) {
 		if(pawns[m_playersList[i]] > bestScore) {
 			bestChar = m_playersList[i];
 			bestScore = pawns[m_playersList[i]];
+			tie = false;
+		} else if(pawns[m_playersList[i]] == bestScore) {
+			tie = true;
 		}
 	}
+
+	if(tie)
+		return 'Z';
 
 	return bestChar;
 }

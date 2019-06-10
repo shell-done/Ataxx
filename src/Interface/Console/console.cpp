@@ -219,6 +219,9 @@ void Console::optionsMenuInput(int userInput) {
 void Console::displayParty() {
 	Board* board = m_game->board();
 
+	if(!board->exists())
+		return;
+
 	cout << endl;
 	cout << m_tr->qTranslate("console:local:round", true).arg(board->round()).toStdString() << endl;
 	cout << m_tr->stdTranslate("console:local:pawnsLeft");
@@ -284,19 +287,24 @@ void Console::playParty() {
 
 	} while(points.first.x() == -1);
 
-	if(!board->moveAllowed(points.first, points.second)) {
+	if(!board->currentPlayerAllowedMove(points.first, points.second)) {
 		cout << m_tr->stdTranslate("console:local:incorrectMove") << endl;
 		return;
 	}
 
 	board->playMove(points.first, points.second);
 
-	char winner = board->checkVictory();
-	if(winner != board->emptyBoxCharacter) {
+	if(board->stopGame()) {
 		displayParty();
 		board->destroy();
 
-		cout << m_tr->qTranslate("console:local:win", true).arg(winner).toStdString() << endl;
+		char winner = board->winner();
+
+		if(winner == 'Z')
+			cout << m_tr->stdTranslate("graphic:local:game:tie") << endl;
+		else
+			cout << m_tr->qTranslate("console:local:win", true).arg(winner).toStdString() << endl;
+
 		m_game->setGameStatus(ON_MAIN_MENU);
 	}
 }

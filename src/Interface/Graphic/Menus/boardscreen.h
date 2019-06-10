@@ -1,9 +1,11 @@
 #ifndef BOARDSCREEN_H
 #define BOARDSCREEN_H
 
+#include <QGraphicsItemGroup>
 #include <QTimer>
 #include <QTextDocument>
 #include "menu.h"
+#include "src/Interface/Graphic/Items/graphicslabelitem.h"
 #include "src/Interface/Graphic/Items/graphicsbutton.h"
 #include "src/Interface/Graphic/Items/graphicsplayerframeitem.h"
 #include "src/Interface/Graphic/Items/graphicsboarditem.h"
@@ -38,6 +40,7 @@ private slots:
 	void addSecondToTimer();
 	void pawnMoved();
 
+	void restart();
 	void quit();
 };
 

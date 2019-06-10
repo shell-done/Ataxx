@@ -17,7 +17,7 @@ GraphicsButton::GraphicsButton(GameCore* game, QString buttonImg, QString button
 	m_graphicsPixmap = new QGraphicsPixmapItem(this);
 
 	m_fontSize = fontSize;
-	m_graphicsLabel = new QGraphicsTextItem(m_tr->qTranslate(m_label, m_textures->useAccents()), this);
+	m_graphicsLabel = new QGraphicsTextItem(m_tr->qTranslate(m_label, m_textures->removeAccents()), this);
 
 	setCursor(Qt::PointingHandCursor);
 
@@ -36,7 +36,7 @@ void GraphicsButton::update() {
 
 	m_graphicsPixmap->setPixmap(backgroundPixmap);
 
-	m_graphicsLabel->setPlainText(m_tr->qTranslate(m_label, m_textures->useAccents()));
+	m_graphicsLabel->setPlainText(m_tr->qTranslate(m_label, m_textures->removeAccents()));
 	m_graphicsLabel->setFont(m_textures->loadFont(m_fontSize));
 
 	if(!m_disabled) {

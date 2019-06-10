@@ -124,7 +124,7 @@ void GraphicsBoardItem::boxClicked(QPoint box) {
 }
 
 void GraphicsBoardItem::displayAllowedBoxes(QPoint src) {
-	QVector<QPoint> boxes = m_game->board()->movesAllowed(src);
+	QVector<QPoint> boxes = m_game->board()->currentPlayerAllowedMoves(src);
 
 	QCursor newCursor = Qt::ArrowCursor;
 	QPixmap newPixmap(m_boxesSize - 6, m_boxesSize - 6);
@@ -146,7 +146,7 @@ void GraphicsBoardItem::displayAllowedBoxes(QPoint src) {
 }
 
 void GraphicsBoardItem::movePawn(QPoint dest) {
-	if(!m_game->board()->moveAllowed(m_boxClicked, dest))
+	if(!m_game->board()->currentPlayerAllowedMove(m_boxClicked, dest))
 		return;
 
 	m_game->board()->playMove(m_boxClicked, dest);

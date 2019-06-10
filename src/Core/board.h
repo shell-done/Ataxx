@@ -10,6 +10,7 @@ public:
 	Board();
 
 	void generate();
+	void reset();
 	void placePawns();
 	bool exists();
 	void destroy();
@@ -36,13 +37,18 @@ public:
 	bool boxBelongByCurrentPlayer(const QPoint& point);
 
 	QPair<QPoint, QPoint> strToPoints(const QStringList& coordinates);
-	bool moveAllowed(const QPoint& origin, const QPoint& dest);
-	QVector<QPoint> movesAllowed(const QPoint& src);
+	bool allowedMove(const QPoint& origin, const QPoint& dest, char player);
+	bool currentPlayerAllowedMove(const QPoint& origin, const QPoint& dest);
+	QVector<QPoint> allowedMoves(const QPoint& src, char player);
+	QVector<QPoint> currentPlayerAllowedMoves(const QPoint& src);
 	void playMove(const QPoint& origin, const QPoint& dest);
 
 	QMap<char, int> countPawns();
+	bool playerCanPlay(char player);
 	bool currentPlayerCanPlay();
-	char checkVictory();
+
+	bool stopGame();
+	char winner();
 
 	static const char emptyBoxCharacter;
 	static const char P1Character;

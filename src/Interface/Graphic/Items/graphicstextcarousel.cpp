@@ -14,11 +14,11 @@ GraphicsTextCarousel::GraphicsTextCarousel(GameCore* game, QSize size, QString a
 	m_arrowHoverImg = arrowHoverImg;
 	prevArrowHover = -1;
 
-	m_graphicsLabel = new QGraphicsTextItem(m_tr->qTranslate(label, m_textures->useAccents()), this);
+	m_graphicsLabel = new QGraphicsTextItem(m_tr->qTranslate(label, m_textures->removeAccents()), this);
 	m_graphicsLabel->setFont(m_textures->loadFont(fontSize));
 	m_graphicsLabel->setDefaultTextColor(m_textures->primaryColor());
 
-	m_graphicsValue = new QGraphicsTextItem(m_tr->qTranslate(value, m_textures->useAccents()), this);
+	m_graphicsValue = new QGraphicsTextItem(m_tr->qTranslate(value, m_textures->removeAccents()), this);
 	m_graphicsValue->setFont(m_textures->loadFont(fontSize));
 	m_graphicsValue->setDefaultTextColor(m_textures->primaryColor());
 
@@ -64,7 +64,7 @@ void GraphicsTextCarousel::update() {
 }
 
 void GraphicsTextCarousel::setValue(const QString &value) {
-	m_graphicsValue->setPlainText(m_tr->qTranslate(value, m_textures->useAccents()));
+	m_graphicsValue->setPlainText(m_tr->qTranslate(value, m_textures->removeAccents()));
 	placeCarousel();
 }
 

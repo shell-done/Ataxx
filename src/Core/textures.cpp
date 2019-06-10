@@ -191,8 +191,8 @@ QList<s_textures_pack> Textures::getPackList() const {
 	return m_texturesList;
 }
 
-bool Textures::useAccents() const {
-	return m_accents;
+bool Textures::removeAccents() const {
+	return !m_accents;
 }
 
 QColor Textures::primaryColor() const {
