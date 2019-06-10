@@ -2,6 +2,7 @@
 #define TEXTURES_H
 
 #include <QObject>
+#include <QFontDatabase>
 #include <QMap>
 #include <QDir>
 #include <QColor>
@@ -44,12 +45,14 @@ public:
 private:
 	static const QString defaultTexturesPack;
 
-	bool loadPack();
+	bool loadPack(bool defaultPack = false);
 	QColor loadColor(const QString& str);
 
 	QDir m_texturesFolder;
 	QMap<QString, QString> m_texturesAvailable;
 	QList<s_textures_pack> m_texturesList;
+
+	bool m_useDefault;
 
 	QString m_currentTexturesPack;
 	QString m_description;

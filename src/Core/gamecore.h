@@ -14,6 +14,7 @@ class GameCore : public QObject {
 
 public:
 	GameCore(const QMap<QString, QString>& arguments, QObject *parent = nullptr);
+	void loadTextures();
 	void update();
 
 	Translator* tr() const;

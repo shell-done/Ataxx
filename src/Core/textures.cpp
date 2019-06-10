@@ -7,6 +7,7 @@ using namespace std;
 const QString Textures::defaultTexturesPack = "The Original";
 
 Textures::Textures(QString textFolder, QObject *parent) : QObject(parent), m_texturesFolder(textFolder) {
+	m_useDefault = false;
 	m_currentTexturesPack = "";
 	QStringList texturesList = m_texturesFolder.entryList(QDir::Dirs);
 
@@ -53,7 +54,14 @@ Textures::Textures(QString textFolder, QObject *parent) : QObject(parent), m_tex
 
 	if(m_texturesAvailable.isEmpty()) {
 		m_currentTexturesPack = "";
-		cerr << "[WARNING] No textures packs found" << endl;
+		cerr << "[WARNING] No textures packs found in " << m_texturesFolder.path().toStdString() << "/ folder. Using default ressources" << endl;
+		cerr << "[WARNING] Please consider adding textures packs in the right folder (probably the build folder) then restart the game" << endl;
+		cerr << "[WARNING] Please read the readme.md file to get more information" << endl;
+		cerr << endl;
+
+		m_useDefault = true;
+		loadPack(true);
+
 		return;
 	}
 
@@ -69,8 +77,25 @@ Textures::Textures(QString textFolder, QObject *parent) : QObject(parent), m_tex
 	}
 }
 
-bool Textures::loadPack() {
-	QFile textPackConfigFile(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/pack.conf");
+bool Textures::loadPack(bool defaultPack) {
+	m_fontName = "";
+	if(QFile(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/font.ttf").exists() || defaultPack) {
+		int id = -1;
+
+		if(defaultPack)
+			id = QFontDatabase::addApplicationFont(":resources/font.ttf");
+		else
+			id = QFontDatabase::addApplicationFont(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/font.ttf");
+
+		m_fontName = QFontDatabase::applicationFontFamilies(id).at(0);
+	}
+
+	QFile textPackConfigFile;
+
+	if(defaultPack)
+		textPackConfigFile.setFileName(":resources/pack.conf");
+	else
+		textPackConfigFile.setFileName(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/pack.conf");
 
 	if(textPackConfigFile.open(QIODevice::ReadOnly)) {
 		m_description = "No description available";
@@ -92,10 +117,8 @@ bool Textures::loadPack() {
 				m_description = data[1];
 
 			if(data[0] == "font") {
-				data.takeFirst();
-
-				QString font = data.join(" ");
-				m_fontName = font;
+				if(m_fontName == "")
+					m_fontName = data[1];
 			}
 
 			if(data[0] == "use_accents") {
@@ -211,7 +234,7 @@ QPixmap Textures::loadPixmap(QString path) const {
 	QPixmap pixmap(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/" + path);
 
 	if(pixmap.isNull())
-		cerr << "Null pixmap : " << path.toStdString() << endl;
+		return QPixmap(":resources/" + path);
 
 	return pixmap;
 }
@@ -225,5 +248,8 @@ QFont Textures::loadFont(int pointSize) const {
 }
 
 QUrl Textures::loadSoundUrl(QString soundPath) const {
+	if(!QFile(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/sounds/" + soundPath).exists())
+		return QUrl("");
+
 	return QUrl(m_texturesFolder.path() + "/" + m_texturesAvailable[m_currentTexturesPack] + "/sounds/" + soundPath);
 }

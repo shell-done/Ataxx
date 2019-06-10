@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
 		return 0;
 	} else if(game->displayMode() == GRAPHIC || game->displayMode() == MIXED) {
 		QApplication app(argc, argv);
+		game->loadTextures();
 
 		window = new Window(game);
 		window->show();

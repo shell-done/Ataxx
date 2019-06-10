@@ -5,6 +5,7 @@ using namespace std;
 const QString Translator::defaultLanguage = "English";
 
 Translator::Translator(QString langFolder) : m_languageFolder(langFolder) {
+	m_useDefault = false;
 	m_currentLanguage = "";
 	QStringList langFilesFound = m_languageFolder.entryList(QStringList() << "*.lang", QDir::Files);
 
@@ -23,7 +24,14 @@ Translator::Translator(QString langFolder) : m_languageFolder(langFolder) {
 
 	if(m_languagesAvailable.isEmpty()) {
 		m_currentLanguage = "";
-		cerr << "[WARNING] No lang files found" << endl;
+		cerr << "[WARNING] No lang files found in " << m_languageFolder.path().toStdString() << "/ folder. Using the default language (english)"<< endl;
+		cerr << "[WARNING] Please consider adding language files in the right folder (probably the build folder) then restart the game" << endl;
+		cerr << "[WARNING] Please read the readme.md file to get more information" << endl;
+
+		cerr << endl;
+		m_useDefault = true;
+		loadLang(true);
+
 		return;
 	}
 
@@ -40,8 +48,13 @@ Translator::Translator(QString langFolder) : m_languageFolder(langFolder) {
 	}
 }
 
-bool Translator::loadLang() {
-	QFile langFile(m_languageFolder.path() + "/" + m_languagesAvailable[m_currentLanguage]);
+bool Translator::loadLang(bool defaultLang) {
+	QFile langFile;
+
+	if(defaultLang)
+		langFile.setFileName(":resources/default_en.lang");
+	else
+		langFile.setFileName(m_languageFolder.path() + "/" + m_languagesAvailable[m_currentLanguage]);
 
 	if (langFile.open(QIODevice::ReadOnly)) {
 		m_translations.clear();

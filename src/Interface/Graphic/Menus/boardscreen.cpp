@@ -185,9 +185,13 @@ void BoardScreen::pawnMoved() {
 		m_graphicsCurrentPlayerText->setDefaultTextColor(m_textures->secondaryColor());
 		m_graphicsCurrentPlayerFrame->setSelected(true);
 
-		m_soundPlayer->setMedia(m_textures->loadSoundUrl("win_sound.wav"));
+		QUrl soundUrl = m_textures->loadSoundUrl("win_sound.wav");
+		if(!soundUrl.isEmpty())
+			m_soundPlayer->setMedia(soundUrl);
 	} else {
-		m_soundPlayer->setMedia(m_textures->loadSoundUrl("move_sound.wav"));
+		QUrl soundUrl = m_textures->loadSoundUrl("move_sound.wav");
+		if(!soundUrl.isEmpty())
+			m_soundPlayer->setMedia(soundUrl);
 	}
 
 	m_soundPlayer->play();

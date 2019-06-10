@@ -19,7 +19,10 @@ Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 	setScene(m_mainMenu);
 
 	QMediaPlaylist* playlist = new QMediaPlaylist(this);
-	playlist->addMedia(m_game->textures()->loadSoundUrl("background_music.wav"));
+	QUrl bgMusicUrl = m_game->textures()->loadSoundUrl("background_music.wav");
+
+	if(!bgMusicUrl.isEmpty())
+		playlist->addMedia(bgMusicUrl);
 	playlist->setPlaybackMode(QMediaPlaylist::Loop);
 
 	m_backgroundMusicPlayer = new QMediaPlayer(this);
@@ -83,7 +86,11 @@ void Window::gameUpdate() {
 void Window::changeMusic() {
 	QMediaPlaylist* playlist = m_backgroundMusicPlayer->playlist();
 	playlist->clear();
-	playlist->addMedia(m_game->textures()->loadSoundUrl("background_music.wav"));
+
+	QUrl bgMusicUrl = m_game->textures()->loadSoundUrl("background_music.wav");
+
+	if(!bgMusicUrl.isEmpty())
+		playlist->addMedia(bgMusicUrl);
 
 	m_backgroundMusicPlayer->stop();
 	m_backgroundMusicPlayer->setPlaylist(playlist);

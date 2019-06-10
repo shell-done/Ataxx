@@ -8,7 +8,7 @@
 
 #include <QDebug>
 
-#define DIR_LANGUAGES QString("./lang/")
+#define DIR_LANGUAGES QString("./langs/")
 #define DIR_TEXTURES QString("./textures packs/")
 
 typedef enum e_displayMode {

@@ -13,15 +13,17 @@ GameCore::GameCore(const QMap<QString, QString>& arguments, QObject *parent) : Q
 	else
 		m_displayMode = CONSOLE;
 
-	if(m_displayMode == GRAPHIC || m_displayMode == MIXED) {
-		m_textures = new Textures(DIR_TEXTURES);
-		connect(m_textures, SIGNAL(updateTextures()), this, SLOT(texturesUpdated()));
-	}
-
 	m_gameStatus = ON_MAIN_MENU;
 	m_volume = 75;
 
 	srand(static_cast<unsigned int>(time(nullptr)));
+}
+
+void GameCore::loadTextures() {
+	if(m_displayMode == GRAPHIC || m_displayMode == MIXED) {
+		m_textures = new Textures(DIR_TEXTURES);
+		connect(m_textures, SIGNAL(updateTextures()), this, SLOT(texturesUpdated()));
+	}
 }
 
 void GameCore::update() {

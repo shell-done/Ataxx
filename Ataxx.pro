@@ -65,3 +65,6 @@ HEADERS += \
     src/Interface/Graphic/Menus/partyoptionsmenu.h \
     src/Interface/Graphic/Menus/texturesmenu.h \
     src/Interface/Graphic/window.h \
+
+RESOURCES += \
+    resources.qrc

@@ -24,10 +24,11 @@ public:
 	static QString replaceSpecialChars(const QString& str);
 
 private:
-	bool loadLang();
+	bool loadLang(bool defaultLang = false);
 
 	static const QString defaultLanguage;
 
+	bool m_useDefault;
 	QDir m_languageFolder;
 	QMap<QString, QString> m_languagesAvailable;
 	QString m_currentLanguage;
