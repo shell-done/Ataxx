@@ -8,15 +8,15 @@ L'objectif de ce projet est la réalisation de ce jeu en C++ avec le framework Q
 
 ### Règles du jeu
 Ce jeu possède des règles très simples :
-Deux joueurs d'affrontent sur un plateau de 7x7 cases. Un pion de chaque jouer est placé aux extrémité de chaques diagonales. Le jeu se joue en tour par tour. A chaque tour, un joueur sélectionne l'un de ses pions, à ce moment, deux chois s'offrent à lui. Il peut déplacer son pion sur une case adjacente (diagonales incluses) à sa case de départ. Dans ce cas, son pion est dupliqué. Il possède maintenant un pion sur sa case de départ et un sur sa case d'arrivée. Il peut aussi déplacer son pion à deux cases de distances. Dans ce cas, le pion est simplement déplacé sans être dupliqué. Après avoir déplacé son pion, les pions du joueur adverse adjacent deviennet de la couleur du joueur actuel. Le tour se finit et c'est à l'autre joueur de jouer. La partie s'arrête lorsque l'un des deux joueurs ne peut plus jouer, dans ce cas c'est celui qui a le plus de pions qui gagne.
+Deux joueurs d'affrontent sur un plateau de 7x7 cases. Un pion de chaque jouer est placé aux extrémités de chaque diagonales. Le jeu se joue en tour par tour. A chaque tour, un joueur sélectionne l'un de ses pions, à ce moment, deux choix s'offrent à lui. Il peut déplacer son pion sur une case adjacente (diagonales incluses) à sa case de départ. Dans ce cas, son pion est dupliqué. Il possède maintenant un pion sur sa case de départ et un sur sa case d'arrivée. Il peut aussi déplacer son pion à deux cases de distances. Dans ce cas, le pion est simplement déplacé sans être dupliqué. Après avoir déplacé son pion, les pions du joueur adverse adjacent deviennent de la couleur du joueur actuel. Le tour se finit et c'est à l'autre joueur de jouer. La partie s'arrête lorsque l'un des deux joueurs ne peut plus jouer, dans ce cas c'est celui qui a le plus de pions qui gagne.
 
 ### Réalisation et compilation
 Ce projet a été réalisé avec le framework Qt en version 5.10.1 sous l'IDE QtCreator. La compilation de ce projet requiert l'utilisation du fichier qmake ataxx.pro fourni avec les sources. De plus, un fichier de ressources (fichier .qrc) a été utilisé.
-Pour profiter pleinement des fonctionnalités qui seront détaillées plus loin, merci de placer les dossier /langs et /textures packs au même endroit que l'éxécutable. Pour en savoir plus, merci de lire la section "Ressources externes".
+Pour profiter pleinement des fonctionnalités qui seront détaillées plus loin, merci de placer les dossier /langs et /textures packs au même endroit que l'exécutable. Pour en savoir plus, merci de lire la section "Ressources externes".
 
 ### Execution du jeu
 Comme demandé, le jeu est jouable de deux manières différentes, en version console ou graphique. Il est aussi possible de lancer les deux versions en même temps, dans ce cas, la console ne sert que d'affichage et ne récupère pas les entrées.
-La version console ne servant que pour tester le moteur de jeu, les possiblités de celles-ci sont très limitées
+La version console ne servant que pour tester le moteur de jeu, les possibilités de celles-ci sont très limitées
 
 Pour lancer le jeu dans différent mode :
  + Mode console : `./ataxx --mode console`
@@ -52,7 +52,7 @@ Une version en ligne a été envisagée, cependant elle n'a pas été réalisé 
 ##### Fonctionnement
 Les ressources externes sont les langues et les packs de textures. Ceux-ci n'ont volontairement pas été inclus dans le projet dans le fichier .qrc. Cela pour permettre à n'importe qui de créer, d'ajouter, de modifier ou de supprimer un pack de textures ou une langue.
 
-Cependant, cela demande de placer les dossiers au bon endroit pour le programme. Il suffit de placer les dossiers ./langs et ./textures packs dans le même dossier que l'exéctuable pour que celui-ci s'en serve. Si ces dossiers ne sont pas aux bons endroit, un message d'erreur apparaitra dans la console. Le jeu sera quand même jouable car les ressources minimales ont été incluses dans le fichier .qrc. Cependant, aucun son ne sera joué et il sera impossible de changer de langue ou de pack de texture.
+Cependant, cela demande de placer les dossiers au bon endroit pour le programme. Il suffit de placer les dossiers ./langs et ./textures packs dans le même dossier que l'exéctuable pour que celui-ci s'en serve. Si ces dossiers ne sont pas aux bons endroits, un message d'erreur apparaitra dans la console. Le jeu sera quand même jouable car les ressources minimales ont été incluses dans le fichier .qrc. Cependant, aucun son ne sera joué et il sera impossible de changer de langue ou de pack de texture.
 
 ##### Fichiers de langue
 Pour créer son propre fichier de langue, il faut créer un fichier avec l'extension .lang dans le dossier ./langs

@@ -1,0 +1,62 @@
+Français
+console:global:project = Ataxx - Projet CIR 2 - Alexandre THOMAS | ISEN Yncrea Ouest Rennes
+console:global:border = +-------------------------------------+
+console:global:askChoice = Merci d'entrer un des choix suivant :
+console:global:in =   > 
+console:global:error = Entrée invalide
+
+console:menu:title = |             Ataxx - Menu            |
+console:menu:local = 1. Partie locale
+console:menu:online = 2. Partie en ligne
+console:menu:options = 3. Options
+console:menu:quit = 0. Quitter
+console:menu:return = 0. Retourner au menu précédent
+console:menu:unavailable = Ce menu n'est pas encore disponible.
+
+console:local:title = |        Ataxx - Partie locale        |
+console:local:start = 1. Commencer
+console:local:generating = Génération d'un plateau %1x%2...
+console:local:round = Tour %1 :
+console:local:pawnsLeft = Pions restants : 
+console:local:player = Joueur %1
+console:local:playing = Au joueur %1 de jouer
+console:local:incorrectMove = Mouvement impossible ou entrée incorrecte (Entrée correcte > srcX srcY destX destY)
+console:local:win = Le joueur %1 a gagné la partie. Retour au menu principal...
+
+console:options:title = |            Ataxx - Options          |
+console:options:language = 1. Changer la langue
+console:options:languagesAvailable = Langues disponibles :
+console:options:languageSet = Langue définie à:
+
+
+graphic:menu:global:return = Retour
+graphic:menu:global:next = Suivant
+graphic:menu:global:start = Commencer
+graphic:menu:global:yes = Oui
+graphic:menu:global:no = Non
+
+graphic:menu:main:local = Partie locale
+graphic:menu:main:online = Partie en ligne
+graphic:menu:main:textures = Packs de textures
+graphic:menu:main:options = Options
+graphic:menu:main:quit = Quitter
+
+graphic:local:menu:title = Options
+graphic:local:menu:players = Joueurs
+graphic:local:menu:mapSize = Taille carte
+graphic:local:menu:walls = Murs
+
+graphic:local:character:title = Choisissez vos personnages
+graphic:local:character:name = J%1
+
+graphic:local:game:currentPlayer = A J%1 de jouer
+graphic:local:game:quit = Quitter
+graphic:local:game:restart = Relancer
+graphic:local:game:win = J%1 a gagné la partie !
+graphic:local:game:tie = Egalité !
+
+graphic:menu:textures:title = Textures
+
+graphic:menu:options:title = Options
+graphic:menu:options:sound = Volume
+graphic:menu:options:language = Lang

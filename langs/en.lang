@@ -1,0 +1,62 @@
+English
+console:global:project = Ataxx - CIR 2 Project - Alexandre THOMAS | ISEN Yncrea Ouest Rennes
+console:global:border = +-------------------------------------+
+console:global:askChoice = Please select one of the following choice :
+console:global:in =   > 
+console:global:error = Invalid input
+
+console:menu:title = |             Ataxx - Menu            |
+console:menu:local = 1. Local party
+console:menu:online = 2. Online party
+console:menu:options = 3. Options
+console:menu:quit = 0. Quit
+console:menu:return = 0. Return
+console:menu:unavailable = This menu is not available yet.
+
+console:local:title = |         Ataxx - Local Party         |
+console:local:start = 1. Start
+console:local:generating = Generating new %1x%2 board...
+console:local:round = Round %1 :
+console:local:pawnsLeft = Pawns left : 
+console:local:player = Player %1
+console:local:playing = Player %1's turns to play
+console:local:incorrectMove = Incorrect move or incorrect input (correct input > srcX srcY destX destY)
+console:local:win = Player %1 has won the game, returning to the main menu.
+
+console:options:title = |            Ataxx - Options          |
+console:options:language = 1. Change language
+console:options:languagesAvailable = Languages available :
+console:options:languageSet = Language set to :
+
+
+graphic:menu:global:return = Return
+graphic:menu:global:next = Next
+graphic:menu:global:start = Start
+graphic:menu:global:yes = Yes
+graphic:menu:global:no = No
+
+graphic:menu:main:local = Local Game
+graphic:menu:main:online = Online Game
+graphic:menu:main:textures = Textures Pack
+graphic:menu:main:options = Options
+graphic:menu:main:quit = Quit
+
+graphic:local:menu:title = Game Options
+graphic:local:menu:players = Players
+graphic:local:menu:mapSize = Map size
+graphic:local:menu:walls = Walls
+
+graphic:local:character:title = Choose your character
+graphic:local:character:name = P%1
+
+graphic:local:game:currentPlayer = P%1 turns to play
+graphic:local:game:quit = Exit
+graphic:local:game:restart = Restart
+graphic:local:game:win = P%1 has won the game !
+graphic:local:game:tie = Tie !
+
+graphic:menu:textures:title = Textures
+
+graphic:menu:options:title = Options
+graphic:menu:options:sound = Volume
+graphic:menu:options:language = Lang
