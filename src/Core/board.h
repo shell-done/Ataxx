@@ -23,7 +23,6 @@
  *
  * La classe contient le tableau de jeu ainsi que certaines informations comme la taille du plateau ou la liste des joueurs
  */
-
 class Board {
 public:
 	/*!

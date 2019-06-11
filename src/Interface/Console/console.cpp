@@ -3,6 +3,7 @@
 using namespace std;
 
 Console::Console(GameCore* game, QObject *parent) : QObject(parent), m_game(game) {
+	//Connecte le coeur du jeu au slot de mise à jour pour rafraichir le jeu lorsque cela est demandé
 	connect(game, SIGNAL(updateConsole()), this, SLOT(gameUpdate()));
 
 	m_tr = game->tr();
@@ -12,6 +13,8 @@ Console::Console(GameCore* game, QObject *parent) : QObject(parent), m_game(game
 void Console::gameUpdate() {
 	cout << endl << endl;
 
+	//Selon le status du jeu, on aiguille entre différente méthodes
+	//Tout d'abord on affiche
 	switch(m_game->gameStatus()) {
 	case QUIT:
 		return;
@@ -32,7 +35,9 @@ void Console::gameUpdate() {
 		break;
 	}
 
+	//Puis, si le jeu est en mode console uniquement
 	if(m_game->displayMode() == CONSOLE) {
+		//On récupère les entrées utilisateur
 		if(m_game->gameSubStatus() == LOCAL_IN_GAME)
 			playParty();
 		else
@@ -41,6 +46,7 @@ void Console::gameUpdate() {
 }
 
 void Console::displayMainMenu() {
+	//Affichage du menu
 	cout << m_tr->stdTranslate("console:global:border") << endl;
 	cout << m_tr->stdTranslate("console:menu:title") << endl;
 	cout << m_tr->stdTranslate("console:global:border") << endl;
@@ -54,6 +60,7 @@ void Console::displayMainMenu() {
 void Console::displayLocalGame() {
 	switch(m_game->gameSubStatus()) {
 	case LOCAL_PARTY:
+		//Affichage du menu des options de jeu local
 		cout << m_tr->stdTranslate("console:global:border") << endl;
 		cout << m_tr->stdTranslate("console:local:title") << endl;
 		cout << m_tr->stdTranslate("console:global:border") << endl;
@@ -62,6 +69,7 @@ void Console::displayLocalGame() {
 		break;
 
 	case LOCAL_IN_GAME:
+		//Affichage du plateau de jeu
 		displayParty();
 		break;
 
@@ -73,6 +81,7 @@ void Console::displayLocalGame() {
 void Console::displayOptionsMenu() {
 	switch(m_game->gameSubStatus()) {
 	case ON_OPTIONS_MENU:
+		//Affichage des options du jeu
 		cout << m_tr->stdTranslate("console:global:border") << endl;
 		cout << m_tr->stdTranslate("console:options:title") << endl;
 		cout << m_tr->stdTranslate("console:global:border") << endl;
@@ -81,6 +90,7 @@ void Console::displayOptionsMenu() {
 		break;
 
 	case ON_LANGUAGES_MENU:
+		//Affichage des langues disponibles
 		cout << m_tr->stdTranslate("console:options:languagesAvailable") << endl;
 		for(int i=0; i<m_tr->availableLanguages(false).size(); i++)
 			cout << QString("%1. %2").arg(i+1).arg(m_tr->availableLanguages(false)[i]).toStdString() << endl;
@@ -98,24 +108,24 @@ void Console::getUserInput() {
 	string userInput = "";
 	int uinput = -1;
 
-	do {
+	do { // Tant que l'entrée utilisateur n'est pas valide
 		cout << m_tr->stdTranslate("console:global:in");
-		cin >> userInput;
+		cin >> userInput; // On la demande
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 
 		uinput = -1;
 		try {
-			uinput = stoi(userInput);
+			uinput = stoi(userInput); // On essaye de convertir l'entrée en nombre
 		}
 		catch(invalid_argument) {}
 		catch(out_of_range) {}
 
-		if(uinput == -1)
+		if(uinput == -1) // Si cela est impossible, alors on affiche une erreur
 			cout << m_tr->stdTranslate("console:global:error") << endl;
 	} while(uinput == -1);
 
-
+	//En fonction de l'entrée, on redirige l'entrée
 	switch(m_game->gameStatus()) {
 	case ON_MAIN_MENU:
 		mainMenuInput(uinput);
@@ -136,6 +146,7 @@ void Console::getUserInput() {
 }
 
 void Console::mainMenuInput(int userInput) {
+	//On modifie le status du jeu en fonction de l'entrée de l'utilisateur lorsque le menu est affiché
 	switch(userInput) {
 	case 0:
 		m_game->setGameStatus(QUIT);
@@ -160,6 +171,7 @@ void Console::mainMenuInput(int userInput) {
 }
 
 void Console::localGameInput(int userInput) {
+	//On modifie le status du jeu en fonction de l'entrée de l'utilisateur lorsque les options de jeu local sont affichées
 	switch(m_game->gameSubStatus()) {
 	case LOCAL_PARTY:
 		if(userInput == 0)
@@ -182,6 +194,7 @@ void Console::localGameInput(int userInput) {
 }
 
 void Console::optionsMenuInput(int userInput) {
+	//On modifie le status du jeu en fonction de l'entrée de l'utilisateur lorsque les options sont affichées
 	switch(m_game->gameSubStatus()) {
 	case ON_OPTIONS_MENU:
 		switch(userInput) {
@@ -219,13 +232,14 @@ void Console::optionsMenuInput(int userInput) {
 void Console::displayParty() {
 	Board* board = m_game->board();
 
-	if(!board->exists())
+	if(!board->exists()) // Si le plateau n'existe pas, on ne fait rien
 		return;
 
 	cout << endl;
 	cout << m_tr->qTranslate("console:local:round", true).arg(board->round()).toStdString() << endl;
 	cout << m_tr->stdTranslate("console:local:pawnsLeft");
 
+	//Affichage du nombre de pions par joueur
 	QMap<char, int> pawns = board->countPawns();
 	for(int i=0; i<pawns.keys().size() - 1; i++) {
 		QString player = m_tr->qTranslate("console:local:player", true);
@@ -238,6 +252,7 @@ void Console::displayParty() {
 	cout << player.arg(pawns.lastKey()).arg(pawns[pawns.lastKey()]).toStdString() << endl;
 
 
+	//On dessine la grille de jeu
 	cout << "   ";
 	for(int i=1; i<=board->width(); i++)
 		cout << i << " ";
@@ -261,6 +276,7 @@ void Console::displayParty() {
 		cout << "--";
 	cout << "-+" << endl << endl;
 
+	//On affiche le joueur actuel
 	cout << m_tr->qTranslate("console:local:playing", true).arg(board->currentPlayer()).toStdString() << endl;
 }
 
@@ -268,11 +284,11 @@ void Console::playParty() {
 	Board* board = m_game->board();
 	QPair<QPoint, QPoint> points = QPair<QPoint, QPoint>(QPoint(-1, -1), QPoint(-1, -1));
 
-	do {
+	do { // Tant que les informations demandées ne sont pas correctes
 		QStringList coordinates;
 		cout << m_tr->stdTranslate("console:global:in");
 
-		for(int i=0; i<4; i++) {
+		for(int i=0; i<4; i++) { // On demande 4 entrée à l'utilisateur
 			string userInput = "";
 			cin >> userInput;
 			coordinates << QString::fromStdString(userInput);
@@ -280,26 +296,26 @@ void Console::playParty() {
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
 
-		points = board->strToPoints(coordinates);
+		points = board->strToPoints(coordinates); // On transforme ces entrées en pair de point
 
-		if(points.first.x() == -1)
+		if(points.first.x() == -1) // Si les entrées sont invalides, on continu
 			cout << m_tr->stdTranslate("console:global:error") << endl;
 
 	} while(points.first.x() == -1);
 
-	if(!board->currentPlayerAllowedMove(points.first, points.second)) {
+	if(!board->currentPlayerAllowedMove(points.first, points.second)) { // On vérifie que le coup est possible
 		cout << m_tr->stdTranslate("console:local:incorrectMove") << endl;
 		return;
 	}
 
-	board->playMove(points.first, points.second);
+	board->playMove(points.first, points.second); // Si oui, on le joue
 
-	if(board->stopGame()) {
+	if(board->stopGame()) { // Si le jeu est finis, on affiche le plateau une dernière fois avec le gagnant
 		displayParty();
 
 		char winner = board->winner();
 
-		if(winner == 'Z')
+		if(winner == 'Z') // Message différent en cas d'égalité
 			cout << m_tr->stdTranslate("graphic:local:game:tie") << endl;
 		else
 			cout << m_tr->qTranslate("console:local:win", true).arg(winner).toStdString() << endl;

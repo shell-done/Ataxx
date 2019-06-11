@@ -2,11 +2,11 @@
 
 const int CharacterSelectionScreen::topTitleY = 30;
 const int CharacterSelectionScreen::topTextY = 140;
-const int CharacterSelectionScreen::margin = 330;
 
 CharacterSelectionScreen::CharacterSelectionScreen(int width, int height, GameCore* game, QObject* parent) : Screen(width, height, game, "menus/character_selection_menu.png", parent) {
 	m_title = nullptr;
 
+	//Initialisation
 	for(int i=0; i<4; i++)
 		m_playersGroup[i] = nullptr;
 
@@ -15,6 +15,7 @@ CharacterSelectionScreen::CharacterSelectionScreen(int width, int height, GameCo
 
 	m_grid = nullptr;
 
+	//Création et connexion des boutons
 	m_buttons[0] = new GraphicsButtonItem(game, "menus/half_selector.png", "graphic:menu:global:return", 40);
 	m_buttons[1] = new GraphicsButtonItem(game, "menus/half_selector.png", "graphic:menu:global:next", 40);
 	addItem(m_buttons[0]);
@@ -33,7 +34,9 @@ CharacterSelectionScreen::CharacterSelectionScreen(int width, int height, GameCo
 void CharacterSelectionScreen::updateTextures() {
 	QVector<char> playersChar = m_game->board()->playersList();
 
+	//Si le nombre de joueur affiché n'est pas le même que le nombre de joueur dans le coeur du jeu
 	if(m_playersDisplayed != playersChar.size()) {
+		//On supprime les joueurs affichés
 		for(int i=0; i<m_playersDisplayed; i++) {
 			disconnect(m_playersGroup[i], SIGNAL(clicked()), this, SLOT(characterClicked()));
 			removeItem(m_playersGroup[i]);
@@ -43,6 +46,7 @@ void CharacterSelectionScreen::updateTextures() {
 
 		m_playersDisplayed = playersChar.size();
 
+		//Et on en recré le bon nombre
 		for(int i=0; i<playersChar.size(); i++) {
 			m_playersGroup[i] = new GraphicsPlayerFrameItem(m_game, QSize(192, 192), i+1, playersChar[i], 30);
 			m_playersGroup[i]->setHoverable(true);
@@ -50,6 +54,7 @@ void CharacterSelectionScreen::updateTextures() {
 			addItem(m_playersGroup[i]);
 		}
 
+		//On définit le premier comme étant sélectionné
 		m_playersGroup[0]->setSelected(true);
 		m_playerSelected = 0;
 	}
@@ -59,6 +64,7 @@ void CharacterSelectionScreen::updateTextures() {
 }
 
 void CharacterSelectionScreen::updateText() {
+	//Mise à jour du texte
 	generateText(m_title, "graphic:local:character:title", 60, m_textures->primaryColor());
 	hCenter(m_title, topTitleY);
 
@@ -67,6 +73,7 @@ void CharacterSelectionScreen::updateText() {
 }
 
 void CharacterSelectionScreen::update() {
+	//Mise à jour des textures, du texte et des items
 	updateTextures();
 	updateText();
 
@@ -83,6 +90,7 @@ void CharacterSelectionScreen::update() {
 void CharacterSelectionScreen::createThumbsGroup() {
 	QVector<char> playersChar = m_game->board()->playersList();
 
+	//Si la grille de pions existe, on la supprime
 	if(m_grid) {
 		removeItem(m_grid);
 
@@ -98,6 +106,7 @@ void CharacterSelectionScreen::createThumbsGroup() {
 
 	m_grid = createItemGroup(QList<QGraphicsItem*>());
 
+	// On créer les miniatures de pions
 	for(int i=0; i<20; i++) {
 		QGraphicsPixmapItem* icon = addPixmap(m_textures->loadPixmap(QString("characters/pawns/%1.png").arg(static_cast<char>('A' + i))));
 		icon->setPos(3, 3);
@@ -128,6 +137,7 @@ void CharacterSelectionScreen::createThumbsGroup() {
 }
 
 void CharacterSelectionScreen::displayGroups() {
+	//On affiche les joueurs
 	for(int i=0; i<4; i++) {
 		if(!m_playersGroup[i])
 			continue;
@@ -152,6 +162,7 @@ int CharacterSelectionScreen::mouseOverThumb(const QPoint &mousePos) {
 void CharacterSelectionScreen::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
 	QGraphicsScene::mouseMoveEvent(event);
 	int thumbHovered = mouseOverThumb(event->scenePos().toPoint());
+	//En cas de mouvement au dessus d'un pion, on passe son cadre en rouge
 
 	QVector<char> thumbsSelected = m_game->board()->playersList();
 
@@ -178,6 +189,7 @@ void CharacterSelectionScreen::mousePressEvent(QGraphicsSceneMouseEvent *event) 
 	if(thumbHovered == -1)
 		return;
 
+	// En cas de clique sur un pion, on définit si possible le joueur sélectionné à ce pion
 	QVector<char> thumbsSelected = m_game->board()->playersList();
 
 	if(thumbsSelected.contains(static_cast<char>('A' + thumbHovered)))
@@ -203,6 +215,7 @@ void CharacterSelectionScreen::characterClicked() {
 	GraphicsPlayerFrameItem* frameItem = static_cast<GraphicsPlayerFrameItem*>(sender());
 	m_playerSelected = frameItem->player() - 1;
 
+	//Déselectionne tous les cadres
 	for(int i=0; i<m_playersDisplayed; i++)
 		if(i != m_playerSelected)
 			m_playersGroup[i]->setSelected(false);

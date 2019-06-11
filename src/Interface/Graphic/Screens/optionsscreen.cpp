@@ -4,15 +4,16 @@ const int OptionsScreen::topTitleY = 220;
 const int OptionsScreen::topTextY = 330;
 
 OptionsScreen::OptionsScreen(int width, int height, GameCore* game, QObject* parent) : Screen(width, height, game, "menus/main_menu.png", parent) {
-	m_background = nullptr;
 	m_title = nullptr;
 	m_return = nullptr;
 
+	//Initialise les carousels
 	m_carousels[0] = new GraphicsTextCarouselItem(game, QSize(600, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:menu:options:sound", QString::number(m_game->volume()), 40);
 	m_carousels[1] = new GraphicsTextCarouselItem(game, QSize(600, 60), "menus/arrow.png", "menus/arrow_onHover.png", "graphic:menu:options:language", m_tr->currentLanguage(m_textures->removeAccents()), 40);
 	addItem(m_carousels[0]);
 	addItem(m_carousels[1]);
 
+	//Initialise le bouton de retour
 	m_return = new GraphicsButtonItem(game, "menus/selector.png", "graphic:menu:global:return", 40);
 	addItem(m_return);
 
@@ -24,6 +25,7 @@ OptionsScreen::OptionsScreen(int width, int height, GameCore* game, QObject* par
 }
 
 void OptionsScreen::updateText() {
+	//Place les éléments dans la scènes
 	generateText(m_title, "graphic:menu:options:title", 60, m_textures->primaryColor());
 	hCenter(m_title, topTitleY);
 	hCenter(m_carousels[0], topTextY);
@@ -32,6 +34,7 @@ void OptionsScreen::updateText() {
 }
 
 void OptionsScreen::update() {
+	//Met tous les éléments à jour
 	updateText();
 
 	for(int i=0; i<2; i++)
@@ -43,6 +46,7 @@ void OptionsScreen::update() {
 }
 
 void OptionsScreen::soundCarouselChanged(e_carouselArrow arrow) {
+	//Augmente / Diminue la musique
 	if(arrow == LEFT)
 		m_game->addVolume(-5);
 	else
@@ -53,6 +57,7 @@ void OptionsScreen::soundCarouselChanged(e_carouselArrow arrow) {
 }
 
 void OptionsScreen::langCarouselChanged(e_carouselArrow arrow) {
+	//Passe à la langue suivante / Précédente
 	if(arrow == LEFT)
 		m_tr->setPrevLang();
 	else
@@ -63,5 +68,6 @@ void OptionsScreen::langCarouselChanged(e_carouselArrow arrow) {
 }
 
 void OptionsScreen::back() {
+	//Retourne à l'écran précédent
 	m_game->setGameStatus(ON_MAIN_MENU);
 }

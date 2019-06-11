@@ -9,6 +9,7 @@ GraphicsTextCarouselItem::GraphicsTextCarouselItem(GameCore* game, QSize size, Q
 	setRect(0, 0, size.width(), size.height());
 	setPen(QPen(Qt::transparent));
 
+	//Initialisation
 	m_fontSize = fontSize;
 	m_arrowImg = arrowImg;
 	m_arrowHoverImg = arrowHoverImg;
@@ -17,6 +18,7 @@ GraphicsTextCarouselItem::GraphicsTextCarouselItem(GameCore* game, QSize size, Q
 	m_label = label;
 	m_value = value;
 
+	//Création des items graphiques
 	m_graphicsLabel = new QGraphicsTextItem(m_tr->qTranslate(label, m_textures->removeAccents()), this);
 	m_graphicsLabel->setFont(m_textures->loadFont(fontSize));
 	m_graphicsLabel->setDefaultTextColor(m_textures->primaryColor());
@@ -25,9 +27,10 @@ GraphicsTextCarouselItem::GraphicsTextCarouselItem(GameCore* game, QSize size, Q
 	m_graphicsValue->setFont(m_textures->loadFont(fontSize));
 	m_graphicsValue->setDefaultTextColor(m_textures->primaryColor());
 
-	m_arrowItem[0] = new QGraphicsPixmapItem(m_textures->loadRotatePixmap(arrowImg, -90), this);
-	m_arrowItem[1] = new QGraphicsPixmapItem(m_textures->loadRotatePixmap(arrowImg, 90), this);
+	m_arrowItem[0] = new QGraphicsPixmapItem(m_textures->loadRotatedPixmap(arrowImg, -90), this);
+	m_arrowItem[1] = new QGraphicsPixmapItem(m_textures->loadRotatedPixmap(arrowImg, 90), this);
 
+	//Affichage des curseurs sur les flèches
 	for(int i=0; i<2; i++) {
 		m_arrowItem[i]->hide();
 		m_arrowItem[i]->setCursor(Qt::PointingHandCursor);
@@ -38,6 +41,7 @@ GraphicsTextCarouselItem::GraphicsTextCarouselItem(GameCore* game, QSize size, Q
 }
 
 void GraphicsTextCarouselItem::placeCarousel() {
+	//Place les éléments du carousel
 	int textY = static_cast<int>((boundingRect().height() - m_graphicsLabel->boundingRect().height())/2);
 	int arrowY = static_cast<int>((boundingRect().height() - m_arrowItem[0]->boundingRect().height())/2);
 
@@ -50,6 +54,7 @@ void GraphicsTextCarouselItem::placeCarousel() {
 }
 
 int GraphicsTextCarouselItem::mouseOnArrow(const QPoint& p) {
+	//Renvoie le numéro de la flèche survolé ou -1 si aucune
 	for(int i=0; i<2; i++)
 		if(m_arrowItem[i]->sceneBoundingRect().contains(p))
 			return i;
@@ -58,9 +63,11 @@ int GraphicsTextCarouselItem::mouseOnArrow(const QPoint& p) {
 }
 
 void GraphicsTextCarouselItem::update() {
-	m_arrowItem[0]->setPixmap(m_textures->loadRotatePixmap(m_arrowImg, -90));
-	m_arrowItem[1]->setPixmap(m_textures->loadRotatePixmap(m_arrowImg, 90));
+	//Charge et tourne les images
+	m_arrowItem[0]->setPixmap(m_textures->loadRotatedPixmap(m_arrowImg, -90));
+	m_arrowItem[1]->setPixmap(m_textures->loadRotatedPixmap(m_arrowImg, 90));
 
+	//Actualise le texte et l'option
 	m_graphicsLabel->setPlainText(m_tr->qTranslate(m_label, m_textures->removeAccents()));
 	m_graphicsLabel->setDefaultTextColor(m_textures->primaryColor());
 	m_graphicsLabel->setFont(m_textures->loadFont(m_fontSize));
@@ -73,6 +80,7 @@ void GraphicsTextCarouselItem::update() {
 }
 
 void GraphicsTextCarouselItem::setValue(const QString &value) {
+	//Change la valeur de l'option
 	m_graphicsValue->setPlainText(m_tr->qTranslate(value, m_textures->removeAccents()));
 	m_value = value;
 
@@ -80,6 +88,7 @@ void GraphicsTextCarouselItem::setValue(const QString &value) {
 }
 
 void GraphicsTextCarouselItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
+	//Affiche les flèches lorsque la souris est au dessus du carousel
 	m_arrowItem[0]->show();
 	m_arrowItem[1]->show();
 
@@ -87,11 +96,12 @@ void GraphicsTextCarouselItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) 
 }
 
 void GraphicsTextCarouselItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
+	//Cache les flèches lorsque la souris n'est plus au dessus du carousel
 	m_arrowItem[0]->hide();
 	m_arrowItem[1]->hide();
 
 	if(prevArrowHover != -1)
-		m_arrowItem[prevArrowHover]->setPixmap(m_textures->loadRotatePixmap(m_arrowImg, -90 + 180*prevArrowHover));
+		m_arrowItem[prevArrowHover]->setPixmap(m_textures->loadRotatedPixmap(m_arrowImg, -90 + 180*prevArrowHover));
 
 	prevArrowHover = -1;
 
@@ -101,11 +111,12 @@ void GraphicsTextCarouselItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) 
 void GraphicsTextCarouselItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 	int arrowHover = mouseOnArrow(event->scenePos().toPoint());
 
+	//Change les flèches lorsque la souris est dessus
 	if(prevArrowHover != -1 && prevArrowHover != arrowHover)
-		m_arrowItem[prevArrowHover]->setPixmap(m_textures->loadRotatePixmap(m_arrowImg, -90 + 180*prevArrowHover));
+		m_arrowItem[prevArrowHover]->setPixmap(m_textures->loadRotatedPixmap(m_arrowImg, -90 + 180*prevArrowHover));
 
 	if(arrowHover != -1)
-		m_arrowItem[arrowHover]->setPixmap(m_textures->loadRotatePixmap(m_arrowHoverImg, -90 + 180*arrowHover));
+		m_arrowItem[arrowHover]->setPixmap(m_textures->loadRotatedPixmap(m_arrowHoverImg, -90 + 180*arrowHover));
 
 	prevArrowHover = arrowHover;
 	QGraphicsRectItem::hoverMoveEvent(event);
@@ -114,6 +125,7 @@ void GraphicsTextCarouselItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event) {
 void GraphicsTextCarouselItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 	int arrowHover = mouseOnArrow(event->scenePos().toPoint());
 
+	//Envoie un signal en cas de click sur les flèches
 	if(arrowHover == 0)
 		emit arrowClicked(LEFT);
 	else if(arrowHover == 1)

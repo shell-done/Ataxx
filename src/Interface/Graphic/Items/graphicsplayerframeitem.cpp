@@ -17,6 +17,7 @@ GraphicsPlayerFrameItem::GraphicsPlayerFrameItem(GameCore* game, QSize rectSize,
 	m_score = -1;
 	m_fontSize = fontSize;
 
+	//Chargement des images et du text
 	m_graphicsCharacter = new QGraphicsPixmapItem(m_textures->loadPixmap(charactersThumbs.arg(character)).scaled(rectSize), this);
 	m_graphicsFrame = new QGraphicsPixmapItem(m_textures->loadPixmap(characterSelector).scaled(rectSize), this);
 	m_graphicsText = new QGraphicsTextItem(m_tr->qTranslate("graphic:local:character:name", m_textures->removeAccents()).arg(player), this);
@@ -29,7 +30,7 @@ GraphicsPlayerFrameItem::GraphicsPlayerFrameItem(GameCore* game, QSize rectSize,
 }
 
 void GraphicsPlayerFrameItem::update() {
-	if(!m_selected) {
+	if(!m_selected) { // Si sélectionné, on change la couleur du texte et du cadre
 		m_graphicsFrame->setPixmap(m_textures->loadPixmap(characterSelector).scaled(boundingRect().size().toSize()));
 		m_graphicsText->setDefaultTextColor(m_textures->primaryColor());
 	} else {
@@ -37,28 +38,29 @@ void GraphicsPlayerFrameItem::update() {
 		m_graphicsText->setDefaultTextColor(m_textures->secondaryColor());
 	}
 
+	// On affiche l'image du joueur
 	m_graphicsCharacter->setPixmap(m_textures->loadPixmap(charactersThumbs.arg(m_character)).scaled(boundingRect().size().toSize()));
 
-	if(m_player != -1) {
-		if(m_score == -1)
+	if(m_player != -1) { // Si le joueur est définit, on l'affiche
+		if(m_score == -1) // Si le score du joueur est définit, on l'affiche
 			m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name", m_textures->removeAccents()).arg(m_player));
 		else
 			m_graphicsText->setPlainText(m_tr->qTranslate("graphic:local:character:name", m_textures->removeAccents()).arg(m_player) + " - " + QString::number(m_score));
 	} else {
-		m_graphicsText->setPlainText("");
+		m_graphicsText->setPlainText(""); // Sinon on laisse le cadre vide
 	}
 
 	m_graphicsText->setFont(m_textures->loadFont(m_fontSize));
 
+	//On replace correctement le text au milieu de l'image
 	int x = static_cast<int>((boundingRect().width() - m_graphicsText->boundingRect().width())/2);
 	int y = static_cast<int>(boundingRect().height() - m_graphicsText->boundingRect().height());
-
 	m_graphicsText->setPos(x, y);
 }
 
 void GraphicsPlayerFrameItem::enableScoreDisplay(bool display) {
 	if(display)
-		m_score = (m_score == -1 ? 0 : m_score);
+		m_score = (m_score == -1 ? 0 : m_score); // Si le score vaut -1, on le passe à 0. Sinon on le laisse ainsi
 	else
 		m_score = -1;
 
@@ -73,6 +75,7 @@ void GraphicsPlayerFrameItem::setScore(int s) {
 void GraphicsPlayerFrameItem::setHoverable(bool hoverable) {
 	m_isHoverable = hoverable;
 
+	//Si survolable, on change le curseur
 	if(hoverable)
 		setCursor(Qt::PointingHandCursor);
 	else
@@ -108,6 +111,7 @@ int GraphicsPlayerFrameItem::player() {
 
 void GraphicsPlayerFrameItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 	if(m_isHoverable && !m_selected) {
+		//Lorsque la souris entre de l'item, on change le cadre et la couleur du texte
 		m_graphicsFrame->setPixmap(m_textures->loadPixmap(characterHovered).scaled(boundingRect().size().toSize()));
 		m_graphicsText->setDefaultTextColor(m_textures->secondaryColor());
 	}
@@ -117,6 +121,7 @@ void GraphicsPlayerFrameItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
 
 void GraphicsPlayerFrameItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 	if(!m_selected) {
+		//Lorsque la souris sort de l'item, on change le cadre et la couleur du texte
 		m_graphicsFrame->setPixmap(m_textures->loadPixmap(characterSelector).scaled(boundingRect().size().toSize()));
 		m_graphicsText->setDefaultTextColor(m_textures->primaryColor());
 	}
@@ -125,7 +130,7 @@ void GraphicsPlayerFrameItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
 }
 
 void GraphicsPlayerFrameItem::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-	if(m_isHoverable) {
+	if(m_isHoverable) { // En cas de click et si l'item est survolable, alors on émet un signal clicked()
 		setSelected(true);
 		emit clicked();
 	}

@@ -6,6 +6,7 @@ const int Window::m_height = 720;
 Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 	setWindowTitle("Ataxx - ISEN Yncréa Ouest Rennes - CIR 2 C++ Project | Alexandre THOMAS");
 
+	//Initialise toutes les scènes
 	m_mainMenu = new MainMenuScreen(m_width, m_height, game, this);
 	m_partyOptionsScreen = new PartyOptionsScreen(m_width, m_height, game, this);
 	m_characterSelectionScreen = new CharacterSelectionScreen(m_width, m_height, game, this);
@@ -13,6 +14,7 @@ Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 	m_optionsScreen = new OptionsScreen(m_width, m_height, game, this);
 	m_boardScreen = new BoardScreen(m_width, m_height, game, this);
 
+	//Fixe la taille
 	setFixedSize(m_width + 2, m_height + 2);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -20,6 +22,7 @@ Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 	setMouseTracking(true);
 	setScene(m_mainMenu);
 
+	//Prépare le layer
 	QMediaPlaylist* playlist = new QMediaPlaylist(this);
 	playlist->setPlaybackMode(QMediaPlaylist::Loop);
 
@@ -36,6 +39,7 @@ Window::Window(GameCore* game) : QGraphicsView(), m_game(game) {
 }
 
 void Window::gameUpdate() {
+	//Agit en fonction du statut
 	switch(m_game->gameSubSubStatus()) {
 	case QUIT:
 		close();
@@ -58,7 +62,7 @@ void Window::gameUpdate() {
 
 	case LOCAL_IN_GAME:
 		setScene(m_boardScreen);
-		if(m_prevStatus != LOCAL_IN_GAME)
+		if(m_prevStatus != LOCAL_IN_GAME) // Si on vient de lancer une partie, on génère la grille
 			m_boardScreen->generateBoard();
 		else
 			m_boardScreen->update();
@@ -83,16 +87,20 @@ void Window::gameUpdate() {
 }
 
 void Window::changeResources() {
+	//On définit l'icon de la fenêtre comme étant l'icon du pack de texture
 	setWindowIcon(QIcon(m_game->textures()->loadPixmap("icon.png")));
 
+	//On vide la liste
 	QMediaPlaylist* playlist = m_backgroundMusicPlayer->playlist();
 	playlist->clear();
 
+	//On charge la nouvelle musique
 	QUrl bgMusicUrl = m_game->textures()->loadSoundUrl("background_music.wav");
 
 	if(!bgMusicUrl.isEmpty())
 		playlist->addMedia(bgMusicUrl);
 
+	//On la joue
 	m_backgroundMusicPlayer->stop();
 	m_backgroundMusicPlayer->setPlaylist(playlist);
 	m_backgroundMusicPlayer->play();
