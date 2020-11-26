@@ -34,8 +34,6 @@ Le jeu dispose de fichiers de langues permettant de jouer en Anglais ou en Fran�
 ##### Packs de textures
 Inspiré du célèbre jeu Minecraft, le jeu propose un système de pack de texture. Il est possible de créer son propre pack ou d'utiliser ceux déjà disponibles. Cela provoque un changement des couleurs, des images, de la police et des sons du jeu. Pour savoir comment créer son propre texture pack, merci de lire la section "Ressources externes"
 
-Note : Le pack "CIR Rennes" avec nos têtes n'est évidemment destiné qu'au rendu du projet et ne sera pas publié en ligne.
-
 ##### Plus de joueurs
 Le jeu peut maintenant se jouer de 2 à 4 joueurs, le placement des pions sur la grille changeant en fonction du nombre de joueur. Une partie se termine lorsqu'il ne reste qu'un seul joueur à pouvoir jouer à la fin d'un tour.
 De plus, en fonction des packs de textures, chaque joueur possède un pion différent et une image différente.
